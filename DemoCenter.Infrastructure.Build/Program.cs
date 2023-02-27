@@ -5,25 +5,25 @@ using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks.SetupDotNetTaskV1s;
 
 var githubPipline = new GithubPipeline
 {
-    Name="Build & Test DemoCenter",
+    Name = "Build & Test DemoCenter",
     OnEvents = new Events
     {
-        Push=new PushEvent
+        Push = new PushEvent
         {
-           Branches=new string[] {"master"}
+            Branches = new string[] { "master" }
 
         },
-        PullRequest =new PullRequestEvent
+        PullRequest = new PullRequestEvent
         {
-            Branches=new string[] {"master"}
+            Branches = new string[] { "master" }
         }
     },
-    Jobs=new Jobs
+    Jobs = new Jobs
     {
         Build = new BuildJob
         {
             RunsOn = BuildMachines.WindowsLatest,
-            Steps = new List <GithubTask>
+            Steps = new List<GithubTask>
             {
                 new CheckoutTaskV2
                 {
@@ -52,7 +52,7 @@ var githubPipline = new GithubPipeline
                     Name="Running tests"
                 }
 
-                
+
             }
         }
     }
