@@ -14,7 +14,7 @@ namespace DemoCenter.Brokers.Storages
         public async ValueTask<Teacher> InsertTeacherAsync(Teacher teacher) =>
             await InsertAsync(teacher);
 
-        public async ValueTask<Teacher> SelectTeacherByID(Guid id) =>
+        public async ValueTask<Teacher> SelectTeacherByIdAsync(Guid id) =>
             await SelectAsync<Teacher>(id);
 
         public IQueryable<Teacher> SelectAllTeachers() =>

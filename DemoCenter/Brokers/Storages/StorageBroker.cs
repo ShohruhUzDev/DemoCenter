@@ -1,6 +1,11 @@
-﻿using EFxceptions;
+﻿using DemoCenter.Models.Groups;
+using DemoCenter.Models.Students;
+using DemoCenter.Models.Subjects;
+using DemoCenter.Models.Teachers;
+using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -62,6 +67,5 @@ namespace DemoCenter.Brokers.Storages
 
             optionsBuilder.UseSqlServer(connectionString);
         }
-
     }
 }

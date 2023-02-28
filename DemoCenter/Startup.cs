@@ -14,19 +14,19 @@ namespace DemoCenter
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<StorageBroker>();
-
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(config =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DemoCenter", Version = "v1" });
+                config.SwaggerDoc(
+                    name: "v1",
+                    info: new OpenApiInfo { Title = "DemoCenter", Version = "v1" });
             });
+
+            services.AddTransient<IStorageBroker, StorageBroker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,15 +40,11 @@ namespace DemoCenter
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+                endpoints.MapControllers());
         }
     }
 }
