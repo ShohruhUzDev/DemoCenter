@@ -1,13 +1,8 @@
-﻿using DemoCenter.Models.Groups;
-using DemoCenter.Models.Students;
-using DemoCenter.Models.Subjects;
-using DemoCenter.Models.Teachers;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DemoCenter.Brokers.Storages
 {
@@ -45,8 +40,8 @@ namespace DemoCenter.Brokers.Storages
 
         private async ValueTask<T> UpdateAsync<T>(T @object)
         {
-            var broker = new StorageBroker(configuration);  
-            broker.Entry(@object).State|= EntityState.Modified;
+            var broker = new StorageBroker(configuration);
+            broker.Entry(@object).State |= EntityState.Modified;
             await broker.SaveChangesAsync();
 
             return @object;
@@ -54,8 +49,8 @@ namespace DemoCenter.Brokers.Storages
 
         private async ValueTask<T> DeleteAsync<T>(T @object)
         {
-            var broker = new StorageBroker(configuration);  
-            broker.Entry(@object).State&= ~EntityState.Deleted;
+            var broker = new StorageBroker(configuration);
+            broker.Entry(@object).State &= ~EntityState.Deleted;
             await broker.SaveChangesAsync();
 
             return @object;

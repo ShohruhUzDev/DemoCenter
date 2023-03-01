@@ -1,9 +1,8 @@
-﻿using DemoCenter.Models.Teachers;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DemoCenter.Models.Teachers;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoCenter.Brokers.Storages
 {
@@ -13,12 +12,11 @@ namespace DemoCenter.Brokers.Storages
 
         public async ValueTask<Teacher> InsertTeacherAsync(Teacher teacher) =>
             await InsertAsync(teacher);
+        public IQueryable<Teacher> SelectAllTeachers() =>
+            SelectAll<Teacher>();
 
         public async ValueTask<Teacher> SelectTeacherByIdAsync(Guid id) =>
             await SelectAsync<Teacher>(id);
-
-        public IQueryable<Teacher> SelectAllTeachers() =>
-            SelectAll<Teacher>();
 
         public async ValueTask<Teacher> UpdateTeacherAsync(Teacher teacher) =>
             await UpdateAsync(teacher);

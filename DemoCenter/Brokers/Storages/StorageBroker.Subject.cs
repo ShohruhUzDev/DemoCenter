@@ -12,10 +12,10 @@ namespace DemoCenter.Brokers.Storages
         public DbSet<Subject> Subjects { get; set; }
         public async ValueTask<Subject> InsertSubjectAsync(Subject subject) =>
             await InsertAsync(subject);
-        public async ValueTask<Subject> SelectSubjectByIdAsync(Guid id) =>
-            await SelectAsync<Subject>(id); 
         public IQueryable<Subject> SelectAllSubjects() =>
             SelectAll<Subject>();
+        public async ValueTask<Subject> SelectSubjectByIdAsync(Guid id) =>
+            await SelectAsync<Subject>(id);
         public async ValueTask<Subject> UpdateSubjectAsync(Subject subject) =>
             await UpdateAsync(subject); 
         public async ValueTask<Subject> DeleteSubjectAsync(Subject subject) =>

@@ -8,8 +8,8 @@ namespace DemoCenter.Brokers.Storages
     public partial interface IStorageBroker
     {
         ValueTask<Subject> InsertSubjectAsync(Subject subject);
-        ValueTask<Subject> SelectSubjectByIdAsync(Guid id);
         IQueryable<Subject> SelectAllSubjects();
+        ValueTask<Subject> SelectSubjectByIdAsync(Guid id);
         ValueTask<Subject> UpdateSubjectAsync(Subject subject);
         ValueTask<Subject> DeleteSubjectAsync(Subject subject);
     }

@@ -8,8 +8,8 @@ namespace DemoCenter.Brokers.Storages
     public partial interface IStorageBroker
     {
         ValueTask<Group> InsertGroupAsync(Group group);
-        ValueTask<Group> SelectGroupByIdAsync(Guid id);
         IQueryable<Group> SelectAllGroups();
+        ValueTask<Group> SelectGroupByIdAsync(Guid id);
         ValueTask<Group> UpdateGroupAsync(Group group);
         ValueTask<Group> DeleteGroupAsync(Group group);
     }
