@@ -12,6 +12,6 @@ namespace DemoCenter.Services.Foundations.Students
                  this.storageBroker = storageBroker;
 
         public ValueTask<Student> AddStudentAsync(Student student) =>
-            throw new System.NotImplementedException();
+            this.storageBroker.InsertStudentAsync(student);
     }
 }
