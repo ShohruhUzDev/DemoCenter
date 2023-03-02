@@ -14,6 +14,8 @@ namespace DemoCenter.Models.Groups
         public Teacher Teacher { get; set; }
         public Guid? SubjectId { get; set; }
         public Subject Subject { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset UpdatedDate { get; set; }
         public virtual ICollection<Student> Students { get; set; }
 
     }
