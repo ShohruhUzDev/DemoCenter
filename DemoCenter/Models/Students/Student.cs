@@ -10,6 +10,8 @@ namespace DemoCenter.Models.Students
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset UpdatedDate { get; set; }
         public virtual ICollection<Group> Groups { get; set; }
     }
 }
