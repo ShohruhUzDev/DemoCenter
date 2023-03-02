@@ -18,5 +18,10 @@
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Foundations\Users\" />
+    <Folder Include="Services\Foundations\Subjects\" />
+    <Folder Include="Services\Foundations\Teachers\" />
+  </ItemGroup>
 
 </Project>

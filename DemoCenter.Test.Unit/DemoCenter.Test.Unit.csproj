@@ -29,4 +29,10 @@
     <ProjectReference Include="..\DemoCenter\DemoCenter.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Foundations\Users\" />
+    <Folder Include="Services\Foundations\Subjects\" />
+    <Folder Include="Services\Foundations\Teachers\" />
+  </ItemGroup>
+
 </Project>
