@@ -19,9 +19,9 @@ namespace DemoCenter.Test.Services.Foundations
             this.groupService = new GroupService(
                 storageBroker: this.storageBrokerMock.Object);
         }
-
         private DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
 
         private Group CreateRandomGroup() =>
             CreateGroupFiller(dates: GetRandomDateTimeOffset()).Create();
