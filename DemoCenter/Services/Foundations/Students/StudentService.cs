@@ -11,7 +11,7 @@ namespace DemoCenter.Services.Foundations.Students
         public StudentService(IStorageBroker storageBroker) =>
                  this.storageBroker = storageBroker;
 
-        public ValueTask<Student> AddStudentAsync(Student student) =>
-            this.storageBroker.InsertStudentAsync(student);
+        public async ValueTask<Student> AddStudentAsync(Student student) =>
+            await this.storageBroker.InsertStudentAsync(student);
     }
 }
