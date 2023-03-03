@@ -11,8 +11,8 @@ namespace DemoCenter.Services.Foundations.Subjects
         public SubjectService(IStorageBroker storageBroker) =>
               this.storageBroker = storageBroker;
         
-        public ValueTask<Subject> AddSubjectAsync(Subject subject) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<Subject> AddSubjectAsync(Subject subject) =>
+            await this.storageBroker.InsertSubjectAsync(subject);
         
     }
 }
