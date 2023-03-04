@@ -26,7 +26,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             Teacher actualTeacher = await this.teacherService.AddTeacherAsync(inputTeacher);
 
             //then
-            actualTeacher.Should().NotBeEquivalentTo(expectedTeacher);
+            actualTeacher.Should().BeEquivalentTo(expectedTeacher);
 
             this.storageBrokerMock.Verify(broker =>
             broker.InsertTeacherAsync(inputTeacher), Times.Once());
