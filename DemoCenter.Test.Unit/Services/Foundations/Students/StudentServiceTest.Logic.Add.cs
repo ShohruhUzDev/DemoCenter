@@ -28,7 +28,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             //then
             actualStudent.Should().BeEquivalentTo(expectedStuden);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
             broker.InsertStudentAsync(inputStudent), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

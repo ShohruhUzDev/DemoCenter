@@ -26,7 +26,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         private Subject CreateRandomSubject() =>
             CreateSubjectFiller(GetRandomDateTimeOffset()).Create();
 
-        private Filler< Subject> CreateSubjectFiller(DateTimeOffset dates)
+        private Filler<Subject> CreateSubjectFiller(DateTimeOffset dates)
         {
             var filler = new Filler<Subject>();
 

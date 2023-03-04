@@ -1,8 +1,8 @@
-﻿using DemoCenter.Models.Users;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DemoCenter.Models.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoCenter.Brokers.Storages
 {
@@ -17,7 +17,7 @@ namespace DemoCenter.Brokers.Storages
 
         public async ValueTask<User> SelectUserByIdAsync(Guid id) =>
             await SelectAsync<User>(id);
-            
+
         public async ValueTask<User> UpdateUserAsync(User user) =>
             await UpdateAsync(user);
 

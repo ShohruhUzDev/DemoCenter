@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DemoCenter.Brokers.Storages;
 using DemoCenter.Models.Groups;
 
@@ -14,6 +13,6 @@ namespace DemoCenter.Services.Foundations.Groups
 
         public async ValueTask<Group> AddGroupAsync(Group group) =>
             await this.storageBroker.InsertGroupAsync(group);
-        
+
     }
 }

@@ -1,6 +1,6 @@
-﻿using DemoCenter.Models.Groups;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using DemoCenter.Models.Groups;
 
 namespace DemoCenter.Models.Students
 {

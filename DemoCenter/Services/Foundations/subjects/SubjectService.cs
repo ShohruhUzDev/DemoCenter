@@ -10,9 +10,9 @@ namespace DemoCenter.Services.Foundations.Subjects
 
         public SubjectService(IStorageBroker storageBroker) =>
               this.storageBroker = storageBroker;
-        
+
         public async ValueTask<Subject> AddSubjectAsync(Subject subject) =>
             await this.storageBroker.InsertSubjectAsync(subject);
-        
+
     }
 }
