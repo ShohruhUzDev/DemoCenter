@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
-using DemoCenter.Models.Subjects;
+using DemoCenter.Models.Teachers;
 
-namespace DemoCenter.Services.Foundations.Subjects
+namespace DemoCenter.Services.Foundations.Teachers
 {
-    public class SubjectService : ISubjectService
+    public class TeacherService : ITeacherService
     {
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
         private readonly ILoggingBroker loggingBroker;
 
-        public SubjectService(
+        public TeacherService(
             IStorageBroker storageBroker,
             IDateTimeBroker dateTimeBroker,
             ILoggingBroker loggingBroker)
@@ -24,14 +24,14 @@ namespace DemoCenter.Services.Foundations.Subjects
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<Subject> AddSubjectAsync(Subject subject) =>
-            await this.storageBroker.InsertSubjectAsync(subject);
+        public async ValueTask<Teacher> AddTeacherAsync(Teacher teacher) =>
+            await storageBroker.InsertTeacherAsync(teacher);
 
-        public IQueryable<Subject> RetrieveAllSubjects() =>
-            this.storageBroker.SelectAllSubjects();
+        public IQueryable<Teacher> RetrieveAllTeachers() =>
+            this.storageBroker.SelectAllTeachers();
 
-        public async ValueTask<Subject> RetrieveSubjectByIdAsync(Guid subjectId)=>
-           await this.storageBroker.SelectSubjectByIdAsync(subjectId);
-        
+        public async ValueTask<Teacher> RetrieveTeacherByIdAsync(Guid teacherId) =>
+           await this.storageBroker.SelectTeacherByIdAsync(teacherId);
+       
     }
 }

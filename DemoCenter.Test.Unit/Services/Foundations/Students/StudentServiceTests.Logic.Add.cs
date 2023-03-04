@@ -7,7 +7,7 @@ using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Students
 {
-    partial class StudentServiceTest
+    partial class StudentServiceTests
     {
         [Fact]
         public async Task ShouldAddStudentAsync()
@@ -28,7 +28,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             //then
             actualStudent.Should().BeEquivalentTo(expectedStuden);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
             broker.InsertStudentAsync(inputStudent), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

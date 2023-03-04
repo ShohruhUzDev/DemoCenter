@@ -1,9 +1,8 @@
-﻿using DemoCenter.Models.Students;
-using DemoCenter.Models.Users;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DemoCenter.Models.Students;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoCenter.Brokers.Storages
 {
@@ -19,6 +18,6 @@ namespace DemoCenter.Brokers.Storages
         public async ValueTask<Student> UpdateStudentAsync(Student student) =>
             await UpdateAsync(student);
         public async ValueTask<Student> DeleteStudentAsync(Student student) =>
-            await DeleteAsync(student); 
+            await DeleteAsync(student);
     }
 }

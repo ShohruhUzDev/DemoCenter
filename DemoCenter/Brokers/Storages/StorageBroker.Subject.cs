@@ -1,9 +1,8 @@
-﻿using DemoCenter.Models.Subjects;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using DemoCenter.Models.Subjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoCenter.Brokers.Storages
 {
@@ -17,7 +16,7 @@ namespace DemoCenter.Brokers.Storages
         public async ValueTask<Subject> SelectSubjectByIdAsync(Guid id) =>
             await SelectAsync<Subject>(id);
         public async ValueTask<Subject> UpdateSubjectAsync(Subject subject) =>
-            await UpdateAsync(subject); 
+            await UpdateAsync(subject);
         public async ValueTask<Subject> DeleteSubjectAsync(Subject subject) =>
             await DeleteAsync(subject);
     }

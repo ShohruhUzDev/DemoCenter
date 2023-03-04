@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System;
-using DemoCenter.Models.Teachers;
-using DemoCenter.Models.Subjects;
+﻿using System;
+using System.Collections.Generic;
 using DemoCenter.Models.Students;
+using DemoCenter.Models.Subjects;
+using DemoCenter.Models.Teachers;
 
 namespace DemoCenter.Models.Groups
 {

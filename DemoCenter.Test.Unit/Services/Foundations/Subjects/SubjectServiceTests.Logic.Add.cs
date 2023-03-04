@@ -7,7 +7,7 @@ using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 {
-    partial class SubjectServiceTest
+    partial class SubjectServiceTests
     {
         [Fact]
         public async Task ShouldAddSubjectAsync()
@@ -20,9 +20,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 
             this.storageBrokerMock.Setup(broker =>
             broker.InsertSubjectAsync(inputSubject)).ReturnsAsync(persistedSubject);
-            
+
             //when
-            Subject actualSubject = await subjectService.AddSubjectAsync(inputSubject); 
+            Subject actualSubject = await subjectService.AddSubjectAsync(inputSubject);
 
             //then
             actualSubject.Should().BeEquivalentTo(expectedSubject);

@@ -1,7 +1,7 @@
-﻿using DemoCenter.Models.Students;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DemoCenter.Models.Students;
 
 namespace DemoCenter.Brokers.Storages
 {
@@ -12,5 +12,5 @@ namespace DemoCenter.Brokers.Storages
         ValueTask<Student> SelectStudentByIdAsync(Guid id);
         ValueTask<Student> UpdateStudentAsync(Student student);
         ValueTask<Student> DeleteStudentAsync(Student student);
-      }
+    }
 }

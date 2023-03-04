@@ -1,7 +1,7 @@
-﻿using DemoCenter.Models.Users;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DemoCenter.Models.Users;
 
 namespace DemoCenter.Brokers.Storages
 {
@@ -12,6 +12,6 @@ namespace DemoCenter.Brokers.Storages
         ValueTask<User> SelectUserByIdAsync(Guid id);
         ValueTask<User> UpdateUserAsync(User user);
         ValueTask<User> DeleteUserAsync(User user);
-       
+
     }
 }

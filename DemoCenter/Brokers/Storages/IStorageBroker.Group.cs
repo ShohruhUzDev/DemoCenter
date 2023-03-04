@@ -1,7 +1,7 @@
-﻿using DemoCenter.Models.Groups;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DemoCenter.Models.Groups;
 
 namespace DemoCenter.Brokers.Storages
 {

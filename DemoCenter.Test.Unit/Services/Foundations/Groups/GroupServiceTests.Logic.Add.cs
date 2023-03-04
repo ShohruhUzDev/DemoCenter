@@ -1,13 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
 using Xunit;
 
-namespace DemoCenter.Test.Services.Foundations.Groups
+namespace DemoCenter.Test.Unit.Services.Foundations.Groups
 {
-    public partial class GroupServiceTest
+    public partial class GroupServiceTests
     {
         [Fact]
         public async Task ShouldAddGroupAsync()
