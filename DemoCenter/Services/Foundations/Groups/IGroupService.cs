@@ -10,5 +10,7 @@ namespace DemoCenter.Services.Foundations.Groups
         ValueTask<Group> AddGroupAsync(Group group);
         IQueryable<Group> RetrieveAllGroups();
         ValueTask<Group> RetrieveGroupByIdAsync(Guid groupId);
+        ValueTask<Group> ModifyGroupAsync(Group group);
+        ValueTask<Group> RemoveGroupByIdAsync(Guid groupId);
     }
 }
