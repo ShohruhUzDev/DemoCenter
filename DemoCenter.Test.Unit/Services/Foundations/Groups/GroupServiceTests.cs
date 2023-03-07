@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DemoCenter.Brokers.DateTimes;
@@ -10,6 +11,7 @@ using DemoCenter.Models.Groups;
 using DemoCenter.Services.Foundations.Groups;
 using Moq;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Groups
 {
@@ -39,12 +41,13 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         }
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
-
+        private static Expression<Func<Xeption, bool>> SameExceptonAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
         private static Group CreateRandomGroup() =>
             CreateGroupFiller(dates: GetRandomDateTimeOffset()).Create();
 
         private static Group CreateRandomGroup(DateTimeOffset dates) =>
-            CreateGroupFiller(dates: dates).Create();
+            CreateGroupFiller(dates).Create();
 
         private static int GetRandomNegativeNumber() =>
            -1 * new IntRange(min: 2, max: 99).GetValue();
