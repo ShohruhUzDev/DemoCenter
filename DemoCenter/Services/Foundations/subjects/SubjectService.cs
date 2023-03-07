@@ -32,6 +32,12 @@ namespace DemoCenter.Services.Foundations.Subjects
 
         public async ValueTask<Subject> RetrieveSubjectByIdAsync(Guid subjectId)=>
            await this.storageBroker.SelectSubjectByIdAsync(subjectId);
-        
+        public async ValueTask<Subject> RemoveSubjectByIdAsync(Guid subjectId)
+        {
+            Subject maybeSubject = await
+                this.storageBroker.SelectSubjectByIdAsync(subjectId);
+
+            return await this.storageBroker.DeleteSubjectAsync(maybeSubject);
+        }
     }
 }
