@@ -4,6 +4,6 @@ namespace DemoCenter.Brokers.DateTimes
 {
     public interface IDateTimeBroker
     {
-        public DateTime GetCurrenDateTime();
+        public DateTimeOffset GetCurrenDateTime();
     }
 }

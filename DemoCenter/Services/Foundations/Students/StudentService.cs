@@ -8,7 +8,7 @@ using DemoCenter.Models.Students;
 
 namespace DemoCenter.Services.Foundations.Students
 {
-    public class StudentService : IStudentService
+    public partial class StudentService : IStudentService
     {
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
@@ -24,14 +24,34 @@ namespace DemoCenter.Services.Foundations.Students
             this.loggingBroker = loggingBroker;
 
         }
-        public async ValueTask<Student> AddStudentAsync(Student student) =>
-            await this.storageBroker.InsertStudentAsync(student);
+        public ValueTask<Student> AddStudentAsync(Student student) =>
+            TryCatch(async () =>
+            {
+                ValidationStudentNotNull(student);
+
+                return await this.storageBroker.InsertStudentAsync(student);
+            });
+
 
         public IQueryable<Student> RetrieveAllStudents() =>
             this.storageBroker.SelectAllStudents();
 
         public ValueTask<Student> RetrieveStudentByIdAsync(Guid studentId)=>
             this.storageBroker.SelectStudentByIdAsync(studentId);
-        
+        public async ValueTask<Student> ModifyStudentAsync(Student student)
+        {
+         Student maybeStudent=await 
+                this.storageBroker.SelectStudentByIdAsync(student.Id);   
+
+            return await this.storageBroker.UpdateStudentAsync(student);
+        }
+        public async ValueTask<Student> RemoveStudentByIdAsync(Guid studentId)
+        {
+            Student maybeStudent =
+                await this.storageBroker.SelectStudentByIdAsync(studentId);
+            return await this.storageBroker.DeleteStudentAsync(maybeStudent);
+
+        }
+
     }
 }

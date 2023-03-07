@@ -8,7 +8,7 @@ using DemoCenter.Models.Teachers;
 
 namespace DemoCenter.Services.Foundations.Teachers
 {
-    public class TeacherService : ITeacherService
+    public partial class TeacherService : ITeacherService
     {
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
@@ -24,14 +24,34 @@ namespace DemoCenter.Services.Foundations.Teachers
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<Teacher> AddTeacherAsync(Teacher teacher) =>
-            await storageBroker.InsertTeacherAsync(teacher);
+        public ValueTask<Teacher> AddTeacherAsync(Teacher teacher) =>
+            TryCatch(async () =>
+            {
+                ValidationTeacherNotNull(teacher);
+                return await storageBroker.InsertTeacherAsync(teacher);
+
+            });
+
 
         public IQueryable<Teacher> RetrieveAllTeachers() =>
             this.storageBroker.SelectAllTeachers();
 
         public async ValueTask<Teacher> RetrieveTeacherByIdAsync(Guid teacherId) =>
            await this.storageBroker.SelectTeacherByIdAsync(teacherId);
-       
+        public async ValueTask<Teacher> ModifyTeacherAsync(Teacher teacher)
+        {
+            Teacher maybeTeacher =
+                await this.storageBroker.SelectTeacherByIdAsync(teacher.Id);
+
+            return await this.storageBroker.UpdateTeacherAsync(teacher);
+        }
+        public async ValueTask<Teacher> RemoveTeacherByIdAsync(Guid teacherid)
+        {
+            Teacher maybeTeacher = await
+                   this.storageBroker.SelectTeacherByIdAsync(teacherid);
+
+            return await this.storageBroker.DeleteTeacherAsync(maybeTeacher);
+        }
+
     }
 }

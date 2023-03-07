@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
@@ -7,6 +8,7 @@ using DemoCenter.Models.Students;
 using DemoCenter.Services.Foundations.Students;
 using Moq;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Students
 {
@@ -27,20 +29,34 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 this.loggingBrokerMock.Object);
         }
 
-        private DateTimeOffset GetRandomDateTimeOffset() =>
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+        private static int GetRandomNegativeNumber()=>
+            -1* new IntRange(min:2, max:99).GetValue();
+        private static Student CreateRandomStudent(DateTimeOffset dates)=>
+            CreateStudentFiller(dates).Create();
+      
+        private static Student CreateRandomModifyStudent(DateTimeOffset dates)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Student randomStudent=CreateRandomStudent(dates);
+            randomStudent.CreatedDate=randomStudent.CreatedDate.AddDays(randomDaysInPast);
+            return randomStudent;
+        }
 
-        private IQueryable<Student> CreateRandomStudents()
+        private static IQueryable<Student> CreateRandomStudents()
         {
             return CreateStudentFiller(dates: GetRandomDateTimeOffset())
                 .Create(count: GetRandomNumber()).AsQueryable();
         }
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException)=>
+            actualException=>actualException.SameExceptionAs(expectedException);
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 99).GetValue();
-        private Student CreateRandomStudent() =>
+        private static Student CreateRandomStudent() =>
             CreateStudentFiller(dates: GetRandomDateTimeOffset()).Create();
 
-        private Filler<Student> CreateStudentFiller(DateTimeOffset dates)
+        private static Filler<Student> CreateStudentFiller(DateTimeOffset dates)
         {
             var filler = new Filler<Student>();
 

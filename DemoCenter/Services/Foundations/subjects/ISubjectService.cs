@@ -10,5 +10,6 @@ namespace DemoCenter.Services.Foundations.Subjects
         ValueTask<Subject> AddSubjectAsync(Subject subject);
         IQueryable<Subject> RetrieveAllSubjects();
         ValueTask<Subject> RetrieveSubjectByIdAsync(Guid subjectId);
+        ValueTask<Subject> RemoveSubjectByIdAsync(Guid subjectId);
     }
 }

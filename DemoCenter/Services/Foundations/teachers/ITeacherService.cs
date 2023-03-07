@@ -10,5 +10,7 @@ namespace DemoCenter.Services.Foundations.Teachers
         ValueTask<Teacher> AddTeacherAsync(Teacher teacher);
         IQueryable<Teacher> RetrieveAllTeachers();
         ValueTask<Teacher> RetrieveTeacherByIdAsync(Guid teacherId);
+        ValueTask<Teacher> ModifyTeacherAsync(Teacher teacher);
+        ValueTask<Teacher> RemoveTeacherByIdAsync(Guid teacherid);
     }
 }

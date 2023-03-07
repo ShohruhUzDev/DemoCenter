@@ -8,7 +8,7 @@ using DemoCenter.Models.Groups;
 
 namespace DemoCenter.Services.Foundations.Groups
 {
-    public class GroupService : IGroupService
+    public partial class GroupService : IGroupService
     {
         private IStorageBroker storageBroker;
         private IDateTimeBroker dateTimeBroker;
@@ -24,15 +24,34 @@ namespace DemoCenter.Services.Foundations.Groups
             this.loggingBroker = loggingBroker;
 
         }
-        public async ValueTask<Group> AddGroupAsync(Group group) =>
-            await this.storageBroker.InsertGroupAsync(group);
+        public ValueTask<Group> AddGroupAsync(Group group) =>
+        TryCatch(async () =>
+        {
+            ValidationGroupNotNull(group);
+            return await this.storageBroker.InsertGroupAsync(group);
+
+
+        });
 
         public IQueryable<Group> RetrieveAllGroups() =>
             this.storageBroker.SelectAllGroups();
-        
+
 
         public ValueTask<Group> RetrieveGroupByIdAsync(Guid groupId) =>
             this.storageBroker.SelectGroupByIdAsync(groupId);
-        
+        public async ValueTask<Group> ModifyGroupAsync(Group group)
+        {
+            var maybeGroup = await this.storageBroker.SelectGroupByIdAsync(group.Id);
+
+
+            return await this.storageBroker.UpdateGroupAsync(group);
+        }
+        public async ValueTask<Group> RemoveGroupByIdAsync(Guid groupId)
+        {
+            Group maybeGroup = await this.storageBroker.SelectGroupByIdAsync(groupId);
+
+            return await this.storageBroker.DeleteGroupAsync(maybeGroup);
+        }
+
     }
 }
