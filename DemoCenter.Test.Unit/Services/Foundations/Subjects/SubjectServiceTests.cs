@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
@@ -7,6 +8,7 @@ using DemoCenter.Models.Subjects;
 using DemoCenter.Services.Foundations.Subjects;
 using Moq;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 {
@@ -29,16 +31,21 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+
         private DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private IQueryable<Subject> CreateRandomSubjects()
         {
-            return CreateSubjectFiller(dates:GetRandomDateTimeOffset())
-                .Create(count:GetRandomNumber()).AsQueryable();
+            return CreateSubjectFiller(dates: GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber()).AsQueryable();
         }
-        private static int GetRandomNumber()=>
-            new IntRange(min:2, max:99).GetValue();
+
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 99).GetValue();
+
         private Subject CreateRandomSubject() =>
             CreateSubjectFiller(GetRandomDateTimeOffset()).Create();
 
