@@ -27,10 +27,9 @@ namespace DemoCenter.Services.Foundations.Groups
         public ValueTask<Group> AddGroupAsync(Group group) =>
         TryCatch(async () =>
         {
-            ValidationGroupNotNull(group);
+            ValidateGroupOnAdd(group);
+
             return await this.storageBroker.InsertGroupAsync(group);
-
-
         });
 
         public IQueryable<Group> RetrieveAllGroups() =>

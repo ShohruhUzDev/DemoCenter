@@ -19,7 +19,10 @@ namespace DemoCenter.Services.Foundations.Groups
             {
                throw CreateAndLogValidationException(nullGroupException);
             }
-
+            catch (InvalidGroupException invalidGroupException)
+            {
+                throw CreateAndLogValidationException(invalidGroupException);
+            }
         }
 
         private GroupValidationException CreateAndLogValidationException(Xeption exception)
