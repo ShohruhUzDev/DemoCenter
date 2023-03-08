@@ -20,6 +20,11 @@ namespace DemoCenter.Services.Foundations.Subjects
                 
                 throw CreateAndLogValidationExcetion(nulSubjectException);
             }
+            catch (InvalidSubjectException invalidSubjectException)
+            {
+
+                throw CreateAndLogValidationExcetion(invalidSubjectException);
+            }
         }
 
         private SubjectValidationException CreateAndLogValidationExcetion(Xeption xeption)

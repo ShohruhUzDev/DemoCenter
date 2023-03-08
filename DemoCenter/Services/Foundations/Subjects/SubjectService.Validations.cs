@@ -46,11 +46,11 @@ namespace DemoCenter.Services.Foundations.Subjects
             }
         }
 
-        public static void Validate(params (dynamic Rule, string Parameter)[] validatioons)
+        public static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidSubjectExceptoion = new InvalidSubjectException();
 
-            foreach ((dynamic rule, string parameter) in validatioons)
+            foreach ((dynamic rule, string parameter) in validations)
             {
                 if (rule.Condition)
                 {
@@ -59,6 +59,7 @@ namespace DemoCenter.Services.Foundations.Subjects
                         value: rule.Message);
                 }
             }
+            invalidSubjectExceptoion.ThrowIfContainsErrors();
         }
 
     }

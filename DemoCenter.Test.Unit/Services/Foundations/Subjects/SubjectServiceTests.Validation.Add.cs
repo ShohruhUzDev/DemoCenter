@@ -92,7 +92,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 
             this.loggingBrokerMock.Verify(broker=>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedSubjetValidationException))),Times.Once());
+                    expectedSubjetValidationException))),Times.Once);
 
             this.storageBrokerMock.Verify(broker=>
                 broker.InsertSubjectAsync(It.IsAny<Subject>()), Times.Never);

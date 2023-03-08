@@ -27,7 +27,8 @@ namespace DemoCenter.Services.Foundations.Subjects
         public ValueTask<Subject> AddSubjectAsync(Subject subject) =>
         TryCatch(async () =>
         {
-            ValidateSubjectNotNull(subject);
+            ValidateSubjectOnAdd(subject);
+
             return await this.storageBroker.InsertSubjectAsync(subject);
 
         });
