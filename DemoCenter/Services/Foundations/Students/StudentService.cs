@@ -27,7 +27,7 @@ namespace DemoCenter.Services.Foundations.Students
         public ValueTask<Student> AddStudentAsync(Student student) =>
             TryCatch(async () =>
             {
-                ValidationStudentNotNull(student);
+                ValidateStudentOnAdd(student);
 
                 return await this.storageBroker.InsertStudentAsync(student);
             });
