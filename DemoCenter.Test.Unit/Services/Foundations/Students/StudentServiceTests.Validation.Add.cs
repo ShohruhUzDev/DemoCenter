@@ -41,5 +41,69 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
 
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ShouldThrowValidationExceptionOnAddIfInputIsInvalidAndLogItAsync(
+            string invalidString)
+        {
+            //given
+            var invalidStduent = new Student
+            {
+                FirstName = invalidString,
+                LastName = invalidString,
+                Phone=invalidString,
+            };
+            var invalidStudentException = new InvalidStudentException();
+
+            invalidStudentException.AddData(
+                key: nameof(Student.Id),
+                values: "Id is required");
+
+            invalidStudentException.AddData(
+                key: nameof(Student.FirstName),
+                values: "Text is required"); 
+
+            invalidStudentException.AddData(
+                key: nameof(Student.LastName),
+                values: "Text is required");
+
+            invalidStudentException.AddData(
+                key: nameof(Student.Phone),
+                values: "Text is required");
+
+            invalidStudentException.AddData(
+                key: nameof(Student.CreatedDate),
+                values: "Value is required");
+
+            invalidStudentException.AddData(
+                key: nameof(Student.UpdatedDate),
+                values: "Value is required");
+
+            var expectedStudentValidationException =
+                new StudentValidationException(invalidStudentException);
+
+            //when
+            ValueTask<Student> addStudentTask = this.studentService.AddStudentAsync(invalidStduent);
+
+            StudentValidationException actualStudentValidatioException =
+                await Assert.ThrowsAsync<StudentValidationException>(addStudentTask.AsTask);
+
+            //then
+            actualStudentValidatioException.Should()
+                .BeEquivalentTo(expectedStudentValidationException);
+
+            this.loggingBrokerMock.Verify(broker=>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStudentValidationException))), Times.Once());   
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.InsertStudentAsync(It.IsAny<Student>()), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
