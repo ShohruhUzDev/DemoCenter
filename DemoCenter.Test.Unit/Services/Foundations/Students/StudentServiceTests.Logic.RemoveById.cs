@@ -14,9 +14,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
         public async Task ShouldRemoveStudentByIdAsync()
         {
             //given
-            Guid randomStudentId= Guid.NewGuid();
+            Guid randomStudentId = Guid.NewGuid();
             Guid inputStudentId = randomStudentId;
-            Student randomStudent=CreateRandomStudent();
+            Student randomStudent = CreateRandomStudent();
             Student storageStudent = randomStudent;
             Student expectedInputStudent = storageStudent;
             Student deletedStudent = expectedInputStudent;
@@ -29,7 +29,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             broker.DeleteStudentAsync(expectedInputStudent)).ReturnsAsync(deletedStudent);
 
             //when
-            Student actualStudent=await this.studentService.RemoveStudentByIdAsync(inputStudentId);
+            Student actualStudent = await this.studentService.RemoveStudentByIdAsync(inputStudentId);
 
             //then
             actualStudent.Should().BeEquivalentTo(expectedStudent);
@@ -38,11 +38,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             broker.SelectStudentByIdAsync(inputStudentId), Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
-            broker.DeleteStudentAsync(expectedInputStudent), Times.Once()); 
+            broker.DeleteStudentAsync(expectedInputStudent), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();   
-            this.loggingBrokerMock.VerifyNoOtherCalls();    
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

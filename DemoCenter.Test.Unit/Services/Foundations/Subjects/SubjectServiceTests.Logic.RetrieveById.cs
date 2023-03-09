@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DemoCenter.Models.Subjects;
 using FluentAssertions;
@@ -19,16 +16,16 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             //given
             Guid randomSubjectId = Guid.NewGuid();
             Guid inputSubjectId = randomSubjectId;
-            Subject randomSubject=CreateRandomSubject();
+            Subject randomSubject = CreateRandomSubject();
             Subject inputSubject = randomSubject;
             Subject storedSubject = inputSubject;
-            Subject expectedSubject = storedSubject.DeepClone() ;
+            Subject expectedSubject = storedSubject.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
             broker.SelectSubjectByIdAsync(inputSubjectId)).ReturnsAsync(storedSubject);
-            
+
             //when
-            Subject actualSubject= await 
+            Subject actualSubject = await
                 this.subjectService.RetrieveSubjectByIdAsync(inputSubjectId);
 
             //then
@@ -39,7 +36,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();    
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

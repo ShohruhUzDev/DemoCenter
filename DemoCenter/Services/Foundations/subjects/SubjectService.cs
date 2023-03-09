@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
+using DemoCenter.Models.Students;
 using DemoCenter.Models.Subjects;
 
 namespace DemoCenter.Services.Foundations.Subjects
@@ -27,7 +28,8 @@ namespace DemoCenter.Services.Foundations.Subjects
         public ValueTask<Subject> AddSubjectAsync(Subject subject) =>
         TryCatch(async () =>
         {
-            ValidateSubjectNotNull(subject);
+            ValidateSubjectOnAdd(subject);
+
             return await this.storageBroker.InsertSubjectAsync(subject);
 
         });
@@ -37,6 +39,17 @@ namespace DemoCenter.Services.Foundations.Subjects
 
         public async ValueTask<Subject> RetrieveSubjectByIdAsync(Guid subjectId) =>
            await this.storageBroker.SelectSubjectByIdAsync(subjectId);
+        
+        public ValueTask<Subject> ModifySubjectAsync(Subject subject) =>
+            TryCatch(async () =>
+            {
+            ValidateSubjectOnModify(subject);
+            Subject maybeSubject = await
+                   this.storageBroker.SelectSubjectByIdAsync(subject.Id);
+
+            return await this.storageBroker.UpdateSubjectAsync(subject);
+        });
+        
         public async ValueTask<Subject> RemoveSubjectByIdAsync(Guid subjectId)
         {
             Subject maybeSubject = await
@@ -44,5 +57,6 @@ namespace DemoCenter.Services.Foundations.Subjects
 
             return await this.storageBroker.DeleteSubjectAsync(maybeSubject);
         }
+
     }
 }

@@ -7,7 +7,7 @@ namespace DemoCenter.Services.Foundations.Groups
 {
     public partial class GroupService
     {
-        private  delegate ValueTask<Group> ReturningGroupFunction();
+        private delegate ValueTask<Group> ReturningGroupFunction();
 
         private async ValueTask<Group> TryCatch(ReturningGroupFunction returningGroupFunction)
         {
@@ -17,9 +17,12 @@ namespace DemoCenter.Services.Foundations.Groups
             }
             catch (NullGroupException nullGroupException)
             {
-               throw CreateAndLogValidationException(nullGroupException);
+                throw CreateAndLogValidationException(nullGroupException);
             }
-
+            catch (InvalidGroupException invalidGroupException)
+            {
+                throw CreateAndLogValidationException(invalidGroupException);
+            }
         }
 
         private GroupValidationException CreateAndLogValidationException(Xeption exception)

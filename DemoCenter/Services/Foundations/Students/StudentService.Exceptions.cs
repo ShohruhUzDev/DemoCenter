@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 using Xeptions;
@@ -21,11 +20,15 @@ namespace DemoCenter.Services.Foundations.Students
 
                 throw CreateAndLogValidationException(nullStudentException);
             }
+            catch (InvalidStudentException invalidStudentException)
+            {
+                throw CreateAndLogValidationException(invalidStudentException);
+            }
         }
 
         private StudentValidationException CreateAndLogValidationException(Xeption exception)
         {
-           var studentValidationException=new StudentValidationException(exception);
+            var studentValidationException = new StudentValidationException(exception);
             this.loggingBroker.LogError(studentValidationException);
 
             throw studentValidationException;

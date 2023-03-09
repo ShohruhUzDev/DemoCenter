@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DemoCenter.Models.Subjects;
 using FluentAssertions;
@@ -17,11 +14,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         public async Task ShouldRemoveSubjectByIdAsync()
         {
             //given
-            Guid randomSubjectId= Guid.NewGuid();
+            Guid randomSubjectId = Guid.NewGuid();
             Guid inputSubjectId = randomSubjectId;
-            Subject randomSubject=CreateRandomSubject();
+            Subject randomSubject = CreateRandomSubject();
             Subject storageSubject = randomSubject;
-            Subject expectedInputSubject=storageSubject;
+            Subject expectedInputSubject = storageSubject;
             Subject deletedSubject = expectedInputSubject;
             Subject expectedSubject = deletedSubject.DeepClone();
 
@@ -29,19 +26,19 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             broker.SelectSubjectByIdAsync(inputSubjectId)).ReturnsAsync(storageSubject);
 
             this.storageBrokerMock.Setup(broker =>
-            broker.DeleteSubjectAsync(expectedInputSubject)).ReturnsAsync(deletedSubject);  
+            broker.DeleteSubjectAsync(expectedInputSubject)).ReturnsAsync(deletedSubject);
 
             //when
-            Subject actualSubject=await 
+            Subject actualSubject = await
                 this.subjectService.RemoveSubjectByIdAsync(inputSubjectId);
 
             //then
             actualSubject.Should().BeEquivalentTo(expectedSubject);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
             broker.SelectSubjectByIdAsync(inputSubjectId), Times.Once());
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
             broker.DeleteSubjectAsync(expectedInputSubject), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();

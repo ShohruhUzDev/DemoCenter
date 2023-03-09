@@ -27,7 +27,7 @@ namespace DemoCenter.Services.Foundations.Teachers
         public ValueTask<Teacher> AddTeacherAsync(Teacher teacher) =>
             TryCatch(async () =>
             {
-                ValidationTeacherNotNull(teacher);
+                ValidationTeacherOnAdd(teacher);
                 return await storageBroker.InsertTeacherAsync(teacher);
 
             });
@@ -38,13 +38,17 @@ namespace DemoCenter.Services.Foundations.Teachers
 
         public async ValueTask<Teacher> RetrieveTeacherByIdAsync(Guid teacherId) =>
            await this.storageBroker.SelectTeacherByIdAsync(teacherId);
-        public async ValueTask<Teacher> ModifyTeacherAsync(Teacher teacher)
-        {
-            Teacher maybeTeacher =
-                await this.storageBroker.SelectTeacherByIdAsync(teacher.Id);
+        public ValueTask<Teacher> ModifyTeacherAsync(Teacher teacher) =>
+            TryCatch(async () =>
+            {
+                ValidationTeacherOnModify(teacher);
+                Teacher maybeTeacher =
+                    await this.storageBroker.SelectTeacherByIdAsync(teacher.Id);
 
-            return await this.storageBroker.UpdateTeacherAsync(teacher);
-        }
+                return await this.storageBroker.UpdateTeacherAsync(teacher);
+
+            });
+        
         public async ValueTask<Teacher> RemoveTeacherByIdAsync(Guid teacherid)
         {
             Teacher maybeTeacher = await

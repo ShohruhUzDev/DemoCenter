@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using FluentAssertions;
@@ -23,21 +20,21 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             Group storedGroup = randomGroup;
             Group expectedGroup = storedGroup.DeepClone();
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
             broker.SelectGroupByIdAsync(inputGroupId)).ReturnsAsync(storedGroup);
 
             //when
-           Group actualGroup= await this.groupService.RetrieveGroupByIdAsync(inputGroupId);
+            Group actualGroup = await this.groupService.RetrieveGroupByIdAsync(inputGroupId);
 
             //then
             actualGroup.Should().BeEquivalentTo(expectedGroup);
 
-            this.storageBrokerMock.Verify(broker=>
-            broker.SelectGroupByIdAsync(inputGroupId), Times.Once());   
+            this.storageBrokerMock.Verify(broker =>
+            broker.SelectGroupByIdAsync(inputGroupId), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();    
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();   
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

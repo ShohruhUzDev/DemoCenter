@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using DemoCenter.Models.Subjects;
 using FluentAssertions;
 using Moq;
@@ -10,7 +6,7 @@ using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 {
-    public partial  class SubjectServiceTests
+    public partial class SubjectServiceTests
     {
         [Fact]
         public void ShouldRetrieveAllSubjects()
@@ -20,22 +16,22 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             IQueryable<Subject> storageSubjects = randomSubjects;
             IQueryable<Subject> expectedSubjects = storageSubjects;
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
             broker.SelectAllSubjects()).Returns(storageSubjects);
 
             //when
-            IQueryable<Subject> actualSubjects=
+            IQueryable<Subject> actualSubjects =
                 this.subjectService.RetrieveAllSubjects();
 
             //then
             actualSubjects.Should().BeEquivalentTo(expectedSubjects);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectAllSubjects(),Times.Once()); 
-            
+            broker.SelectAllSubjects(), Times.Once());
+
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();   
-            this.loggingBrokerMock.VerifyNoOtherCalls();    
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
