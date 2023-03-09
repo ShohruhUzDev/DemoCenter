@@ -26,6 +26,11 @@ namespace DemoCenter.Services.Foundations.Groups
                     Parameter:nameof(Group.CreatedDate)));
         }
 
+        private void ValidateGroupOnModify(Group group)
+        {
+            ValidationGroupNotNull(group);
+        }
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,
