@@ -25,6 +25,10 @@ namespace DemoCenter.Services.Foundations.Subjects
                     Parameter: nameof(Subject.CreatedDate)));
         }
 
+        private void ValidateSubjectOnModify(Subject subject)
+        {
+            ValidateSubjectNotNull(subject);
+        }
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,
