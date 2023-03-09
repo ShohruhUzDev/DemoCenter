@@ -43,7 +43,7 @@ namespace DemoCenter.Services.Foundations.Subjects
         public ValueTask<Subject> ModifySubjectAsync(Subject subject) =>
             TryCatch(async () =>
             {
-           // ValidateStudentOnModify(student);
+            ValidateSubjectOnModify(subject);
             Subject maybeSubject = await
                    this.storageBroker.SelectSubjectByIdAsync(subject.Id);
 
