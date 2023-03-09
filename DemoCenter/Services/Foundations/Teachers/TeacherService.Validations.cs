@@ -24,6 +24,11 @@ namespace DemoCenter.Services.Foundations.Teachers
                 Parameter: nameof(Teacher.CreatedDate)));
 
         }
+
+        public void ValidationTeacherOnModify(Teacher teacher)
+        {
+            ValidationTeacherNotNull(teacher);
+        }
         public static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,
