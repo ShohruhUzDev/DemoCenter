@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Reflection.Metadata;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 
@@ -15,7 +17,14 @@ namespace DemoCenter.Services.Foundations.Subjects
                 (Rule: IsInvalid(subject.SubjectName), Parameter: nameof(Subject.SubjectName)),
                 (Rule: IsInvalid(subject.Price), Parameter: nameof(Subject.Price)),
                 (Rule: IsInvalid(subject.CreatedDate), Parameter: nameof(Subject.CreatedDate)),
-                (Rule: IsInvalid(subject.UpdatedDate), Parameter: nameof(Subject.UpdatedDate)));
+                (Rule: IsInvalid(subject.UpdatedDate), Parameter: nameof(Subject.UpdatedDate)),
+
+                (Rule:IsInvalid(
+                    firstDate:subject.CreatedDate,
+                    secondDate:subject.UpdatedDate,
+                    secondDateName:nameof(Subject.UpdatedDate)),
+                    
+                    Parameter:nameof(Subject.CreatedDate))) ;
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -28,6 +37,14 @@ namespace DemoCenter.Services.Foundations.Subjects
             Condition = String.IsNullOrWhiteSpace(text),
             Message = "Text is required"
         };
+        private static dynamic IsInvalid(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as {secondDateName}"
+            };
         private static dynamic IsInvalid(int price) => new
         {
             Condition = price == default,

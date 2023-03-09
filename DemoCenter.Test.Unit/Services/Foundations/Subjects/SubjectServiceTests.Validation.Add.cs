@@ -115,7 +115,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 
             invalidSubjectException.AddData(
                 key:nameof(Subject.CreatedDate),
-                values:$"Date is not same as{nameof(Subject.UpdatedDate)}");
+                values:$"Date is not same as {nameof(Subject.UpdatedDate)}");
 
             var expectedSubjectValidationExeption = new SubjectValidationException(invalidSubjectException);
 
