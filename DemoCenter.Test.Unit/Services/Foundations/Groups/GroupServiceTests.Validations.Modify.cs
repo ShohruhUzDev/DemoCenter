@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
 using FluentAssertions;
@@ -23,7 +19,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             var expectedGroupValidationException = new GroupValidationException(nullGroupException);
 
             //when
-            ValueTask<Group> onModifyGroupTask=this.groupService.ModifyGroupAsync(nullGroup);
+            ValueTask<Group> onModifyGroupTask = this.groupService.ModifyGroupAsync(nullGroup);
 
             GroupValidationException actualGroupValidationException =
                 await Assert.ThrowsAsync<GroupValidationException>(onModifyGroupTask.AsTask);
@@ -31,10 +27,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             //then
             actualGroupValidationException.Should().BeEquivalentTo(expectedGroupValidationException);
 
-            this.loggingBrokerMock.Verify(broker=>
-                broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException))),Times.Once);
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateGroupAsync(It.IsAny<Group>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

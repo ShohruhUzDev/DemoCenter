@@ -60,8 +60,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             var invalidTeacherException = new InvalidTeacherException();
 
             invalidTeacherException.AddData(
-                key:nameof(Teacher.Id),
-                values:"Id is required");
+                key: nameof(Teacher.Id),
+                values: "Id is required");
 
             invalidTeacherException.AddData(
                 key: nameof(Teacher.FirstName),
@@ -87,21 +87,21 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 new TeacherValidationException(invalidTeacherException);
 
             //when
-            ValueTask<Teacher> addTeacherTask = 
+            ValueTask<Teacher> addTeacherTask =
                  this.teacherService.AddTeacherAsync(invalidTeacher);
 
-            TeacherValidationException actualTeacherValidationException=
+            TeacherValidationException actualTeacherValidationException =
                 await Assert.ThrowsAsync<TeacherValidationException>(addTeacherTask.AsTask);
 
             //then
             actualTeacherValidationException.Should()
                 .BeEquivalentTo(expectedTeacherValidationException);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTeacherValidationException))), Times.Once());
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.InsertTeacherAsync(It.IsAny<Teacher>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -116,7 +116,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             DateTimeOffset randomDate = GetRandomDateTimeOffset();
             Teacher randomTeacher = CreateRandomTeacher(randomDate);
             Teacher invalidTeacher = randomTeacher;
-            invalidTeacher.UpdatedDate=randomDate.AddMinutes(randomMinutes);
+            invalidTeacher.UpdatedDate = randomDate.AddMinutes(randomMinutes);
             var invalidTeacherException = new InvalidTeacherException();
 
             invalidTeacherException.AddData(
@@ -134,10 +134,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             //then
             actualTeacherValidationException.Should().BeEquivalentTo(expectedTeacherValidationException);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedTeacherValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.InsertTeacherAsync(It.IsAny<Teacher>()), Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

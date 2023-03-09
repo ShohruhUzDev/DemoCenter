@@ -36,7 +36,7 @@ namespace DemoCenter.Services.Foundations.Students
         public IQueryable<Student> RetrieveAllStudents() =>
             this.storageBroker.SelectAllStudents();
 
-        public ValueTask<Student> RetrieveStudentByIdAsync(Guid studentId)=>
+        public ValueTask<Student> RetrieveStudentByIdAsync(Guid studentId) =>
             this.storageBroker.SelectStudentByIdAsync(studentId);
 
         public ValueTask<Student> ModifyStudentAsync(Student student) =>
@@ -49,7 +49,7 @@ namespace DemoCenter.Services.Foundations.Students
 
                 return await this.storageBroker.UpdateStudentAsync(student);
             });
-     
+
         public async ValueTask<Student> RemoveStudentByIdAsync(Guid studentId)
         {
             Student maybeStudent =

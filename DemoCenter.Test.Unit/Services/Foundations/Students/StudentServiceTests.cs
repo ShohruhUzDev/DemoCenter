@@ -31,16 +31,16 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
-        private static int GetRandomNegativeNumber()=>
-            -1* new IntRange(min:2, max:99).GetValue();
-        private static Student CreateRandomStudent(DateTimeOffset dates)=>
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 99).GetValue();
+        private static Student CreateRandomStudent(DateTimeOffset dates) =>
             CreateStudentFiller(dates).Create();
-      
+
         private static Student CreateRandomModifyStudent(DateTimeOffset dates)
         {
             int randomDaysInPast = GetRandomNegativeNumber();
-            Student randomStudent=CreateRandomStudent(dates);
-            randomStudent.CreatedDate=randomStudent.CreatedDate.AddDays(randomDaysInPast);
+            Student randomStudent = CreateRandomStudent(dates);
+            randomStudent.CreatedDate = randomStudent.CreatedDate.AddDays(randomDaysInPast);
             return randomStudent;
         }
 
@@ -49,8 +49,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             return CreateStudentFiller(dates: GetRandomDateTimeOffset())
                 .Create(count: GetRandomNumber()).AsQueryable();
         }
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException)=>
-            actualException=>actualException.SameExceptionAs(expectedException);
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 99).GetValue();
         private static Student CreateRandomStudent() =>

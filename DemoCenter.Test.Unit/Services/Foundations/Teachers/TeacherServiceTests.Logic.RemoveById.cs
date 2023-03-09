@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DemoCenter.Models.Teachers;
 using FluentAssertions;
@@ -17,9 +14,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldRemoveSubjectByIdAsync()
         {
             //given
-            Guid randomId= Guid.NewGuid();
+            Guid randomId = Guid.NewGuid();
             Guid inputTeacherId = randomId;
-            Teacher randomTeacher=CreateRandomTeacher();
+            Teacher randomTeacher = CreateRandomTeacher();
             Teacher storageTeacher = randomTeacher;
             Teacher expectedInputTeacher = storageTeacher;
             Teacher deletedTeacher = expectedInputTeacher;
@@ -32,21 +29,21 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             broker.DeleteTeacherAsync(expectedInputTeacher)).ReturnsAsync(deletedTeacher);
 
             //when
-            Teacher actualTeacher =await
+            Teacher actualTeacher = await
                 this.teacherService.RemoveTeacherByIdAsync(inputTeacherId);
 
             //then
             actualTeacher.Should().BeEquivalentTo(expectedTeacher);
 
-            this.storageBrokerMock.Verify(broker=>
-            broker.SelectTeacherByIdAsync(inputTeacherId), Times.Once());   
+            this.storageBrokerMock.Verify(broker =>
+            broker.SelectTeacherByIdAsync(inputTeacherId), Times.Once());
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
             broker.DeleteTeacherAsync(expectedInputTeacher), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();    
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

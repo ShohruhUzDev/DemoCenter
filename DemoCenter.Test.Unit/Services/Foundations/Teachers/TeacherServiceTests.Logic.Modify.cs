@@ -30,7 +30,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 broker.SelectTeacherByIdAsync(teacherId))
                     .ReturnsAsync(storageTeacher);
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
                 broker.UpdateTeacherAsync(inputTeacher))
                     .ReturnsAsync(updatedTeacher);
 
@@ -41,18 +41,18 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             //then
             actualTeacher.Should().BeEquivalentTo(expectedTeacher);
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Never);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeacherByIdAsync(teacherId), Times.Once());
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTeacherAsync(inputTeacher), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();           
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

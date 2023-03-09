@@ -17,7 +17,7 @@ namespace DemoCenter.Services.Foundations.Subjects
             }
             catch (NullSubjectException nulSubjectException)
             {
-                
+
                 throw CreateAndLogValidationExcetion(nulSubjectException);
             }
             catch (InvalidSubjectException invalidSubjectException)

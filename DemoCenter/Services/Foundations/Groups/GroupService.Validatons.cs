@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.Reflection.Metadata;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
 
@@ -17,13 +15,13 @@ namespace DemoCenter.Services.Foundations.Groups
                 (Rule: IsInvalid(group.GroupName), Parameter: nameof(Group.GroupName)),
                 (Rule: IsInvalid(group.UpdatedDate), Parameter: nameof(Group.UpdatedDate)),
                 (Rule: IsInvalid(group.CreatedDate), Parameter: nameof(Group.CreatedDate)),
-           
-                (Rule:IsInvalid(
-                    firstDate:group.CreatedDate,
-                    secondDate:group.UpdatedDate,
-                    secondDateName:nameof(Group.UpdatedDate)),
-                    
-                    Parameter:nameof(Group.CreatedDate)));
+
+                (Rule: IsInvalid(
+                    firstDate: group.CreatedDate,
+                    secondDate: group.UpdatedDate,
+                    secondDateName: nameof(Group.UpdatedDate)),
+
+                    Parameter: nameof(Group.CreatedDate)));
         }
 
         private void ValidateGroupOnModify(Group group)

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.Reflection.Metadata;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 
@@ -19,12 +17,12 @@ namespace DemoCenter.Services.Foundations.Subjects
                 (Rule: IsInvalid(subject.CreatedDate), Parameter: nameof(Subject.CreatedDate)),
                 (Rule: IsInvalid(subject.UpdatedDate), Parameter: nameof(Subject.UpdatedDate)),
 
-                (Rule:IsInvalid(
-                    firstDate:subject.CreatedDate,
-                    secondDate:subject.UpdatedDate,
-                    secondDateName:nameof(Subject.UpdatedDate)),
-                    
-                    Parameter:nameof(Subject.CreatedDate))) ;
+                (Rule: IsInvalid(
+                    firstDate: subject.CreatedDate,
+                    secondDate: subject.UpdatedDate,
+                    secondDateName: nameof(Subject.UpdatedDate)),
+
+                    Parameter: nameof(Subject.CreatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new

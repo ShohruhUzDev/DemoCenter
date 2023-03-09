@@ -2,12 +2,12 @@
 
 namespace DemoCenter.Models.Subjects.Exceptions
 {
-    public class NullSubjectException :Xeption
+    public class NullSubjectException : Xeption
     {
         public NullSubjectException() :
-            base(message : "Subject is null")
+            base(message: "Subject is null")
         {
-            
+
         }
     }
 }

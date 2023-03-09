@@ -2,11 +2,11 @@
 
 namespace DemoCenter.Models.Groups.Exceptions
 {
-    public class InvalidGroupException :Xeption
+    public class InvalidGroupException : Xeption
     {
         public InvalidGroupException()
-            :base(message : "Group is invalid.")
-        {           
+            : base(message: "Group is invalid.")
+        {
         }
     }
 }

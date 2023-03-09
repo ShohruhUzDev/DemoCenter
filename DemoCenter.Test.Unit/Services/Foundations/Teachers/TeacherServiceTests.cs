@@ -23,11 +23,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
-            this.loggingBrokerMock = new Mock<ILoggingBroker>();    
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.teacherService = new TeacherService(
                 storageBroker: this.storageBrokerMock.Object,
-                dateTimeBroker :this.dateTimeBrokerMock.Object,
+                dateTimeBroker: this.dateTimeBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
@@ -37,8 +37,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         private DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
-        private static int GetRandomNegativeNumber()=>
-            -1 * new IntRange(min:2, max:10).GetValue();
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 10).GetValue();
 
         private static Teacher CreateRandomTeacher(DateTimeOffset dates) =>
             CreateTeacherFiller(dates).Create();
@@ -48,19 +48,19 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             int randomDaysInPast = GetRandomNegativeNumber();
             Teacher randomTeacher = CreateRandomTeacher(dates);
 
-            randomTeacher.CreatedDate=randomTeacher.CreatedDate
+            randomTeacher.CreatedDate = randomTeacher.CreatedDate
                 .AddDays(randomDaysInPast);
 
             return randomTeacher;
         }
-          
+
         private IQueryable<Teacher> CreateRandomTeachers()
         {
-            return CreateTeacherFiller(dates:GetRandomDateTimeOffset())
-                .Create(count:GetRandomNumber()).AsQueryable();
+            return CreateTeacherFiller(dates: GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber()).AsQueryable();
         }
-        private static int GetRandomNumber()=>
-            new IntRange(min:2, max:99).GetValue();
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 99).GetValue();
         private Teacher CreateRandomTeacher() =>
             CreateTeacherFiller(GetRandomDateTimeOffset()).Create();
 

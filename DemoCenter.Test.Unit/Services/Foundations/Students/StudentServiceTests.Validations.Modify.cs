@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 using FluentAssertions;
@@ -20,10 +16,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             Student nullStudent = null;
             var nullStudentException = new NullStudentException();
 
-            var expectedStudentValidationException=new StudentValidationException(nullStudentException); 
+            var expectedStudentValidationException = new StudentValidationException(nullStudentException);
 
             //when
-            ValueTask<Student> onModifyStudentTask=this.studentService.ModifyStudentAsync(nullStudent);
+            ValueTask<Student> onModifyStudentTask = this.studentService.ModifyStudentAsync(nullStudent);
 
             StudentValidationException actualStudentValidationException =
                 await Assert.ThrowsAsync<StudentValidationException>(onModifyStudentTask.AsTask);
@@ -31,10 +27,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             //then
             actualStudentValidationException.Should().BeEquivalentTo(expectedStudentValidationException);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedStudentValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateStudentAsync(It.IsAny<Student>()), Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

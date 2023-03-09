@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DemoCenter.Models.Teachers;
 using FluentAssertions;
@@ -17,9 +14,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldRetrieveTeacherByIdAsync()
         {
             //given
-            Guid randomTeacherId= Guid.NewGuid();
+            Guid randomTeacherId = Guid.NewGuid();
             Guid inputTeacherId = randomTeacherId;
-            Teacher  inputTeacher=CreateRandomTeacher();
+            Teacher inputTeacher = CreateRandomTeacher();
             Teacher storedTeacher = inputTeacher;
             Teacher expectedTeacher = storedTeacher.DeepClone();
 
@@ -27,7 +24,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             broker.SelectTeacherByIdAsync(inputTeacherId)).ReturnsAsync(storedTeacher);
 
             //when
-            Teacher actualTeacher = await 
+            Teacher actualTeacher = await
                 this.teacherService.RetrieveTeacherByIdAsync(inputTeacherId);
 
             //then
@@ -38,7 +35,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();    
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

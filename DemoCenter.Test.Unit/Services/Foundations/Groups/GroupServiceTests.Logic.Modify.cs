@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using FluentAssertions;
@@ -17,22 +14,22 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldModifyGroupAsync()
         {
             //given
-            DateTimeOffset randomDate=GetRandomDateTimeOffset();
-            Group randomGroup=CreateRandomModifyGroup(randomDate);
+            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            Group randomGroup = CreateRandomModifyGroup(randomDate);
             Group inputGroup = randomGroup;
             Group storageGroup = inputGroup.DeepClone();
             storageGroup.UpdatedDate = randomGroup.CreatedDate;
             Group updatedGroup = inputGroup;
             Group expectedGroup = updatedGroup.DeepClone();
-            Guid groupId=inputGroup.Id;
+            Guid groupId = inputGroup.Id;
 
-            this.dateTimeBrokerMock.Setup(broker=>
+            this.dateTimeBrokerMock.Setup(broker =>
             broker.GetCurrenDateTime()).Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
             broker.SelectGroupByIdAsync(groupId)).ReturnsAsync(storageGroup);
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
             broker.UpdateGroupAsync(inputGroup)).ReturnsAsync(updatedGroup);
 
             //when
@@ -43,13 +40,13 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroup.Should().BeEquivalentTo(expectedGroup);
 
             this.dateTimeBrokerMock.Verify(broker =>
-            broker.GetCurrenDateTime(), Times.Never);    
+            broker.GetCurrenDateTime(), Times.Never);
 
-            this.storageBrokerMock.Verify(broker=>
-            broker.SelectGroupByIdAsync(groupId), Times.Once());    
+            this.storageBrokerMock.Verify(broker =>
+            broker.SelectGroupByIdAsync(groupId), Times.Once());
 
-            this.storageBrokerMock.Verify(broker=>
-            broker.UpdateGroupAsync(inputGroup), Times.Once()); 
+            this.storageBrokerMock.Verify(broker =>
+            broker.UpdateGroupAsync(inputGroup), Times.Once());
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

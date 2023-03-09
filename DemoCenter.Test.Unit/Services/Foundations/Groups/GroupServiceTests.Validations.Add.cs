@@ -120,11 +120,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             //then
             actualGroupValidationException.Should().BeEquivalentTo(expectedGroupValidationException);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException))), Times.Once());
 
-            this.storageBrokerMock.Verify(broker=>
-                broker.InsertGroupAsync(It.IsAny<Group>()), Times.Never());  
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertGroupAsync(It.IsAny<Group>()), Times.Never());
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

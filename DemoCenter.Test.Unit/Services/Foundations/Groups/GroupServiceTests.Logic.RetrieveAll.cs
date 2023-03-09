@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using DemoCenter.Models.Groups;
 using FluentAssertions;
 using Moq;
@@ -18,13 +14,13 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             //given
             IQueryable<Group> randomGroups = CreateRandomGroups();
             IQueryable<Group> storageGroups = randomGroups;
-            IQueryable<Group> expectedGroups= storageGroups;
+            IQueryable<Group> expectedGroups = storageGroups;
 
-           this.storageBrokerMock.Setup(broker =>
-           broker.SelectAllGroups()).Returns(storageGroups);
-            
+            this.storageBrokerMock.Setup(broker =>
+            broker.SelectAllGroups()).Returns(storageGroups);
+
             //when
-            IQueryable<Group> actualGroups=
+            IQueryable<Group> actualGroups =
                 this.groupService.RetrieveAllGroups();
 
             //then
@@ -34,8 +30,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectAllGroups(), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();   
-            this.loggingBrokerMock.VerifyNoOtherCalls();    
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

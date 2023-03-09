@@ -34,7 +34,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             broker.LogError(It.Is(SameExceptionAs(
                 expectedStudentValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
             broker.InsertStudentAsync(It.IsAny<Student>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -55,7 +55,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             {
                 FirstName = invalidString,
                 LastName = invalidString,
-                Phone=invalidString,
+                Phone = invalidString,
             };
             var invalidStudentException = new InvalidStudentException();
 
@@ -65,7 +65,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
 
             invalidStudentException.AddData(
                 key: nameof(Student.FirstName),
-                values: "Text is required"); 
+                values: "Text is required");
 
             invalidStudentException.AddData(
                 key: nameof(Student.LastName),
@@ -96,11 +96,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudentValidatioException.Should()
                 .BeEquivalentTo(expectedStudentValidationException);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedStudentValidationException))), Times.Once());   
+                    expectedStudentValidationException))), Times.Once());
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.InsertStudentAsync(It.IsAny<Student>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -111,11 +111,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
         public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameUpdatedDateAndLogItAsync()
         {
             //given
-            int randomMinutes=GetRandomNumber();
+            int randomMinutes = GetRandomNumber();
             DateTimeOffset randomDate = GetRandomDateTimeOffset();
-            Student randomStudent=CreateRandomStudent(randomDate);
+            Student randomStudent = CreateRandomStudent(randomDate);
             Student invalidStudent = randomStudent;
-            invalidStudent.UpdatedDate=randomDate.AddMinutes(randomMinutes);
+            invalidStudent.UpdatedDate = randomDate.AddMinutes(randomMinutes);
             var invalidStudentException = new InvalidStudentException();
 
             invalidStudentException.AddData(
@@ -125,7 +125,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             var expectedStudentValidationException = new StudentValidationException(invalidStudentException);
 
             //when
-            ValueTask<Student> addStudentTask=this.studentService.AddStudentAsync(invalidStudent);
+            ValueTask<Student> addStudentTask = this.studentService.AddStudentAsync(invalidStudent);
 
             var actualStudentValidationException =
                 await Assert.ThrowsAsync<StudentValidationException>(addStudentTask.AsTask);
@@ -133,7 +133,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             //then
             actualStudentValidationException.Should().BeEquivalentTo(expectedStudentValidationException);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedStudentValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>

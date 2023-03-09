@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using FluentAssertions;
@@ -17,11 +14,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
         public async Task ShouldRetrieveStudentByIdAsync()
         {
             //given
-            Guid randomStudentId= Guid.NewGuid();
+            Guid randomStudentId = Guid.NewGuid();
             Guid inputStudentId = randomStudentId;
-            Student randomStudent=CreateRandomStudent();
+            Student randomStudent = CreateRandomStudent();
             Student storedStudent = randomStudent;
-            Student  expectedStudent= storedStudent.DeepClone();
+            Student expectedStudent = storedStudent.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
             broker.SelectStudentByIdAsync(inputStudentId)).ReturnsAsync(storedStudent);
@@ -34,7 +31,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudent.Should().BeEquivalentTo(expectedStudent);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectStudentByIdAsync(inputStudentId), Times.Once); 
+            broker.SelectStudentByIdAsync(inputStudentId), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

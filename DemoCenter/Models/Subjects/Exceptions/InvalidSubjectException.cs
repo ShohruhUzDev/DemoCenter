@@ -2,12 +2,12 @@
 
 namespace DemoCenter.Models.Subjects.Exceptions
 {
-    public class InvalidSubjectException :Xeption
+    public class InvalidSubjectException : Xeption
     {
-        public InvalidSubjectException():
-            base(message:"Subject is invalid.")
+        public InvalidSubjectException() :
+            base(message: "Subject is invalid.")
         {
-            
+
         }
     }
 }
