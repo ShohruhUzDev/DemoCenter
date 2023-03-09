@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.Diagnostics;
-using System.Reflection.Metadata;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 
@@ -38,6 +35,7 @@ namespace DemoCenter.Services.Foundations.Teachers
             Condition = date == default,
             Message = "Value si required"
         };
+       
         private static void ValidationTeacherNotNull(Teacher teacher)
         {
             if (teacher is null)
@@ -50,10 +48,10 @@ namespace DemoCenter.Services.Foundations.Teachers
         {
             var invalidTeacherExceptioin = new InvalidTeacherException();
 
-            foreach((dynamic rule, string parameter) in validations)
+            foreach ((dynamic rule, string parameter) in validations)
 
             {
-                if(rule.Condition)
+                if (rule.Condition)
                 {
                     invalidTeacherExceptioin.UpsertDataList(
                         key: parameter,
