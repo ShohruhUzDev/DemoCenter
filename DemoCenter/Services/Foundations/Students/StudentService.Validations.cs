@@ -27,6 +27,10 @@ namespace DemoCenter.Services.Foundations.Students
 
         }
 
+        private static void ValidateStudentOnModify(Student student)
+        {
+            ValidationStudentNotNull(student);
+        }
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,
