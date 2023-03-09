@@ -46,6 +46,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 99).GetValue();
 
+        private Subject CreateRandomSubject(DateTimeOffset date) =>
+            CreateSubjectFiller(date).Create();
+
         private Subject CreateRandomSubject() =>
             CreateSubjectFiller(GetRandomDateTimeOffset()).Create();
 

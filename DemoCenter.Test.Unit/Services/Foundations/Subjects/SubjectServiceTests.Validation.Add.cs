@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 using FluentAssertions;
@@ -97,6 +98,43 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             this.storageBrokerMock.Verify(broker=>
                 broker.InsertSubjectAsync(It.IsAny<Subject>()), Times.Never);
 
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreatedTimeIsNotSameUpdatedTimeAndLogIstAsync()
+        {
+            //given
+            int randomMinutes = GetRandomNumber();
+            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            Subject randomSubject = CreateRandomSubject(randomDate);
+            Subject invalidSubject = randomSubject;
+            invalidSubject.UpdatedDate = randomDate.AddMinutes(randomMinutes);
+            var invalidSubjectException = new InvalidSubjectException();
+
+            invalidSubjectException.AddData(
+                key:nameof(Subject.CreatedDate),
+                values:$"Date is not same as{nameof(Subject.UpdatedDate)}");
+
+            var expectedSubjectValidationExeption = new SubjectValidationException(invalidSubjectException);
+
+            //when
+            ValueTask<Subject> addSubjectTask = this.subjectService.AddSubjectAsync(invalidSubject);
+
+            SubjectValidationException actualSubjectValidationException =
+                await Assert.ThrowsAsync<SubjectValidationException>(addSubjectTask.AsTask);
+
+            //then
+            actualSubjectValidationException.Should().BeEquivalentTo(expectedSubjectValidationExeption);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedSubjectValidationExeption))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.InsertSubjectAsync(It.IsAny<Subject>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
