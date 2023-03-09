@@ -27,7 +27,7 @@ namespace DemoCenter.Services.Foundations.Teachers
         public ValueTask<Teacher> AddTeacherAsync(Teacher teacher) =>
             TryCatch(async () =>
             {
-                ValidationTeacherNotNull(teacher);
+                ValidationTeacherOnAdd(teacher);
                 return await storageBroker.InsertTeacherAsync(teacher);
 
             });

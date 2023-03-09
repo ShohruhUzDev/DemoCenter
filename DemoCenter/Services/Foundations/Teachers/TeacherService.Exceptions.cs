@@ -20,6 +20,12 @@ namespace DemoCenter.Services.Foundations.Teachers
 
                 throw CreateTeAndLogValidationException(nullTeacherException);
             }
+            catch (InvalidTeacherException invalidTeacherException)
+            {
+
+                throw CreateTeAndLogValidationException(invalidTeacherException);
+            }
+
         }
 
         private TeacherValidationException CreateTeAndLogValidationException(Xeption xeption)
