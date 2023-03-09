@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 using FluentAssertions;
@@ -104,6 +105,43 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameUpdatedDateAndLogItAsync()
+        {
+            //given
+            int randomMinutes=GetRandomNumber();
+            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            Student randomStudent=CreateRandomStudent(randomDate);
+            Student invalidStudent = randomStudent;
+            invalidStudent.UpdatedDate=randomDate.AddMinutes(randomMinutes);
+            var invalidStudentException = new InvalidStudentException();
+
+            invalidStudentException.AddData(
+                key: nameof(Student.CreatedDate),
+                values: $"Date is not same as {nameof(Student.UpdatedDate)}");
+
+            var expectedStudentValidationException = new StudentValidationException(invalidStudentException);
+
+            //when
+            ValueTask<Student> addStudentTask=this.studentService.AddStudentAsync(invalidStudent);
+
+            var actualStudentValidationException =
+                await Assert.ThrowsAsync<StudentValidationException>(addStudentTask.AsTask);
+
+            //then
+            actualStudentValidationException.Should().BeEquivalentTo(expectedStudentValidationException);
+
+            this.loggingBrokerMock.Verify(broker=>
+                broker.LogError(It.Is(SameExceptionAs(expectedStudentValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertStudentAsync(It.IsAny<Student>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
