@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.NetworkInformation;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
+using DemoCenter.Models.Students;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Services.Foundations.Subjects;
 using Moq;
@@ -31,6 +33,13 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
+        private Subject CreateRandomModifySubjects(DateTimeOffset date)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Subject randomSubject = CreateRandomSubject(date);
+            randomSubject.CreatedDate = randomSubject.CreatedDate.AddDays(randomDaysInPast);
+            return randomSubject;
+        }
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
@@ -43,6 +52,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 .Create(count: GetRandomNumber()).AsQueryable();
         }
 
+        private static int GetRandomNegativeNumber() =>
+          -1* new IntRange(min: 2, max: 99).GetValue();
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 99).GetValue();
 
