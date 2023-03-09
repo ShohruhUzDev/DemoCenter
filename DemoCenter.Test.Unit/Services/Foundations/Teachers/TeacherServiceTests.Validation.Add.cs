@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 using FluentAssertions;
@@ -105,6 +106,44 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameUpdatedDateAndLogItAsync()
+        {
+            //given
+            int randomMinutes = GetRandomNumber();
+            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            Teacher randomTeacher = CreateRandomTeacher(randomDate);
+            Teacher invalidTeacher = randomTeacher;
+            invalidTeacher.UpdatedDate=randomDate.AddMinutes(randomMinutes);
+            var invalidTeacherException = new InvalidTeacherException();
+
+            invalidTeacherException.AddData(
+                key: nameof(Teacher.CreatedDate),
+                values: $"Date is not same as {nameof(Teacher.UpdatedDate)}");
+
+            var expectedTeacherValidationException = new TeacherValidationException(invalidTeacherException);
+
+            //when
+            ValueTask<Teacher> addTeacherTask = this.teacherService.AddTeacherAsync(invalidTeacher);
+
+            TeacherValidationException actualTeacherValidationException =
+                await Assert.ThrowsAsync<TeacherValidationException>(addTeacherTask.AsTask);
+
+            //then
+            actualTeacherValidationException.Should().BeEquivalentTo(expectedTeacherValidationException);
+
+            this.loggingBrokerMock.Verify(broker=>
+                broker.LogError(It.Is(SameExceptionAs(expectedTeacherValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.InsertTeacherAsync(It.IsAny<Teacher>()), Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+
         }
 
     }
