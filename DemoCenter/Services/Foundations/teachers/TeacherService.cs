@@ -36,8 +36,13 @@ namespace DemoCenter.Services.Foundations.Teachers
         public IQueryable<Teacher> RetrieveAllTeachers() =>
             this.storageBroker.SelectAllTeachers();
 
-        public async ValueTask<Teacher> RetrieveTeacherByIdAsync(Guid teacherId) =>
-           await this.storageBroker.SelectTeacherByIdAsync(teacherId);
+        public ValueTask<Teacher> RetrieveTeacherByIdAsync(Guid teacherId) =>
+            TryCatch(async () =>
+            {
+                ValidateTeacherId(teacherId);
+                return await this.storageBroker.SelectTeacherByIdAsync(teacherId);
+
+            });
         public ValueTask<Teacher> ModifyTeacherAsync(Teacher teacher) =>
             TryCatch(async () =>
             {
@@ -49,7 +54,7 @@ namespace DemoCenter.Services.Foundations.Teachers
 
             });
 
-        public  ValueTask<Teacher> RemoveTeacherByIdAsync(Guid teacherid) =>
+        public ValueTask<Teacher> RemoveTeacherByIdAsync(Guid teacherid) =>
             TryCatch(async () =>
             {
                 ValidateTeacherId(teacherid);
