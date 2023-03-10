@@ -40,8 +40,11 @@ namespace DemoCenter.Services.Foundations.Groups
             TryCatch(async () =>
             {
                 ValidateGroupId(groupId);
-               return await this.storageBroker.SelectGroupByIdAsync(groupId);
 
+                Group maybeGroup = await this.storageBroker.SelectGroupByIdAsync(groupId);
+                ValidateStorageGroupExist(maybeGroup, groupId);
+
+                return maybeGroup;
             });
         public ValueTask<Group> ModifyGroupAsync(Group group) =>
             TryCatch(async () =>

@@ -35,6 +35,13 @@ namespace DemoCenter.Services.Foundations.Groups
         private static void ValidateGroupId(Guid groupId) =>
             Validate((Rule: IsInvalid(groupId), Parameter:(nameof(Group.Id))));
 
+        private static void ValidateStorageGroupExist(Group maybeGroup, Guid groupId)
+        {
+            if(maybeGroup is null)
+            {
+                throw new NotFoundGroupException(groupId);
+            }
+        }
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,
