@@ -25,7 +25,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 new StudentValidationException(invalidStudentException);
 
             //when
-            ValueTask<Student> onRetrieveStudentTask=this.studentService.RetrieveStudentByIdAsync(invalidStudentId);
+            ValueTask<Student> onRetrieveStudentTask=
+                this.studentService.RetrieveStudentByIdAsync(invalidStudentId);
 
             StudentValidationException actualStudentValidationException =
                 await Assert.ThrowsAsync<StudentValidationException>(onRetrieveStudentTask.AsTask);
@@ -35,8 +36,15 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 .BeEquivalentTo(expectedStudentValidationException);
 
             this.loggingBrokerMock.Verify(broker=>
-                broker.LogError(It.Is(SameExceptionAs(expectedStudentValidationException))), Times.Once);
+                broker.LogError(It.Is(
+                    SameExceptionAs(expectedStudentValidationException))), Times.Once);
 
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStudentByIdAsync(It.IsAny<Guid>()), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
