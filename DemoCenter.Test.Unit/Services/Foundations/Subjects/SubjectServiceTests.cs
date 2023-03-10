@@ -40,7 +40,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             randomSubject.CreatedDate = randomSubject.CreatedDate.AddDays(randomDaysInPast);
             return randomSubject;
         }
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
         private DateTimeOffset GetRandomDateTimeOffset() =>
