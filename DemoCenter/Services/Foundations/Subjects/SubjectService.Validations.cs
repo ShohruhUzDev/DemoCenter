@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Reflection.Metadata;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 
@@ -29,6 +31,10 @@ namespace DemoCenter.Services.Foundations.Subjects
         {
             ValidateSubjectNotNull(subject);
         }
+
+        private static void ValidateSubjectId(Guid subjectId) =>
+            Validate((Rule: IsInvalid(subjectId), Parameter: nameof(Subject.Id)));
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,
