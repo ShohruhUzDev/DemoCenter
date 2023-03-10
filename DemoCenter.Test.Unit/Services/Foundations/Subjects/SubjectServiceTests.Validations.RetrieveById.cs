@@ -17,6 +17,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             Guid invalidSubjectId = Guid.Empty;
             var invalidSubjectException = new InvalidSubjectException();
 
+            invalidSubjectException.AddData(
+                key: nameof(Subject.Id),
+                values: "Id is required");
+
             var expectedSubjectValidationException = 
                 new SubjectValidationException(invalidSubjectException);
 
