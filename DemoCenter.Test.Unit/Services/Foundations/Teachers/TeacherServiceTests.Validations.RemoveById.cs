@@ -19,7 +19,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             invalidTeacheException.AddData(
                 key: nameof(Teacher.Id),
-                values: "id is required");
+                values: "Id is required");
 
             var expectedTeacherValidationException =
                 new TeacherValidationException(invalidTeacheException);

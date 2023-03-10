@@ -48,14 +48,15 @@ namespace DemoCenter.Services.Foundations.Teachers
                 return await this.storageBroker.UpdateTeacherAsync(teacher);
 
             });
-        
-        public async ValueTask<Teacher> RemoveTeacherByIdAsync(Guid teacherid)
-        {
-            Teacher maybeTeacher = await
-                   this.storageBroker.SelectTeacherByIdAsync(teacherid);
 
-            return await this.storageBroker.DeleteTeacherAsync(maybeTeacher);
-        }
+        public  ValueTask<Teacher> RemoveTeacherByIdAsync(Guid teacherid) =>
+            TryCatch(async () =>
+            {
+                ValidateTeacherId(teacherid);
+                Teacher maybeTeacher = await
+                       this.storageBroker.SelectTeacherByIdAsync(teacherid);
 
+                return await this.storageBroker.DeleteTeacherAsync(maybeTeacher);
+            });
     }
 }
