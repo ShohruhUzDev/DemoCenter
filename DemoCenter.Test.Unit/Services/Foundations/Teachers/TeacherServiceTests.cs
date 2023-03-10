@@ -31,7 +31,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
         private DateTimeOffset GetRandomDateTimeOffset() =>
