@@ -32,6 +32,7 @@ namespace DemoCenter.Services.Foundations.Subjects
             ValidateSubjectNotNull(subject);
         }
 
+            
         private static void ValidateSubjectId(Guid subjectId) =>
             Validate((Rule: IsInvalid(subjectId), Parameter: nameof(Subject.Id)));
 

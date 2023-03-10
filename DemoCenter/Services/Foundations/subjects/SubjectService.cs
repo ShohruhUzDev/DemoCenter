@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
-using DemoCenter.Models.Students;
 using DemoCenter.Models.Subjects;
 
 namespace DemoCenter.Services.Foundations.Subjects
@@ -37,18 +36,23 @@ namespace DemoCenter.Services.Foundations.Subjects
         public IQueryable<Subject> RetrieveAllSubjects() =>
             this.storageBroker.SelectAllSubjects();
 
-        public async ValueTask<Subject> RetrieveSubjectByIdAsync(Guid subjectId) =>
-           await this.storageBroker.SelectSubjectByIdAsync(subjectId);
-        
+        public ValueTask<Subject> RetrieveSubjectByIdAsync(Guid subjectId) =>
+            TryCatch(async () =>
+            {
+                ValidateSubjectId(subjectId);
+
+                return await this.storageBroker.SelectSubjectByIdAsync(subjectId);
+            });
+
         public ValueTask<Subject> ModifySubjectAsync(Subject subject) =>
             TryCatch(async () =>
             {
-            ValidateSubjectOnModify(subject);
-            Subject maybeSubject = await
-                   this.storageBroker.SelectSubjectByIdAsync(subject.Id);
+                ValidateSubjectOnModify(subject);
+                Subject maybeSubject = await
+                       this.storageBroker.SelectSubjectByIdAsync(subject.Id);
 
-            return await this.storageBroker.UpdateSubjectAsync(subject);
-        });
+                return await this.storageBroker.UpdateSubjectAsync(subject);
+            });
 
         public ValueTask<Subject> RemoveSubjectByIdAsync(Guid subjectId) =>
             TryCatch(async () =>

@@ -49,7 +49,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             return CreateStudentFiller(dates: GetRandomDateTimeOffset())
                 .Create(count: GetRandomNumber()).AsQueryable();
         }
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 99).GetValue();

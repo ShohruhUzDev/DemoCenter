@@ -23,6 +23,10 @@ namespace DemoCenter.Services.Foundations.Groups
             {
                 throw CreateAndLogValidationException(invalidGroupException);
             }
+            catch (NotFoundGroupException notFoundGroupException)
+            {
+                throw CreateAndLogValidationException(notFoundGroupException);
+            }
         }
 
         private GroupValidationException CreateAndLogValidationException(Xeption exception)
