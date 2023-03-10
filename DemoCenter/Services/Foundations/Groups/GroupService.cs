@@ -49,12 +49,13 @@ namespace DemoCenter.Services.Foundations.Groups
                 return await this.storageBroker.UpdateGroupAsync(group);
             });
 
-        public async ValueTask<Group> RemoveGroupByIdAsync(Guid groupId)
-        {
-            Group maybeGroup = await this.storageBroker.SelectGroupByIdAsync(groupId);
+        public ValueTask<Group> RemoveGroupByIdAsync(Guid groupId) =>
+            TryCatch(async () =>
+            {
+                ValidateGroupId(groupId);
+                Group maybeGroup = await this.storageBroker.SelectGroupByIdAsync(groupId);
 
-            return await this.storageBroker.DeleteGroupAsync(maybeGroup);
-        }
-
+                return await this.storageBroker.DeleteGroupAsync(maybeGroup);
+            });
     }
 }

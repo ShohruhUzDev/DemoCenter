@@ -31,6 +31,10 @@ namespace DemoCenter.Services.Foundations.Students
         {
             ValidationStudentNotNull(student);
         }
+
+        private static void ValidateStudentId(Guid studentId) =>
+            Validate((Rule: IsInvalid(studentId), Parameter: nameof(Student.Id)));
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,

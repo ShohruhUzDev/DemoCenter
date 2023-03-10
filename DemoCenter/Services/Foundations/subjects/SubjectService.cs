@@ -49,14 +49,15 @@ namespace DemoCenter.Services.Foundations.Subjects
 
             return await this.storageBroker.UpdateSubjectAsync(subject);
         });
-        
-        public async ValueTask<Subject> RemoveSubjectByIdAsync(Guid subjectId)
-        {
-            Subject maybeSubject = await
-                this.storageBroker.SelectSubjectByIdAsync(subjectId);
 
-            return await this.storageBroker.DeleteSubjectAsync(maybeSubject);
-        }
+        public ValueTask<Subject> RemoveSubjectByIdAsync(Guid subjectId) =>
+            TryCatch(async () =>
+            {
+                ValidateSubjectId(subjectId);
+                Subject maybeSubject = await
+                    this.storageBroker.SelectSubjectByIdAsync(subjectId);
 
+                return await this.storageBroker.DeleteSubjectAsync(maybeSubject);
+            });
     }
 }
