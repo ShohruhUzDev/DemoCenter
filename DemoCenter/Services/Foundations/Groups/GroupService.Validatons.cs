@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Data;
+using System.Reflection.Metadata;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
+using Microsoft.AspNetCore.Hosting.Server;
 
 namespace DemoCenter.Services.Foundations.Groups
 {
@@ -28,6 +31,9 @@ namespace DemoCenter.Services.Foundations.Groups
         {
             ValidationGroupNotNull(group);
         }
+
+        private static void ValidateGroupId(Guid groupId) =>
+            Validate((Rule: IsInvalid(groupId), Parameter:(nameof(Group.Id))));
 
         private static dynamic IsInvalid(Guid id) => new
         {
