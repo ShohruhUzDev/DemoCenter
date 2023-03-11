@@ -24,6 +24,10 @@ namespace DemoCenter.Services.Foundations.Students
             {
                 throw CreateAndLogValidationException(invalidStudentException);
             }
+            catch (NotFoundStudentException notFoundStudentException)
+            {
+                throw CreateAndLogValidationException(notFoundStudentException);
+            }
         }
 
         private StudentValidationException CreateAndLogValidationException(Xeption exception)

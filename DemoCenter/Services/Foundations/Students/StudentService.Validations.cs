@@ -32,6 +32,12 @@ namespace DemoCenter.Services.Foundations.Students
             ValidationStudentNotNull(student);
         }
 
+        private static void ValidateStorageStudentExist(Student student, Guid studentId)
+        {
+            if (student is null)
+                throw new NotFoundStudentException(studentId);
+        }
+
         private static void ValidateStudentId(Guid studentId) =>
             Validate((Rule: IsInvalid(studentId), Parameter: nameof(Student.Id)));
 

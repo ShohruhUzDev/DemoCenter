@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 using FluentAssertions;
+using Microsoft.Identity.Client;
 using Moq;
 using Xunit;
 
@@ -45,6 +46,40 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfStudentNotFoundAndLogItAsync()
+        {
+            //given
+            Guid someStudentId= Guid.NewGuid();
+            Student noStudent = null;
+            var notFounStudentException=new NotFoundStudentException(someStudentId);
+
+            var expectedStudentValidationException = 
+                new StudentValidationException(notFounStudentException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectStudentByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noStudent);
+
+            //when
+            ValueTask<Student> onRetrieveStudentTask=this.studentService.RetrieveStudentByIdAsync(someStudentId);
+
+            StudentValidationException actualStudentValidationException =
+                            await Assert.ThrowsAsync<StudentValidationException>(onRetrieveStudentTask.AsTask);
+
+            //then
+            actualStudentValidationException.Should().BeEquivalentTo(expectedStudentValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                    broker.SelectStudentByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedStudentValidationException))), Times.Once);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls(); 
         }
     }
 }
