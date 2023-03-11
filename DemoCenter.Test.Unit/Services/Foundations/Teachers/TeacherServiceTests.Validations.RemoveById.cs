@@ -45,5 +45,40 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRemoveIfTeacherNotFoundAndLogItAsync()
+        {
+            //given
+            Guid randomTeacherId= Guid.NewGuid();
+            Guid inputTeacherId = randomTeacherId;
+            Teacher noTeacher = null;
+            var notFoundTeacherException=new NotFoundTeacherException(inputTeacherId);
+
+            var expectedTeacherValidationException = 
+                new TeacherValidationException(notFoundTeacherException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTeacherByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noTeacher);
+
+            //when
+            ValueTask<Teacher> onRemoveTeacherTask = this.teacherService.RemoveTeacherByIdAsync(inputTeacherId);
+
+            TeacherValidationException actualTeacherValidationException =
+                await Assert.ThrowsAsync<TeacherValidationException>(onRemoveTeacherTask.AsTask);
+                           
+            //then
+            actualTeacherValidationException.Should().BeEquivalentTo(expectedTeacherValidationException);
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.SelectTeacherByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedTeacherValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
