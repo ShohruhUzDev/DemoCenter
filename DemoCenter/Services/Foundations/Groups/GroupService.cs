@@ -62,6 +62,7 @@ namespace DemoCenter.Services.Foundations.Groups
             {
                 ValidateGroupId(groupId);
                 Group maybeGroup = await this.storageBroker.SelectGroupByIdAsync(groupId);
+                ValidateStorageGroupExist(maybeGroup, groupId);
 
                 return await this.storageBroker.DeleteGroupAsync(maybeGroup);
             });
