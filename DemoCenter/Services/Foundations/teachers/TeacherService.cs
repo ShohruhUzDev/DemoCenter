@@ -63,6 +63,8 @@ namespace DemoCenter.Services.Foundations.Teachers
                 Teacher maybeTeacher = await
                        this.storageBroker.SelectTeacherByIdAsync(teacherid);
 
+                ValidateStoreageTeacherExist(maybeTeacher, teacherid);
+
                 return await this.storageBroker.DeleteTeacherAsync(maybeTeacher);
             });
     }
