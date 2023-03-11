@@ -61,10 +61,10 @@ namespace DemoCenter.Services.Foundations.Students
             TryCatch(async () =>
             {
                 ValidateStudentId(studentId);
-                Student maybeStudent =
-                    await this.storageBroker.SelectStudentByIdAsync(studentId);
-                return await this.storageBroker.DeleteStudentAsync(maybeStudent);
+                Student maybeStudent =await this.storageBroker.SelectStudentByIdAsync(studentId);
+                ValidateStorageStudentExist(maybeStudent, studentId);
 
+                return await this.storageBroker.DeleteStudentAsync(maybeStudent);
             });
     }
 }
