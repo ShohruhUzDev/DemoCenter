@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.Reflection.Metadata;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 
@@ -32,6 +30,11 @@ namespace DemoCenter.Services.Foundations.Teachers
             ValidationTeacherNotNull(teacher);
         }
 
+        private static void ValidateStoreageTeacherExist(Teacher teacher, Guid teacherId)
+        {
+            if (teacher is null)
+                throw new NotFoundTeacherException(teacherId);
+        }
         private static void ValidateTeacherId(Guid teacherId) =>
             Validate((Rule: IsInvalid(teacherId), Parameter: nameof(Teacher.Id)));
 

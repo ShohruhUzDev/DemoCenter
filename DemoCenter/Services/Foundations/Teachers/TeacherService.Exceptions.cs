@@ -25,6 +25,11 @@ namespace DemoCenter.Services.Foundations.Teachers
 
                 throw CreateTeAndLogValidationException(invalidTeacherException);
             }
+            catch (NotFoundTeacherException notFoundTeacherException)
+            {
+
+                throw CreateTeAndLogValidationException(notFoundTeacherException);
+            }
 
         }
 
