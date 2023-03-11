@@ -63,6 +63,8 @@ namespace DemoCenter.Services.Foundations.Subjects
                 Subject maybeSubject = await
                     this.storageBroker.SelectSubjectByIdAsync(subjectId);
 
+                ValidatStorageSubjectExist(maybeSubject, subjectId);
+
                 return await this.storageBroker.DeleteSubjectAsync(maybeSubject);
             });
     }

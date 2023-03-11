@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DemoCenter.Models.Students.Exceptions;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 using FluentAssertions;
@@ -41,6 +42,42 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 
             this.storageBrokerMock.Verify(broker =>
                 broker.DeleteSubjectAsync(It.IsAny<Subject>()), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRemoveIfStudentIsNotFoundAndLogItAsync()
+        {
+            //given
+            Guid randomSubjectId= Guid.NewGuid();
+            Guid inputSubjectId = randomSubjectId;
+            Subject noSubject = null;
+            var notFoundSubjectException = new NotFoundSubjectException(inputSubjectId);
+
+            var expectedSubjectValidationException =
+                new SubjectValidationException(notFoundSubjectException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSubjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noSubject);
+            
+            //when
+            ValueTask<Subject> onRemoveSubjectTask=this.subjectService.RemoveSubjectByIdAsync(inputSubjectId);
+
+            SubjectValidationException actualSubjectValidationException =
+                await Assert.ThrowsAsync<SubjectValidationException>(onRemoveSubjectTask.AsTask);
+
+            //then
+            actualSubjectValidationException.Should()
+                .BeEquivalentTo(expectedSubjectValidationException);
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.SelectSubjectByIdAsync(It.IsAny<Guid>()), Times.Once());
+
+            this.loggingBrokerMock.Verify(broker=>
+                broker.LogError(It.Is(SameExceptionAs(expectedSubjectValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

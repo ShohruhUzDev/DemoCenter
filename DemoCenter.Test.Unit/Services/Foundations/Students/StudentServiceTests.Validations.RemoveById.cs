@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 using FluentAssertions;
+using FluentAssertions.Specialized;
 using Moq;
 using Xunit;
 
@@ -41,6 +42,42 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();   
+        }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRemoveIfStudentIsNotFoundAndLogItAsync()
+        {
+            //given
+            Guid randomStudentId= Guid.NewGuid();
+            Guid inputStudentId = randomStudentId;
+            Student noStudent = null;
+            var notFoundStudentException=new NotFoundStudentException(inputStudentId);
+
+            var expectedStudentValidationException=
+                new StudentValidationException(notFoundStudentException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectStudentByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noStudent);
+
+            //when
+            ValueTask<Student> onRemoveStudentTask=this.studentService.RemoveStudentByIdAsync(inputStudentId);
+
+            StudentValidationException actualStudentValidationException =
+                await Assert.ThrowsAsync<StudentValidationException>(onRemoveStudentTask.AsTask);
+
+            //then
+           actualStudentValidationException.Should()
+                .BeEquivalentTo(expectedStudentValidationException);
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.SelectStudentByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedStudentValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
