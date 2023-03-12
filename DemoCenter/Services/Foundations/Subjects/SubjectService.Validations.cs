@@ -28,6 +28,22 @@ namespace DemoCenter.Services.Foundations.Subjects
         private void ValidateSubjectOnModify(Subject subject)
         {
             ValidateSubjectNotNull(subject);
+
+            Validate(
+              (Rule: IsInvalid(subject.Id), Parameter: nameof(Subject.Id)),
+              (Rule: IsInvalid(subject.SubjectName), Parameter: nameof(Subject.SubjectName)),
+              (Rule: IsInvalid(subject.Price), Parameter: nameof(Subject.Price)),
+              (Rule: IsInvalid(subject.CreatedDate), Parameter: nameof(Subject.CreatedDate)),
+              (Rule: IsInvalid(subject.UpdatedDate), Parameter: nameof(Subject.UpdatedDate)),
+              (Rule: IsNotRecent(subject.UpdatedDate), Parameter: nameof(Subject.UpdatedDate)),
+
+              (Rule: IsSame(
+                  firstDate: subject.UpdatedDate,
+                  secondDate: subject.CreatedDate,
+                  secondDateName: nameof(Subject.CreatedDate)),
+
+                  Parameter: nameof(Subject.UpdatedDate)));
+
         }
 
         private static void ValidatStorageSubjectExist(Subject subject, Guid subjectId)
@@ -39,6 +55,28 @@ namespace DemoCenter.Services.Foundations.Subjects
         private static void ValidateSubjectId(Guid subjectId) =>
             Validate((Rule: IsInvalid(subjectId), Parameter: nameof(Subject.Id)));
 
+        private dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrenDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Data;
-using System.Reflection.Metadata;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
-using Microsoft.AspNetCore.Hosting.Server;
 
 namespace DemoCenter.Services.Foundations.Groups
 {
@@ -18,7 +15,7 @@ namespace DemoCenter.Services.Foundations.Groups
                 (Rule: IsInvalid(group.GroupName), Parameter: nameof(Group.GroupName)),
                 (Rule: IsInvalid(group.UpdatedDate), Parameter: nameof(Group.UpdatedDate)),
                 (Rule: IsInvalid(group.CreatedDate), Parameter: nameof(Group.CreatedDate)),
-
+               
                 (Rule: IsInvalid(
                     firstDate: group.CreatedDate,
                     secondDate: group.UpdatedDate,
@@ -30,18 +27,77 @@ namespace DemoCenter.Services.Foundations.Groups
         private void ValidateGroupOnModify(Group group)
         {
             ValidationGroupNotNull(group);
+
+            Validate(
+              (Rule: IsInvalid(group.Id), Parameter: nameof(Group.Id)),
+              (Rule: IsInvalid(group.GroupName), Parameter: nameof(Group.GroupName)),
+              (Rule: IsInvalid(group.UpdatedDate), Parameter: nameof(Group.UpdatedDate)),
+              (Rule: IsInvalid(group.CreatedDate), Parameter: nameof(Group.CreatedDate)),
+              (Rule: IsNotRecent(group.UpdatedDate), Parameter: nameof(Group.UpdatedDate)),
+
+              (Rule: IsSame(
+                  firstDate: group.UpdatedDate,
+                  secondDate: group.CreatedDate,
+                  secondDateName: nameof(Group.CreatedDate)),
+
+                  Parameter: nameof(Group.UpdatedDate)));
         }
 
+        private void ValidateAgainstStorageGroupOnModify(Group inputGroup, Group storageGroup)
+        {
+            ValidateStorageGroupExist(storageGroup, inputGroup.Id);
+
+            Validate(
+                (Rule: IsSame(
+                    firstDate: inputGroup.UpdatedDate,
+                    secondDate: storageGroup.UpdatedDate,
+                    secondDateName: nameof(Group.UpdatedDate)),
+                    Parameter: nameof(Group.UpdatedDate)
+                    ));
+        }
+       
+        private static dynamic IsSame(
+           DateTimeOffset firstDate,
+           DateTimeOffset secondDate,
+           string secondDateName) => new
+           {
+               Condition = firstDate == secondDate,
+               Message = $"Date is the same as {secondDateName}"
+           };
+
+
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as {secondDateName}"
+            };
+
+
         private static void ValidateGroupId(Guid groupId) =>
-            Validate((Rule: IsInvalid(groupId), Parameter:(nameof(Group.Id))));
+            Validate((Rule: IsInvalid(groupId), Parameter: (nameof(Group.Id))));
 
         private static void ValidateStorageGroupExist(Group maybeGroup, Guid groupId)
         {
-            if(maybeGroup is null)
+            if (maybeGroup is null)
             {
                 throw new NotFoundGroupException(groupId);
             }
         }
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrenDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent."
+        };
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,

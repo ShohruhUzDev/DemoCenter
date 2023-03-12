@@ -40,7 +40,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroup.Should().BeEquivalentTo(expectedGroup);
 
             this.dateTimeBrokerMock.Verify(broker =>
-            broker.GetCurrenDateTime(), Times.Never);
+            broker.GetCurrenDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
             broker.SelectGroupByIdAsync(groupId), Times.Once());

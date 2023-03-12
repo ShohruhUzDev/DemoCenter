@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Reflection.Metadata;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 
@@ -28,6 +30,20 @@ namespace DemoCenter.Services.Foundations.Teachers
         public void ValidationTeacherOnModify(Teacher teacher)
         {
             ValidationTeacherNotNull(teacher);
+
+            Validate(
+                (Rule: IsInvalid(teacher.Id), Parameter: nameof(Teacher.Id)),
+                (Rule: IsInvalid(teacher.FirstName), Parameter: nameof(Teacher.FirstName)),
+                (Rule: IsInvalid(teacher.LastName), Parameter: nameof(Teacher.LastName)),
+                (Rule: IsInvalid(teacher.CreatedDate), Parameter: nameof(Teacher.CreatedDate)),
+                (Rule: IsInvalid(teacher.UpdatedDate), Parameter: nameof(Teacher.UpdatedDate)),
+                (Rule:IsNotRecent(teacher.UpdatedDate), Parameter:nameof(Teacher.UpdatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: teacher.UpdatedDate,
+                    secondDate: teacher.CreatedDate,
+                    secondDateName: nameof(Teacher.CreatedDate)),
+                Parameter: nameof(Teacher.UpdatedDate)));
         }
 
         private static void ValidateStoreageTeacherExist(Teacher teacher, Guid teacherId)
@@ -35,6 +51,29 @@ namespace DemoCenter.Services.Foundations.Teachers
             if (teacher is null)
                 throw new NotFoundTeacherException(teacherId);
         }
+
+        private dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrenDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message="Date is not recent"
+        };
+
         private static void ValidateTeacherId(Guid teacherId) =>
             Validate((Rule: IsInvalid(teacherId), Parameter: nameof(Teacher.Id)));
 

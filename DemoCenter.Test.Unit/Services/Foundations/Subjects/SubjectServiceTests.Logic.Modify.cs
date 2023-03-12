@@ -40,7 +40,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             actualSubject.Should().BeEquivalentTo(expectedSubject);
 
             this.dateTimeBrokerMock.Verify(broker=>
-                broker.GetCurrenDateTime(), Times.Never);
+                broker.GetCurrenDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker=>
                 broker.SelectSubjectByIdAsync(subjectid), Times.Once);

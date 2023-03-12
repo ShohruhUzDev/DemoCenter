@@ -40,7 +40,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudent.Should().BeEquivalentTo(expectedStudent);
 
             this.dateTimeBrokerMock.Verify(broker =>
-            broker.GetCurrenDateTime(), Times.Never);
+            broker.GetCurrenDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
             broker.SelectStudentByIdAsync(studentId), Times.Once);

@@ -27,9 +27,26 @@ namespace DemoCenter.Services.Foundations.Students
 
         }
 
-        private static void ValidateStudentOnModify(Student student)
+
+        private  void ValidateStudentOnModify(Student student)
         {
             ValidationStudentNotNull(student);
+
+            Validate(
+                (Rule: IsInvalid(student.Id), Parameter: nameof(Student.Id)),
+                (Rule: IsInvalid(student.FirstName), Parameter: nameof(Student.FirstName)),
+                (Rule: IsInvalid(student.LastName), Parameter: nameof(Student.LastName)),
+                (Rule: IsInvalid(student.Phone), Parameter: nameof(Student.Phone)),
+                (Rule: IsInvalid(student.CreatedDate), Parameter: nameof(Student.CreatedDate)),
+                (Rule: IsInvalid(student.UpdatedDate), Parameter: nameof(Student.UpdatedDate)),
+                (Rule: IsNotRecent(student.UpdatedDate), Parameter: nameof(student.UpdatedDate)),
+               
+                (Rule: IsSame(
+                    firstDate: student.UpdatedDate,
+                    secondDate: student.CreatedDate,
+                    secondDateName: nameof(Student.CreatedDate)),
+
+                    Parameter: nameof(Student.UpdatedDate)));
         }
 
         private static void ValidateStorageStudentExist(Student student, Guid studentId)
@@ -41,6 +58,28 @@ namespace DemoCenter.Services.Foundations.Students
         private static void ValidateStudentId(Guid studentId) =>
             Validate((Rule: IsInvalid(studentId), Parameter: nameof(Student.Id)));
 
+        private  dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private  bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = dateTimeBroker.GetCurrenDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,

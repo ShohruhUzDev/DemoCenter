@@ -50,10 +50,9 @@ namespace DemoCenter.Services.Foundations.Groups
             TryCatch(async () =>
             {
                 ValidateGroupOnModify(group);
-
                 var maybeGroup = await this.storageBroker.SelectGroupByIdAsync(group.Id);
-
-
+              //  ValidateAgainstStorageGroupOnModify(inputGroup: maybeGroup, storageGroup: group);
+               
                 return await this.storageBroker.UpdateGroupAsync(group);
             });
 

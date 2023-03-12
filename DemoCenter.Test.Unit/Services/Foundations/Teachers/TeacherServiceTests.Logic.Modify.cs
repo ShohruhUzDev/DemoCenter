@@ -42,7 +42,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             actualTeacher.Should().BeEquivalentTo(expectedTeacher);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Never);
+                broker.GetCurrenDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeacherByIdAsync(teacherId), Times.Once());
