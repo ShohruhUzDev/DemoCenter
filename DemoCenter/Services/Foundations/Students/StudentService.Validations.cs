@@ -40,6 +40,7 @@ namespace DemoCenter.Services.Foundations.Students
                 (Rule: IsInvalid(student.CreatedDate), Parameter: nameof(Student.CreatedDate)),
                 (Rule: IsInvalid(student.UpdatedDate), Parameter: nameof(Student.UpdatedDate)),
                 (Rule: IsNotRecent(student.UpdatedDate), Parameter: nameof(student.UpdatedDate)),
+               
                 (Rule: IsSame(
                     firstDate: student.UpdatedDate,
                     secondDate: student.CreatedDate,
