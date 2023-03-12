@@ -61,6 +61,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 values: "Text is required");
 
             invalidSubjectException.AddData(
+                key: nameof(Subject.Price),
+                values: "Value is required");
+
+
+            invalidSubjectException.AddData(
                 key: nameof(Subject.CreatedDate),
                 values: "Value is required");
 

@@ -32,6 +32,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             broker.InsertGroupAsync(inputGroup), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

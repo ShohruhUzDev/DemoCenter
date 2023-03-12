@@ -15,8 +15,7 @@ namespace DemoCenter.Services.Foundations.Groups
                 (Rule: IsInvalid(group.GroupName), Parameter: nameof(Group.GroupName)),
                 (Rule: IsInvalid(group.UpdatedDate), Parameter: nameof(Group.UpdatedDate)),
                 (Rule: IsInvalid(group.CreatedDate), Parameter: nameof(Group.CreatedDate)),
-                (Rule: IsNotRecent(group.UpdatedDate), Parameter: nameof(Group.UpdatedDate)),
-
+               
                 (Rule: IsInvalid(
                     firstDate: group.CreatedDate,
                     secondDate: group.UpdatedDate,
