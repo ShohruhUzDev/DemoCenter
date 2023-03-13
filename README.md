@@ -2,6 +2,6 @@
 OpenAI is a research organization that focuses on developing artificial intelligence (AI) in a safe and beneficial way for humanity. It was founded in 2015 by a group of prominent individuals in the tech industry, including Elon Musk, Sam Altman, and Greg Brockman. OpenAI's mission is to create AI systems that can reason, learn, and interact with the world in a way that benefits humans. They work on a wide range of projects, from natural language processing to robotics, and collaborate with researchers and experts from around the world. OpenAI also provides free access to some of its AI tools and technologies, and publishes research papers and findings to promote transparency and accountability in the field of AI.
 
 P.S. Generated with ChatGPT : )
-(https://www.youtube.com/watch?v=UmX4kyB2wfg)
+[![IMAGE ALT TEXT HERE]([https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg](https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3ALogo_youtube_ios_%2528cropped%2529.jpg&psig=AOvVaw29VRUouwr07fr7uMWkWENr&ust=1678802747831000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCOjP5t2J2f0CFQAAAAAdAAAAABAE))](https://www.youtube.com/watch?v=UmX4kyB2wfg)
 
 ![image](https://user-images.githubusercontent.com/66797803/224476294-916c3fba-edcd-417e-8a83-e5a6402bd486.png)
