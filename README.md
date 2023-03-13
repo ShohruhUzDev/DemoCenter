@@ -3,7 +3,7 @@
 
 P.S. Generated with ChatGPT : )
 
-[YOUTUBE] ((https://www.youtube.com/watch?v=ncrWAAD-Oas&ab_channel=JBLBassBoosted) “Musiqa”)
+[YOUTUBE] (https://www.youtube.com/watch?v=ncrWAAD-Oas&ab_channel=JBLBassBoosted “Musiqa”)
  
 
 
