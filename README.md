@@ -3,7 +3,7 @@
 
 P.S. Generated with ChatGPT : )
 
-![image](https://user-images.githubusercontent.com/66797803/224726498-fb48b6dd-1640-4331-9a6d-095653142752.png)[Dars](https://www.youtube.com/watch?v=UmX4kyB2wfg)
+### ![image](https://user-images.githubusercontent.com/66797803/224726498-fb48b6dd-1640-4331-9a6d-095653142752.png)[Dars](https://www.youtube.com/watch?v=UmX4kyB2wfg)
 
 
 
