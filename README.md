@@ -3,7 +3,14 @@
 
 P.S. Generated with ChatGPT : )
 
-### ![image](https://user-images.githubusercontent.com/66797803/224726498-fb48b6dd-1640-4331-9a6d-095653142752.png)[Dars](https://www.youtube.com/watch?v=UmX4kyB2wfg)
+<p align="center">
+  <img src="[your_relative_path_here](https://www.youtube.com/watch?v=UmX4kyB2wfg)" width="350" title="Darslar">
+  <img src="[your_relative_path_here_number_2_large_name](https://user-images.githubusercontent.com/66797803/224726498-fb48b6dd-1640-4331-9a6d-095653142752.png)" width="350" alt="accessibility text">
+</p>
+
+
+
+ ![image](https://user-images.githubusercontent.com/66797803/224726498-fb48b6dd-1640-4331-9a6d-095653142752.png)[Dars](https://www.youtube.com/watch?v=UmX4kyB2wfg)
 
 
 
