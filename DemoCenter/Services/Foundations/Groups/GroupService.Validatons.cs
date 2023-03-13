@@ -51,7 +51,7 @@ namespace DemoCenter.Services.Foundations.Groups
             Validate(
                 (Rule: IsNotSame(
                     firstDate: inputGroup.CreatedDate,
-                    secondDate: inputGroup.CreatedDate,
+                    secondDate: storageGroup.CreatedDate,
                     secondDateName: nameof(Group.CreatedDate)),
                 Parameter: nameof(Group.CreatedDate)),
 
