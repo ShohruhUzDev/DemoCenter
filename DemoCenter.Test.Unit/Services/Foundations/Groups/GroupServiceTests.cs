@@ -9,6 +9,7 @@ using DemoCenter.Services.Foundations.Groups;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Groups
 {
@@ -59,6 +60,18 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             randomGroup.CreatedDate = randomGroup.CreatedDate.AddDays(randomDaysAgo);
 
             return randomGroup;
+        }
+
+        public static TheoryData MinutsBeforeOrAfter()
+        {
+            int randomNumber = GetRandomNumber();
+            int randomNegativeNumber = GetRandomNegativeNumber();
+
+            return new TheoryData<int>
+            {
+                randomNumber,
+                randomNegativeNumber
+            };
         }
         private static Filler<Group> CreateGroupFiller(DateTimeOffset dates)
         {

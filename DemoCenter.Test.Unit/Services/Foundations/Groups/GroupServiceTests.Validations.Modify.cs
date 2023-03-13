@@ -4,6 +4,7 @@ using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
@@ -147,6 +148,53 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
 
             this.storageBrokerMock.Verify(broker=>
                 broker.SelectGroupByIdAsync(invalidGroup.Id), Times.Never());
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(MinutsBeforeOrAfter))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdateDateIsNotRecentAndLogItAsync(int minuts)
+        {
+            //given
+            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            Group randomGroup = CreateRandomGroup(dateTime);
+            Group inputGroup = randomGroup;
+            inputGroup.UpdatedDate = dateTime.AddMinutes(minuts);
+            var invalidGroupException=new InvalidGroupException();
+
+            invalidGroupException.AddData(
+                key: nameof(Group.UpdatedDate),
+                values: "Date is not recent.");
+
+            var expectedGroupValidationException=
+                new GroupValidationException(invalidGroupException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(dateTime);
+
+            //when
+            ValueTask<Group> modifyGroupTask=
+                this.groupService.ModifyGroupAsync(inputGroup);
+
+            GroupValidationException actualGroupValidationException =
+                await Assert.ThrowsAsync<GroupValidationException>(modifyGroupTask.AsTask);
+
+            //then
+            actualGroupValidationException.Should()
+                .BeEquivalentTo(expectedGroupValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptonAs(
+                    expectedGroupValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.SelectGroupByIdAsync(It.IsAny<Guid>()), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
