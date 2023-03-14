@@ -15,7 +15,7 @@ namespace DemoCenter.Services.Foundations.Groups
                 (Rule: IsInvalid(group.GroupName), Parameter: nameof(Group.GroupName)),
                 (Rule: IsInvalid(group.UpdatedDate), Parameter: nameof(Group.UpdatedDate)),
                 (Rule: IsInvalid(group.CreatedDate), Parameter: nameof(Group.CreatedDate)),
-               
+
                 (Rule: IsInvalid(
                     firstDate: group.CreatedDate,
                     secondDate: group.UpdatedDate,
@@ -41,6 +41,7 @@ namespace DemoCenter.Services.Foundations.Groups
                   secondDateName: nameof(Group.CreatedDate)),
 
                   Parameter: nameof(Group.UpdatedDate)));
+
         }
 
         private void ValidateAgainstStorageGroupOnModify(Group inputGroup, Group storageGroup)
@@ -48,6 +49,12 @@ namespace DemoCenter.Services.Foundations.Groups
             ValidateStorageGroupExist(storageGroup, inputGroup.Id);
 
             Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputGroup.CreatedDate,
+                    secondDate: inputGroup.CreatedDate,
+                    secondDateName: nameof(Group.CreatedDate)),
+                Parameter: nameof(Group.CreatedDate)),
+
                 (Rule: IsSame(
                     firstDate: inputGroup.UpdatedDate,
                     secondDate: storageGroup.UpdatedDate,
@@ -55,7 +62,7 @@ namespace DemoCenter.Services.Foundations.Groups
                     Parameter: nameof(Group.UpdatedDate)
                     ));
         }
-       
+
         private static dynamic IsSame(
            DateTimeOffset firstDate,
            DateTimeOffset secondDate,
@@ -86,6 +93,7 @@ namespace DemoCenter.Services.Foundations.Groups
                 throw new NotFoundGroupException(groupId);
             }
         }
+
         private bool IsDateNotRecent(DateTimeOffset date)
         {
             DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrenDateTime();
@@ -93,11 +101,13 @@ namespace DemoCenter.Services.Foundations.Groups
 
             return timeDifference.TotalSeconds is > 60 or < 0;
         }
+
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
             Message = "Date is not recent."
         };
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,
