@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 using FluentAssertions;
@@ -83,7 +84,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                     $"Date is the same as {nameof( Student.CreatedDate)}"
                 });
 
-            var expectedStudentValidationException=
+            var expectedStudentValidationException =
                 new StudentValidationException(invalidStudentException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -101,14 +102,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudentValidationException.Should()
                 .BeEquivalentTo(expectedStudentValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Once());
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedStudentValidationException))), Times.Once());
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateStudentAsync(It.IsAny<Student>()), Times.Never());
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
@@ -116,6 +117,48 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
+        {
+            //given
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            Student randomStudent = CreateRandomStudent(randomDateTime);
+            Student invalidStudent = randomStudent;
+            var invalidStudentException = new InvalidStudentException();
 
+            invalidStudentException.AddData(
+                key: nameof(Student.UpdatedDate),
+                values: $"Date is the same as {nameof(Student.CreatedDate)}");
+
+            var expectedStudentValidationException =
+                new StudentValidationException(invalidStudentException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<Student> modifyStudentTask =
+                this.studentService.ModifyStudentAsync(invalidStudent);
+
+            StudentValidationException actualStudentValidationException =
+                await Assert.ThrowsAsync<StudentValidationException>(modifyStudentTask.AsTask);
+
+            //then
+            actualStudentValidationException.Should()
+                  .BeEquivalentTo(expectedStudentValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker=>
+                broker.GetCurrenDateTime(), Times.Once());  
+
+            this.loggingBrokerMock.Verify(broker=>
+                broker.LogError(It.Is(SameExceptionAs(expectedStudentValidationException))), Times.Once()); 
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.SelectStudentByIdAsync(invalidStudent.Id), Times.Never());
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
