@@ -9,6 +9,7 @@ using DemoCenter.Services.Foundations.Students;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Students
 {
@@ -29,6 +30,22 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 this.loggingBrokerMock.Object);
         }
 
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
+        }
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
         private static int GetRandomNegativeNumber() =>
