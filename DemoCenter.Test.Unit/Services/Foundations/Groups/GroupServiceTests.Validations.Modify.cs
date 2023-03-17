@@ -257,7 +257,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
              int randomNumber=GetRandomNegativeNumber();
             int randomMinutes = randomNumber;
             DateTimeOffset randomDateTime=GetRandomDateTimeOffset();
-            Group randomGroup = CreateRandomGroup(randomDateTime);
+            Group randomGroup = CreateRandomModifyGroup(randomDateTime);
             Group invalidGroup = randomGroup.DeepClone();
             Group storageGroup=invalidGroup.DeepClone();
             storageGroup.CreatedDate=storageGroup.CreatedDate.AddMinutes(randomMinutes);
@@ -285,7 +285,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 await Assert.ThrowsAsync<GroupValidationException>(modifyGroup.AsTask);
 
             //then
-            actualGroupValidationException.Should().BeEquivalentTo(expectedGroupValidationException);
+            actualGroupValidationException.Should()
+                .BeEquivalentTo(expectedGroupValidationException);
 
             this.storageBrokerMock.Verify(broker=>
                 broker.SelectGroupByIdAsync(groupId), Times.Once());
@@ -294,7 +295,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.GetCurrenDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException))), Times.Once);
+                broker.LogError(It.Is(
+                    SameExceptonAs(expectedGroupValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
