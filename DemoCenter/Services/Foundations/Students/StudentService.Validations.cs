@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Reflection.Metadata;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 
@@ -28,7 +30,7 @@ namespace DemoCenter.Services.Foundations.Students
         }
 
 
-        private  void ValidateStudentOnModify(Student student)
+        private void ValidateStudentOnModify(Student student)
         {
             ValidationStudentNotNull(student);
 
@@ -49,22 +51,42 @@ namespace DemoCenter.Services.Foundations.Students
                     Parameter: nameof(Student.UpdatedDate)));
         }
 
+        private  void ValidateAgainstStorageStudentOnModify(Student inputStudent, Student storageStudent)
+        {
+            ValidateStorageStudentExist(storageStudent, inputStudent.Id);
+
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputStudent.CreatedDate,
+                    secondDate: storageStudent.CreatedDate,
+                    secondDateName: nameof(Student.CreatedDate)),
+                    Parameter: nameof(Student.CreatedDate)));
+        }
         private static void ValidateStorageStudentExist(Student student, Guid studentId)
         {
             if (student is null)
                 throw new NotFoundStudentException(studentId);
         }
 
+
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as {secondDateName}"
+            };
         private static void ValidateStudentId(Guid studentId) =>
             Validate((Rule: IsInvalid(studentId), Parameter: nameof(Student.Id)));
 
-        private  dynamic IsNotRecent(DateTimeOffset date) => new
+        private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
             Message = "Date is not recent"
         };
 
-        private  bool IsDateNotRecent(DateTimeOffset date)
+        private bool IsDateNotRecent(DateTimeOffset date)
         {
             DateTimeOffset currentDateTime = dateTimeBroker.GetCurrenDateTime();
             TimeSpan timeDifference = currentDateTime.Subtract(date);
@@ -108,7 +130,7 @@ namespace DemoCenter.Services.Foundations.Students
 
         private static void ValidationStudentNotNull(Student student)
         {
-            if (student == null)
+            if (student is null)
             {
                 throw new NullStudentException();
             }

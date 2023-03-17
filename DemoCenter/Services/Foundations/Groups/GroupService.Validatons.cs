@@ -35,7 +35,9 @@ namespace DemoCenter.Services.Foundations.Groups
               (Rule: IsInvalid(group.CreatedDate), Parameter: nameof(Group.CreatedDate)),
               (Rule: IsNotRecent(group.UpdatedDate), Parameter: nameof(Group.UpdatedDate)),
 
-              (Rule: IsSame(
+
+
+            (Rule: IsSame(
                   firstDate: group.UpdatedDate,
                   secondDate: group.CreatedDate,
                   secondDateName: nameof(Group.CreatedDate)),
@@ -51,16 +53,15 @@ namespace DemoCenter.Services.Foundations.Groups
             Validate(
                 (Rule: IsNotSame(
                     firstDate: inputGroup.CreatedDate,
-                    secondDate: inputGroup.CreatedDate,
+                    secondDate: storageGroup.CreatedDate,
                     secondDateName: nameof(Group.CreatedDate)),
                 Parameter: nameof(Group.CreatedDate)),
-
-                (Rule: IsSame(
+            (Rule: IsSame(
                     firstDate: inputGroup.UpdatedDate,
                     secondDate: storageGroup.UpdatedDate,
                     secondDateName: nameof(Group.UpdatedDate)),
-                    Parameter: nameof(Group.UpdatedDate)
-                    ));
+                Parameter: nameof(Group.UpdatedDate)));
+
         }
 
         private static dynamic IsSame(

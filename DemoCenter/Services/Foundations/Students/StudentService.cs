@@ -54,6 +54,8 @@ namespace DemoCenter.Services.Foundations.Students
                 Student maybeStudent = await
                        this.storageBroker.SelectStudentByIdAsync(student.Id);
 
+                ValidateAgainstStorageStudentOnModify(inputStudent: student, storageStudent: maybeStudent);
+
                 return await this.storageBroker.UpdateStudentAsync(student);
             });
 
