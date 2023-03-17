@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Reflection.Metadata;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 
@@ -52,6 +54,13 @@ namespace DemoCenter.Services.Foundations.Students
         private  void ValidateAgainstStorageStudentOnModify(Student inputStudent, Student storageStudent)
         {
             ValidateStorageStudentExist(storageStudent, inputStudent.Id);
+
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputStudent.CreatedDate,
+                    secondDate: storageStudent.CreatedDate,
+                    secondDateName: nameof(Student.CreatedDate)),
+                    Parameter: nameof(Student.CreatedDate)));
         }
         private static void ValidateStorageStudentExist(Student student, Guid studentId)
         {
@@ -59,6 +68,15 @@ namespace DemoCenter.Services.Foundations.Students
                 throw new NotFoundStudentException(studentId);
         }
 
+
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as {secondDateName}"
+            };
         private static void ValidateStudentId(Guid studentId) =>
             Validate((Rule: IsInvalid(studentId), Parameter: nameof(Student.Id)));
 
