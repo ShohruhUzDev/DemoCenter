@@ -218,7 +218,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             Student randomStudent = CreateRandomStudent(randomDateTime);
             Student nonExistStudent = randomStudent;
-            nonExistStudent.UpdatedDate=randomDateTime.AddMinutes(randomNegativeMinutes);
+            nonExistStudent.CreatedDate=randomDateTime.AddMinutes(randomNegativeMinutes);
             Student nullStudent = null;
            var notFoundStudentException = new NotFoundStudentException(nonExistStudent.Id);
 

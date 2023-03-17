@@ -49,6 +49,10 @@ namespace DemoCenter.Services.Foundations.Students
                     Parameter: nameof(Student.UpdatedDate)));
         }
 
+        private  void ValidateAgainstStorageStudentOnModify(Student inputStudent, Student storageStudent)
+        {
+            ValidateStorageStudentExist(storageStudent, inputStudent.Id);
+        }
         private static void ValidateStorageStudentExist(Student student, Guid studentId)
         {
             if (student is null)
@@ -108,7 +112,7 @@ namespace DemoCenter.Services.Foundations.Students
 
         private static void ValidationStudentNotNull(Student student)
         {
-            if (student == null)
+            if (student is null)
             {
                 throw new NullStudentException();
             }
