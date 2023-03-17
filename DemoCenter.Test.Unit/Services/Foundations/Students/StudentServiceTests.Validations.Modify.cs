@@ -274,7 +274,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
 
             invalidStudentException.AddData(
                 key: nameof(Student.CreatedDate),
-                values: $"Date is not same as {nameof(Student.CreatedDate)}.");
+                values: $"Date is not same as {nameof(Student.CreatedDate)}");
 
             var expectedStudentValidatinException =
                 new StudentValidationException(invalidStudentException);
