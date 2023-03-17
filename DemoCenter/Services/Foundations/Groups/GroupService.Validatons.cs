@@ -55,7 +55,12 @@ namespace DemoCenter.Services.Foundations.Groups
                     firstDate: inputGroup.CreatedDate,
                     secondDate: storageGroup.CreatedDate,
                     secondDateName: nameof(Group.CreatedDate)),
-                Parameter: nameof(Group.CreatedDate)));
+                Parameter: nameof(Group.CreatedDate)),
+            (Rule: IsSame(
+                    firstDate: inputGroup.UpdatedDate,
+                    secondDate: storageGroup.UpdatedDate,
+                    secondDateName: nameof(Group.UpdatedDate)),
+                Parameter: nameof(Group.UpdatedDate)));
 
         }
 
