@@ -28,7 +28,7 @@ namespace DemoCenter.Services.Foundations.Students
         }
 
 
-        private  void ValidateStudentOnModify(Student student)
+        private void ValidateStudentOnModify(Student student)
         {
             ValidationStudentNotNull(student);
 
@@ -58,13 +58,13 @@ namespace DemoCenter.Services.Foundations.Students
         private static void ValidateStudentId(Guid studentId) =>
             Validate((Rule: IsInvalid(studentId), Parameter: nameof(Student.Id)));
 
-        private  dynamic IsNotRecent(DateTimeOffset date) => new
+        private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
             Message = "Date is not recent"
         };
 
-        private  bool IsDateNotRecent(DateTimeOffset date)
+        private bool IsDateNotRecent(DateTimeOffset date)
         {
             DateTimeOffset currentDateTime = dateTimeBroker.GetCurrenDateTime();
             TimeSpan timeDifference = currentDateTime.Subtract(date);
