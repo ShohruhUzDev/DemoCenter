@@ -11,6 +11,7 @@ using DemoCenter.Services.Foundations.Subjects;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 {
@@ -33,6 +34,22 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
+        }
         private Subject CreateRandomModifySubjects(DateTimeOffset date)
         {
             int randomDaysInPast = GetRandomNegativeNumber();
