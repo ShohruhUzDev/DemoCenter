@@ -56,7 +56,13 @@ namespace DemoCenter.Services.Foundations.Teachers
                    firstDate: inputTeacher.CreatedDate,
                    secondDate: storageTeacher.CreatedDate,
                    secondDateName: nameof(Teacher.CreatedDate)),
-                   Parameter: nameof(Teacher.CreatedDate)));
+                   Parameter: nameof(Teacher.CreatedDate)),
+      
+               (Rule: IsSame(
+                   firstDate: inputTeacher.UpdatedDate,
+                   secondDate: storageTeacher.UpdatedDate,
+                   secondDateName: nameof(Teacher.UpdatedDate)),
+                   Parameter: nameof(Teacher.UpdatedDate)));
 
         }
 
@@ -66,7 +72,7 @@ namespace DemoCenter.Services.Foundations.Teachers
                 throw new NotFoundTeacherException(teacherId);
         }
 
-        private dynamic IsSame(
+        private static dynamic IsSame(
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,
             string secondDateName) => new
