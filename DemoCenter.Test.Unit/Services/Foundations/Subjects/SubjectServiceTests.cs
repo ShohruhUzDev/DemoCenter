@@ -50,6 +50,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 secondsInFuture
             };
         }
+
         private Subject CreateRandomModifySubjects(DateTimeOffset date)
         {
             int randomDaysInPast = GetRandomNegativeNumber();
