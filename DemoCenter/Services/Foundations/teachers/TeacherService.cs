@@ -52,8 +52,9 @@ namespace DemoCenter.Services.Foundations.Teachers
                 Teacher maybeTeacher =
                     await this.storageBroker.SelectTeacherByIdAsync(teacher.Id);
 
-                return await this.storageBroker.UpdateTeacherAsync(teacher);
+                ValidateAgainstTeacherOnModify(inputTeacher: teacher, storageTeacher: maybeTeacher);
 
+                return await this.storageBroker.UpdateTeacherAsync(teacher);
             });
 
         public ValueTask<Teacher> RemoveTeacherByIdAsync(Guid teacherid) =>

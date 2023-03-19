@@ -60,7 +60,12 @@ namespace DemoCenter.Services.Foundations.Students
                     firstDate: inputStudent.CreatedDate,
                     secondDate: storageStudent.CreatedDate,
                     secondDateName: nameof(Student.CreatedDate)),
-                    Parameter: nameof(Student.CreatedDate)));
+                    Parameter: nameof(Student.CreatedDate)),
+                (Rule: IsSame(
+                    firstDate: inputStudent.UpdatedDate,
+                    secondDate: storageStudent.UpdatedDate,
+                    secondDateName: nameof(Student.UpdatedDate)),
+                    Parameter: nameof(Student.UpdatedDate)));
         }
         private static void ValidateStorageStudentExist(Student student, Guid studentId)
         {

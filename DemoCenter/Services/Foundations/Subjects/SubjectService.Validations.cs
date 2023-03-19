@@ -43,17 +43,43 @@ namespace DemoCenter.Services.Foundations.Subjects
                   secondDateName: nameof(Subject.CreatedDate)),
 
                   Parameter: nameof(Subject.UpdatedDate)));
+        }
+        private void ValidateAginstStorageSubjectOnModify(Subject inputSubject, Subject storageSubject)
+        {
+            ValidatStorageSubjectExist(storageSubject, inputSubject.Id);
+
+            Validate(
+               (Rule: IsNotSame(
+                   firstDate: inputSubject.CreatedDate,
+                   secondDate: storageSubject.CreatedDate,
+                   secondDateName: nameof(Subject.CreatedDate)),
+                   Parameter: nameof(Subject.CreatedDate)),
+
+            (Rule: IsSame(
+                   firstDate: inputSubject.UpdatedDate,
+                   secondDate: storageSubject.UpdatedDate,
+                   secondDateName: nameof(Subject.UpdatedDate)),
+                   Parameter: nameof(Subject.UpdatedDate)));
 
         }
 
         private static void ValidatStorageSubjectExist(Subject subject, Guid subjectId)
         {
-            if (subject == null)
+            if (subject is null)
                 throw new NotFoundSubjectException(subjectId);
         }
 
         private static void ValidateSubjectId(Guid subjectId) =>
             Validate((Rule: IsInvalid(subjectId), Parameter: nameof(Subject.Id)));
+
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as {secondDateName}"
+            };
 
         private dynamic IsSame(
             DateTimeOffset firstDate,

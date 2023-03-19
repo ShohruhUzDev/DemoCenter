@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Reflection.Metadata;
+using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 
@@ -37,13 +38,32 @@ namespace DemoCenter.Services.Foundations.Teachers
                 (Rule: IsInvalid(teacher.LastName), Parameter: nameof(Teacher.LastName)),
                 (Rule: IsInvalid(teacher.CreatedDate), Parameter: nameof(Teacher.CreatedDate)),
                 (Rule: IsInvalid(teacher.UpdatedDate), Parameter: nameof(Teacher.UpdatedDate)),
-                (Rule:IsNotRecent(teacher.UpdatedDate), Parameter:nameof(Teacher.UpdatedDate)),
+                (Rule: IsNotRecent(teacher.UpdatedDate), Parameter: nameof(Teacher.UpdatedDate)),
 
-                (Rule: IsSame(
-                    firstDate: teacher.UpdatedDate,
-                    secondDate: teacher.CreatedDate,
-                    secondDateName: nameof(Teacher.CreatedDate)),
-                Parameter: nameof(Teacher.UpdatedDate)));
+            (Rule: IsSame(
+                firstDate: teacher.UpdatedDate,
+                secondDate: teacher.CreatedDate,
+                secondDateName: nameof(Teacher.CreatedDate)),
+            Parameter: nameof(Teacher.UpdatedDate)));
+        }
+
+        private static void ValidateAgainstTeacherOnModify(Teacher inputTeacher, Teacher storageTeacher)
+        {
+            ValidateStoreageTeacherExist(storageTeacher, inputTeacher.Id);
+
+            Validate(
+               (Rule: IsNotSame(
+                   firstDate: inputTeacher.CreatedDate,
+                   secondDate: storageTeacher.CreatedDate,
+                   secondDateName: nameof(Teacher.CreatedDate)),
+                   Parameter: nameof(Teacher.CreatedDate)),
+      
+               (Rule: IsSame(
+                   firstDate: inputTeacher.UpdatedDate,
+                   secondDate: storageTeacher.UpdatedDate,
+                   secondDateName: nameof(Teacher.UpdatedDate)),
+                   Parameter: nameof(Teacher.UpdatedDate)));
+
         }
 
         private static void ValidateStoreageTeacherExist(Teacher teacher, Guid teacherId)
@@ -52,7 +72,7 @@ namespace DemoCenter.Services.Foundations.Teachers
                 throw new NotFoundTeacherException(teacherId);
         }
 
-        private dynamic IsSame(
+        private static dynamic IsSame(
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,
             string secondDateName) => new
@@ -60,6 +80,16 @@ namespace DemoCenter.Services.Foundations.Teachers
                 Condition = firstDate == secondDate,
                 Message = $"Date is the same as {secondDateName}"
             };
+
+        private static dynamic IsNotSame(
+           DateTimeOffset firstDate,
+           DateTimeOffset secondDate,
+           string secondDateName) => new
+           {
+               Condition = firstDate != secondDate,
+               Message = $"Date is not same as {secondDateName}"
+           };
+
 
         private bool IsDateNotRecent(DateTimeOffset date)
         {
