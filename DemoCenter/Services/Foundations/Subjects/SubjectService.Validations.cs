@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Sockets;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 
@@ -37,7 +36,7 @@ namespace DemoCenter.Services.Foundations.Subjects
               (Rule: IsInvalid(subject.CreatedDate), Parameter: nameof(Subject.CreatedDate)),
               (Rule: IsInvalid(subject.UpdatedDate), Parameter: nameof(Subject.UpdatedDate)),
               (Rule: IsNotRecent(subject.UpdatedDate), Parameter: nameof(Subject.UpdatedDate)),
-              
+
               (Rule: IsSame(
                   firstDate: subject.UpdatedDate,
                   secondDate: subject.CreatedDate,
@@ -49,7 +48,14 @@ namespace DemoCenter.Services.Foundations.Subjects
         {
             ValidatStorageSubjectExist(storageSubject, inputSubject.Id);
 
-       
+            Validate(
+               (Rule: IsNotSame(
+                   firstDate: inputSubject.CreatedDate,
+                   secondDate: storageSubject.CreatedDate,
+                   secondDateName: nameof(Subject.CreatedDate)),
+                   Parameter: nameof(Subject.CreatedDate)));
+
+
         }
 
         private static void ValidatStorageSubjectExist(Subject subject, Guid subjectId)
@@ -60,6 +66,15 @@ namespace DemoCenter.Services.Foundations.Subjects
 
         private static void ValidateSubjectId(Guid subjectId) =>
             Validate((Rule: IsInvalid(subjectId), Parameter: nameof(Subject.Id)));
+
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as {secondDateName}"
+            };
 
         private dynamic IsSame(
             DateTimeOffset firstDate,
