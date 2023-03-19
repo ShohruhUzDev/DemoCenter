@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
@@ -110,5 +112,51 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]  
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
+        {
+            //given
+            DateTimeOffset randomDateTime=GetRandomDateTimeOffset   ();
+            Teacher randomTeacher = CreateRandomTeacher(randomDateTime);
+            Teacher invalidTeacher = randomTeacher;
+            var invalidTeacherException = new InvalidTeacherException();
+
+            invalidTeacherException.AddData(
+                key:nameof(Teacher.UpdatedDate),
+                values:$"Date is the same as {nameof(Teacher.CreatedDate)}");
+
+            var expectedTeacherValidationException =
+                new TeacherValidationException(invalidTeacherException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<Teacher> modifyTeacherTask =
+                this.teacherService.ModifyTeacherAsync(invalidTeacher);
+
+            TeacherValidationException actualTeacherValidationException =
+                await Assert.ThrowsAsync<TeacherValidationException>(modifyTeacherTask.AsTask);
+
+            //then
+           actualTeacherValidationException.Should()
+                .BeEquivalentTo(expectedTeacherValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeacherByIdAsync(invalidTeacher.Id), Times.Never);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedTeacherValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+
     }
 }
