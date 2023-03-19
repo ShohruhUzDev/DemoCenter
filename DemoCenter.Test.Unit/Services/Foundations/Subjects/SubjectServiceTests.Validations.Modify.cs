@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 using FluentAssertions;
+using Force.DeepCloner;
 using Moq;
 using Xunit;
 
@@ -245,6 +246,61 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedSubjectValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedDateNotSameAsCreatedDateAndLogItASync()
+        {
+            //given
+            int randomNumber=GetRandomNegativeNumber();
+            int randomMinutes = randomNumber;
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            Subject randomSubject = CreateRandomModifySubjects(randomDateTime);
+            Subject invalidSubject = randomSubject.DeepClone();
+            Subject storageSubject=randomSubject.DeepClone();
+            storageSubject.CreatedDate=storageSubject.CreatedDate.AddMinutes(randomMinutes);
+            storageSubject.UpdatedDate=storageSubject.UpdatedDate.AddMinutes(randomMinutes);
+            Guid subjectId=invalidSubject.Id;
+            var invalidSubjectException = new InvalidSubjectException();
+
+            invalidSubjectException.AddData(
+                key: nameof(Subject.CreatedDate),
+                values:$"Date is not the same as {nameof(Subject.CreatedDate)}");
+
+            var expectedSubjectValidationException =
+                new SubjectValidationException(invalidSubjectException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSubjectByIdAsync(subjectId)).ReturnsAsync(storageSubject);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<Subject> modifySubjectTask =
+                this.subjectService.ModifySubjectAsync(invalidSubject);
+
+            SubjectValidationException actualSubjectValidationException =
+                await Assert.ThrowsAsync<SubjectValidationException>(modifySubjectTask.AsTask);
+
+            //then
+            actualSubjectValidationException.Should()
+                .BeEquivalentTo(expectedSubjectValidationException);
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.SelectSubjectByIdAsync(subjectId), Times.Once());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker=>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSubjectValidationException))), Times.Once()); 
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
