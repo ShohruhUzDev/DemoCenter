@@ -46,6 +46,11 @@ namespace DemoCenter.Services.Foundations.Teachers
             Parameter: nameof(Teacher.UpdatedDate)));
         }
 
+        private static void ValidateAgainstTeacherOnModify(Teacher inputTeacher, Teacher storageTeacher)
+        {
+            ValidateStoreageTeacherExist(storageTeacher, inputTeacher.Id);
+        }
+
         private static void ValidateStoreageTeacherExist(Teacher teacher, Guid teacherId)
         {
             if (teacher is null)
