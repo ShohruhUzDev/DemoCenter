@@ -36,14 +36,13 @@ namespace DemoCenter.Services.Foundations.Subjects
               (Rule: IsInvalid(subject.CreatedDate), Parameter: nameof(Subject.CreatedDate)),
               (Rule: IsInvalid(subject.UpdatedDate), Parameter: nameof(Subject.UpdatedDate)),
               (Rule: IsNotRecent(subject.UpdatedDate), Parameter: nameof(Subject.UpdatedDate)),
-
+              
               (Rule: IsSame(
                   firstDate: subject.UpdatedDate,
                   secondDate: subject.CreatedDate,
                   secondDateName: nameof(Subject.CreatedDate)),
 
                   Parameter: nameof(Subject.UpdatedDate)));
-
         }
 
         private static void ValidatStorageSubjectExist(Subject subject, Guid subjectId)
