@@ -306,5 +306,56 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
+        {
+            //given
+            DateTimeOffset randomDateTime=GetRandomDateTimeOffset();
+            Subject randomSubject = CreateRandomModifySubjects(randomDateTime);
+            Subject invalidSubject = randomSubject;
+            Subject storageSubject = randomSubject.DeepClone();
+            invalidSubject.UpdatedDate = storageSubject.UpdatedDate;
+            Guid subjectId=invalidSubject.Id;
+            var invalidSubjectException = new InvalidSubjectException();
+
+            invalidSubjectException.AddData(
+                key: nameof(Subject.UpdatedDate),
+                values: $"Date is the same as {nameof(Subject.UpdatedDate)}");
+
+            var expectedSubjectValidationException =
+                new SubjectValidationException(invalidSubjectException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSubjectByIdAsync(invalidSubject.Id)).ReturnsAsync(storageSubject);
+
+            this.dateTimeBrokerMock.Setup(broker=>
+                broker.GetCurrenDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<Subject> modifySubjectTask =
+                this.subjectService.ModifySubjectAsync(invalidSubject);
+
+            SubjectValidationException actualSubjectValidationException =
+                await Assert.ThrowsAsync<SubjectValidationException>(modifySubjectTask.AsTask);
+
+            //then
+            actualSubjectValidationException.Should()
+                .BeEquivalentTo(expectedSubjectValidationException);  
+            
+            this.storageBrokerMock.Verify(broker=>
+                broker.SelectSubjectByIdAsync(subjectId), Times.Once());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSubjectValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
