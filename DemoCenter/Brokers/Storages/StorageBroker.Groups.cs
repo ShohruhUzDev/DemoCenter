@@ -12,7 +12,7 @@ namespace DemoCenter.Brokers.Storages
         public async ValueTask<Group> InsertGroupAsync(Group group) =>
             await InsertAsync(group);
         public IQueryable<Group> SelectAllGroups() =>
-            SelectAllGroups();
+            SelectAll<Group>();
         public async ValueTask<Group> SelectGroupByIdAsync(Guid id) =>
             await SelectAsync<Group>(id);
         public async ValueTask<Group> UpdateGroupAsync(Group group) =>
