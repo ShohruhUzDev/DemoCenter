@@ -37,13 +37,13 @@ namespace DemoCenter.Services.Foundations.Teachers
                 (Rule: IsInvalid(teacher.LastName), Parameter: nameof(Teacher.LastName)),
                 (Rule: IsInvalid(teacher.CreatedDate), Parameter: nameof(Teacher.CreatedDate)),
                 (Rule: IsInvalid(teacher.UpdatedDate), Parameter: nameof(Teacher.UpdatedDate)),
-                (Rule:IsNotRecent(teacher.UpdatedDate), Parameter:nameof(Teacher.UpdatedDate)),
+                (Rule: IsNotRecent(teacher.UpdatedDate), Parameter: nameof(Teacher.UpdatedDate)),
 
-                (Rule: IsSame(
-                    firstDate: teacher.UpdatedDate,
-                    secondDate: teacher.CreatedDate,
-                    secondDateName: nameof(Teacher.CreatedDate)),
-                Parameter: nameof(Teacher.UpdatedDate)));
+            (Rule: IsSame(
+                firstDate: teacher.UpdatedDate,
+                secondDate: teacher.CreatedDate,
+                secondDateName: nameof(Teacher.CreatedDate)),
+            Parameter: nameof(Teacher.UpdatedDate)));
         }
 
         private static void ValidateStoreageTeacherExist(Teacher teacher, Guid teacherId)
