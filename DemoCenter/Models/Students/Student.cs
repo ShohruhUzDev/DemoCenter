@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using DemoCenter.Models.Groups;
+using DemoCenter.Models.GroupStudents;
 
 namespace DemoCenter.Models.Students
 {
@@ -12,6 +14,9 @@ namespace DemoCenter.Models.Students
         public string Phone { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-        public virtual ICollection<Group> Groups { get; set; }
+
+        [JsonIgnore]
+        public virtual IEnumerable<GroupStudent> GroupStudents { get; set; }
+    
     }
 }

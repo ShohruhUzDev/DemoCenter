@@ -12,7 +12,8 @@ namespace DemoCenter.Models.Teachers
         public string Phone { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-        public virtual ICollection<Group> Groups { get; set; }
+
+        public virtual IEnumerable<Group> Groups { get; set; }
 
     }
 }
