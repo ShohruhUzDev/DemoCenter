@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO.Compression;
 using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
@@ -179,14 +178,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 key: nameof(Student.UpdatedDate),
                 values: "Date is not recent");
 
-            var expectedStudentValidationException=
-                new StudentValidationException(invalidStudentException);    
+            var expectedStudentValidationException =
+                new StudentValidationException(invalidStudentException);
 
-            this.dateTimeBrokerMock.Setup(broker=>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);    
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(randomDateTime);
 
             //when
-            ValueTask<Student> modifyStudentTask=
+            ValueTask<Student> modifyStudentTask =
                 this.studentService.ModifyStudentAsync(inputStudent);
 
             StudentValidationException actualStudentValidationException =
@@ -196,14 +195,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudentValidationException.Should()
                 .BeEquivalentTo(expectedStudentValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker=>
-                broker.GetCurrenDateTime(), Times.Once());  
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once());
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedStudentValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectStudentByIdAsync(It.IsAny<Guid>()), Times.Never());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -220,9 +219,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             Student randomStudent = CreateRandomStudent(randomDateTime);
             Student nonExistStudent = randomStudent;
-            nonExistStudent.CreatedDate=randomDateTime.AddMinutes(randomNegativeMinutes);
+            nonExistStudent.CreatedDate = randomDateTime.AddMinutes(randomNegativeMinutes);
             Student nullStudent = null;
-           var notFoundStudentException = new NotFoundStudentException(nonExistStudent.Id);
+            var notFoundStudentException = new NotFoundStudentException(nonExistStudent.Id);
 
             var expectedStudentValidationException =
                 new StudentValidationException(notFoundStudentException);
@@ -243,12 +242,12 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudentValidationException.Should()
                 .BeEquivalentTo(expectedStudentValidationException);
 
-            this.storageBrokerMock.Verify(broker=>
-                broker.SelectStudentByIdAsync(nonExistStudent.Id), Times.Once());   
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStudentByIdAsync(nonExistStudent.Id), Times.Once());
 
-            this.dateTimeBrokerMock.Verify(broker=>
-                broker.GetCurrenDateTime(), Times.Once());  
-            this.loggingBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once());
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedStudentValidationException))), Times.Once());
 
@@ -267,10 +266,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             Student randomStudent = CreateRandomModifyStudent(randomDateTime);
             Student invalidStudent = randomStudent.DeepClone();
             Student storageStudent = invalidStudent.DeepClone();
-            storageStudent.CreatedDate=storageStudent.CreatedDate.AddMinutes(randomMinutes);
-            storageStudent.UpdatedDate=storageStudent.UpdatedDate.AddMinutes(randomMinutes); 
-            var invalidStudentException=new InvalidStudentException();
-            Guid studentId=invalidStudent.Id;
+            storageStudent.CreatedDate = storageStudent.CreatedDate.AddMinutes(randomMinutes);
+            storageStudent.UpdatedDate = storageStudent.UpdatedDate.AddMinutes(randomMinutes);
+            var invalidStudentException = new InvalidStudentException();
+            Guid studentId = invalidStudent.Id;
 
             invalidStudentException.AddData(
                 key: nameof(Student.CreatedDate),
@@ -279,7 +278,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             var expectedStudentValidatinException =
                 new StudentValidationException(invalidStudentException);
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectStudentByIdAsync(studentId)).ReturnsAsync(storageStudent);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -296,10 +295,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudentValidationException.Should()
                 .BeEquivalentTo(expectedStudentValidatinException);
 
-            this.storageBrokerMock.Verify(broker=>
-                broker.SelectStudentByIdAsync(studentId), Times.Once());    
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStudentByIdAsync(studentId), Times.Once());
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Once());
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -310,7 +309,56 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
+        {
+            //given
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            Student randomStudent=CreateRandomModifyStudent(randomDateTime);
+            Student invalidStudent = randomStudent;
+            Student storageStudent=randomStudent.DeepClone();
+            invalidStudent.UpdatedDate=storageStudent.UpdatedDate;
+            Guid studentId=invalidStudent.Id;
+            var invalidStudentException = new InvalidStudentException();
 
+            invalidStudentException.AddData(
+                key:nameof(Student.UpdatedDate),
+                values:$"Date is the same as {nameof(Student.UpdatedDate)}");
+
+            var expectedStudenValidationException =
+                new StudentValidationException(invalidStudentException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectStudentByIdAsync(invalidStudent.Id)).ReturnsAsync(storageStudent);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<Student> modifyStudentTask = 
+                this.studentService.ModifyStudentAsync(invalidStudent);
+
+            StudentValidationException actualStudentValidationException =
+                await Assert.ThrowsAsync<StudentValidationException>(modifyStudentTask.AsTask);
+
+            //then
+            actualStudentValidationException.Should()
+                .BeEquivalentTo(expectedStudenValidationException);
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.SelectStudentByIdAsync(studentId), Times.Once());    
+
+            this.loggingBrokerMock.Verify(broker=>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStudenValidationException))), Times.Once());  
+
+            this.dateTimeBrokerMock.Verify(broker=>
+                broker.GetCurrenDateTime(), Times.Once());
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
 
     }
 }
