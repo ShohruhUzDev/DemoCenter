@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoCenter.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    [Migration("20230228092518_CreateOthersTables")]
-    partial class CreateOthersTables
+    [Migration("20230319132028_initialMigration")]
+    partial class initialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,20 +25,39 @@ namespace DemoCenter.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DemoCenter.Models.GroupStudents.GroupStudent", b =>
+                {
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("GroupId", "StudentId");
+
+                    b.ToTable("GroupStudents");
+                });
+
             modelBuilder.Entity("DemoCenter.Models.Groups.Group", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("GroupName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("SubjectId")
+                    b.Property<Guid>("SubjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TeacherId")
+                    b.Property<Guid>("TeacherId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("UpdatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
@@ -55,6 +74,9 @@ namespace DemoCenter.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
@@ -63,6 +85,9 @@ namespace DemoCenter.Migrations
 
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("UpdatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
@@ -75,11 +100,17 @@ namespace DemoCenter.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
                     b.Property<string>("SubjectName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("UpdatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
@@ -92,6 +123,9 @@ namespace DemoCenter.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
@@ -100,6 +134,9 @@ namespace DemoCenter.Migrations
 
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("UpdatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
@@ -141,49 +178,52 @@ namespace DemoCenter.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("GroupStudent", b =>
+            modelBuilder.Entity("DemoCenter.Models.GroupStudents.GroupStudent", b =>
                 {
-                    b.Property<Guid>("GroupsId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasOne("DemoCenter.Models.Groups.Group", "Group")
+                        .WithMany("GroupStudents")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.Property<Guid>("StudentsId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasOne("DemoCenter.Models.Students.Student", "Student")
+                        .WithMany("GroupStudents")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.HasKey("GroupsId", "StudentsId");
+                    b.Navigation("Group");
 
-                    b.HasIndex("StudentsId");
-
-                    b.ToTable("GroupStudent");
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("DemoCenter.Models.Groups.Group", b =>
                 {
                     b.HasOne("DemoCenter.Models.Subjects.Subject", "Subject")
                         .WithMany("Groups")
-                        .HasForeignKey("SubjectId");
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("DemoCenter.Models.Teachers.Teacher", "Teacher")
                         .WithMany("Groups")
-                        .HasForeignKey("TeacherId");
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Subject");
 
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("GroupStudent", b =>
+            modelBuilder.Entity("DemoCenter.Models.Groups.Group", b =>
                 {
-                    b.HasOne("DemoCenter.Models.Groups.Group", null)
-                        .WithMany()
-                        .HasForeignKey("GroupsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("GroupStudents");
+                });
 
-                    b.HasOne("DemoCenter.Models.Students.Student", null)
-                        .WithMany()
-                        .HasForeignKey("StudentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            modelBuilder.Entity("DemoCenter.Models.Students.Student", b =>
+                {
+                    b.Navigation("GroupStudents");
                 });
 
             modelBuilder.Entity("DemoCenter.Models.Subjects.Subject", b =>

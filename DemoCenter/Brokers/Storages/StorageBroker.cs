@@ -56,6 +56,11 @@ namespace DemoCenter.Brokers.Storages
             return @object;
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            AddGroupConfiguration(modelBuilder);
+            AddGroupStudentConfigurations(modelBuilder);
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = this.configuration.GetConnectionString(name: "DefaultConnection");
