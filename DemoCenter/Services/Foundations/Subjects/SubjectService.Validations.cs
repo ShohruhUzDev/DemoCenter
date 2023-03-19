@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 
@@ -44,10 +45,16 @@ namespace DemoCenter.Services.Foundations.Subjects
 
                   Parameter: nameof(Subject.UpdatedDate)));
         }
+        private void ValidateAginstStorageSubjectOnModify(Subject inputSubject, Subject storageSubject)
+        {
+            ValidatStorageSubjectExist(storageSubject, inputSubject.Id);
+
+       
+        }
 
         private static void ValidatStorageSubjectExist(Subject subject, Guid subjectId)
         {
-            if (subject == null)
+            if (subject is null)
                 throw new NotFoundSubjectException(subjectId);
         }
 
