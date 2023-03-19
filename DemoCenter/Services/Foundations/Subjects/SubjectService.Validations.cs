@@ -53,8 +53,13 @@ namespace DemoCenter.Services.Foundations.Subjects
                    firstDate: inputSubject.CreatedDate,
                    secondDate: storageSubject.CreatedDate,
                    secondDateName: nameof(Subject.CreatedDate)),
-                   Parameter: nameof(Subject.CreatedDate)));
+                   Parameter: nameof(Subject.CreatedDate)),
 
+            (Rule: IsSame(
+                   firstDate: inputSubject.UpdatedDate,
+                   secondDate: storageSubject.UpdatedDate,
+                   secondDateName: nameof(Subject.UpdatedDate)),
+                   Parameter: nameof(Subject.UpdatedDate)));
 
         }
 
