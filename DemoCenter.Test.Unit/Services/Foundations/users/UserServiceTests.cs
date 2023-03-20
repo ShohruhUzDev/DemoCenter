@@ -33,7 +33,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static User CreateRandomUser(DateTimeOffset date) =>
-            CreateUserFiller(GetRandomDateTime()).Create();
+            CreateUserFiller(date).Create();
+
+        private static User CreateRandomUser() =>
+         CreateUserFiller(GetRandomDateTime()).Create();
 
         private static Filler<User> CreateUserFiller(DateTimeOffset date)
         {
