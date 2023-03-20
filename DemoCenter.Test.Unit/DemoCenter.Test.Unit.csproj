@@ -29,8 +29,4 @@
     <ProjectReference Include="..\DemoCenter\DemoCenter.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Foundations\Users\" />
-  </ItemGroup>
-
 </Project>
