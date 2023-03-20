@@ -39,10 +39,11 @@ namespace DemoCenter.Services.Foundations.Users
             throw new NotImplementedException();
         }
 
-        public  ValueTask<User> RemoveUserByIdAsync(Guid userId)
+        public  async ValueTask<User> RemoveUserByIdAsync(Guid userId)
         {
-            throw new NotImplementedException();
-        }
+            User maybeUser = await this.storageBroker.SelectUserByIdAsync(userId);
 
+            return await this.storageBroker.DeleteUserAsync(maybeUser);
+        }
     }
 }
