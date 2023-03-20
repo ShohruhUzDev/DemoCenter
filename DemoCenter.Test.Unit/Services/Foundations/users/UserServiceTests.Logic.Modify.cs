@@ -15,37 +15,44 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
         {
             //given
             DateTimeOffset randomDateTime = GetRandomDateTime();
-            User randomUser=CreateRandomModifyUser(randomDateTime);
+            User randomUser = CreateRandomModifyUser(randomDateTime);
             User inputUser = randomUser;
             User storageUser = inputUser.DeepClone();
             storageUser.UpdatedDate = randomUser.CreatedDate;
             User updatedUser = inputUser;
             User expectedUser = updatedUser.DeepClone();
-            Guid userId=inputUser.Id;   
+            Guid userId = inputUser.Id;
 
-            this.dateTimeBrokerMock.Setup(broker=>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime())
+                    .Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectUserByIdAsync(userId)).ReturnsAsync(storageUser);
+                broker.SelectUserByIdAsync(userId))
+                    .ReturnsAsync(storageUser);
 
-            this.storageBrokerMock.Setup(broker=>
-                broker.UpdateUserAsync(inputUser)).ReturnsAsync(updatedUser);
+            this.storageBrokerMock.Setup(broker =>
+                broker.UpdateUserAsync(inputUser))
+                    .ReturnsAsync(updatedUser);
 
             //when
-            User actualUser = await this.userService.ModifyUserAsync(inputUser);
+            User actualUser = 
+                await this.userService.ModifyUserAsync(inputUser);
 
             //then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
-            this.storageBrokerMock.Verify(broker=>
-                broker.SelectUserByIdAsync(userId), Times.Once());  
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(userId),
+                    Times.Once());
 
-            this.storageBrokerMock.Verify(broker=>
-                broker.UpdateUserAsync(inputUser), Times.Once());   
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateUserAsync(inputUser),
+                    Times.Once());
 
-            this.dateTimeBrokerMock.Verify(broker=>
-                broker.GetCurrenDateTime(), Times.Once());
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(),
+                    Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
