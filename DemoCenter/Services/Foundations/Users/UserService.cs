@@ -33,14 +33,18 @@ namespace DemoCenter.Services.Foundations.Users
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
             this.storageBroker.SelectUserByIdAsync(userId);
 
-        public ValueTask<User> ModifyUserAsync(User user)
+        public async ValueTask<User> ModifyUserAsync(User user)
         {
+            User maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
             
+            return await this.storageBroker.UpdateUserAsync(maybeUser);
         }
 
-        public ValueTask<User> RemoveUserByIdAsync(Guid userId)
+        public async ValueTask<User> RemoveUserByIdAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            User maybeUser = await this.storageBroker.SelectUserByIdAsync(userId);
+
+            return await this.storageBroker.DeleteUserAsync(maybeUser);
         }
     }
 }
