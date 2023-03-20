@@ -23,10 +23,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             Subject expectedSubject = deletedSubject.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectSubjectByIdAsync(inputSubjectId)).ReturnsAsync(storageSubject);
+                broker.SelectSubjectByIdAsync(inputSubjectId)).ReturnsAsync(storageSubject);
 
             this.storageBrokerMock.Setup(broker =>
-            broker.DeleteSubjectAsync(expectedInputSubject)).ReturnsAsync(deletedSubject);
+                broker.DeleteSubjectAsync(expectedInputSubject)).ReturnsAsync(deletedSubject);
 
             //when
             Subject actualSubject = await
@@ -36,10 +36,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             actualSubject.Should().BeEquivalentTo(expectedSubject);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectSubjectByIdAsync(inputSubjectId), Times.Once());
+                broker.SelectSubjectByIdAsync(inputSubjectId), Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
-            broker.DeleteSubjectAsync(expectedInputSubject), Times.Once());
+                broker.DeleteSubjectAsync(expectedInputSubject), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

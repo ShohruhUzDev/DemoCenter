@@ -22,7 +22,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             Subject expectedSubject = storedSubject.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectSubjectByIdAsync(inputSubjectId)).ReturnsAsync(storedSubject);
+                broker.SelectSubjectByIdAsync(inputSubjectId)).ReturnsAsync(storedSubject);
 
             //when
             Subject actualSubject = await
@@ -32,7 +32,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             actualSubject.Should().BeEquivalentTo(expectedSubject);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectSubjectByIdAsync(inputSubjectId), Times.Once());
+                broker.SelectSubjectByIdAsync(inputSubjectId), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

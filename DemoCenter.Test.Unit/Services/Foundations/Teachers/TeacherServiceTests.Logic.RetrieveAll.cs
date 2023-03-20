@@ -17,7 +17,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             IQueryable<Teacher> expectedTeachers = storageTeachers;
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectAllTeachers()).Returns(storageTeachers);
+                broker.SelectAllTeachers()).Returns(storageTeachers);
 
             //when
             IQueryable<Teacher> actualTeachers =
@@ -27,7 +27,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             actualTeachers.Should().BeEquivalentTo(expectedTeachers);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectAllTeachers(), Times.Once());
+                broker.SelectAllTeachers(), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

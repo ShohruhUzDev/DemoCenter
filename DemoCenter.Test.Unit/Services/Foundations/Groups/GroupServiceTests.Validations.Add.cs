@@ -29,10 +29,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroupValidationException.Should().BeEquivalentTo(expectedGroupValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
-            broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException))), Times.Once);
+                broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.InsertGroupAsync(It.IsAny<Group>()), Times.Never);
+                broker.InsertGroupAsync(It.IsAny<Group>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

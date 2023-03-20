@@ -31,11 +31,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 BeEquivalentTo(expectedStudentValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
-            broker.LogError(It.Is(SameExceptionAs(
+                broker.LogError(It.Is(SameExceptionAs(
                 expectedStudentValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.InsertStudentAsync(It.IsAny<Student>()), Times.Never);
+                broker.InsertStudentAsync(It.IsAny<Student>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

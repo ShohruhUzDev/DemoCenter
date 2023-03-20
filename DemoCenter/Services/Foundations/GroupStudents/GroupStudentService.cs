@@ -24,27 +24,29 @@ namespace DemoCenter.Services.Foundations.GroupStudents
             this.dateTimeBroker = dateTimeBroker;
         }
 
-        public ValueTask<GroupStudent> AddGroupStudentAsync(GroupStudent student) =>
-            this.storageBroker.InsertGroupStudentAsync(student);
-
-        public IQueryable<GroupStudent> RetrieveAllGroupStudents() =>
-            this.storageBroker.SelectAllGroupStudents();
-
-        public ValueTask<GroupStudent> RetrieveGroupStudentByIdAsync(Guid groupId, Guid studentId) =>
-            this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
-
-        public async ValueTask<GroupStudent> ModifyGroupStudentAsync(GroupStudent groupStudent)
+        public ValueTask<GroupStudent> AddGroupStudentAsync(GroupStudent student)
         {
-            GroupStudent maybeGroupStudent = await this.storageBroker.UpdateGroupStudentAsync(groupStudent);
-
-            return await this.storageBroker.UpdateGroupStudentAsync(maybeGroupStudent);
+            throw new NotImplementedException();
         }
 
-        public async ValueTask<GroupStudent> RemoveGroupStudentByIdAsync(Guid groupId, Guid studentId)
-        {
-            GroupStudent maybeGroupStudent = await this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
 
-            return await this.storageBroker.DeleteGroupStudentAsync(maybeGroupStudent);
+        public IQueryable<GroupStudent> RetrieveAllGroupStudents()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ValueTask<GroupStudent> RetrieveGroupStudentByIdAsync(Guid groupId, Guid studentId)
+        {
+            throw new NotImplementedException();
+        }
+        public ValueTask<GroupStudent> ModifyGroupStudentAsync(GroupStudent groupStudent)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ValueTask<GroupStudent> RemoveGroupStudentByIdAsync(Guid groupId, Guid studentId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

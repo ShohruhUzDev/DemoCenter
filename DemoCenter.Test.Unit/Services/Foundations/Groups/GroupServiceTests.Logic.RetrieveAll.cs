@@ -17,7 +17,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             IQueryable<Group> expectedGroups = storageGroups;
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectAllGroups()).Returns(storageGroups);
+                broker.SelectAllGroups()).Returns(storageGroups);
 
             //when
             IQueryable<Group> actualGroups =

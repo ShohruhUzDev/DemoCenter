@@ -20,7 +20,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
 
             this.storageBrokerMock.Setup(broker =>
-            broker.InsertTeacherAsync(inputTeacher)).ReturnsAsync(persistedTeacher);
+                broker.InsertTeacherAsync(inputTeacher)).ReturnsAsync(persistedTeacher);
 
             //when
             Teacher actualTeacher = await this.teacherService.AddTeacherAsync(inputTeacher);
@@ -29,7 +29,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             actualTeacher.Should().BeEquivalentTo(expectedTeacher);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.InsertTeacherAsync(inputTeacher), Times.Once());
+                broker.InsertTeacherAsync(inputTeacher), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
         }

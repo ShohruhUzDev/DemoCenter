@@ -24,13 +24,13 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             Guid groupId = inputGroup.Id;
 
             this.dateTimeBrokerMock.Setup(broker =>
-            broker.GetCurrenDateTime()).Returns(randomDate);
+                broker.GetCurrenDateTime()).Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectGroupByIdAsync(groupId)).ReturnsAsync(storageGroup);
+                broker.SelectGroupByIdAsync(groupId)).ReturnsAsync(storageGroup);
 
             this.storageBrokerMock.Setup(broker =>
-            broker.UpdateGroupAsync(inputGroup)).ReturnsAsync(updatedGroup);
+                broker.UpdateGroupAsync(inputGroup)).ReturnsAsync(updatedGroup);
 
             //when
             Group actualGroup = await
@@ -40,13 +40,13 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroup.Should().BeEquivalentTo(expectedGroup);
 
             this.dateTimeBrokerMock.Verify(broker =>
-            broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrenDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectGroupByIdAsync(groupId), Times.Once());
+                broker.SelectGroupByIdAsync(groupId), Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
-            broker.UpdateGroupAsync(inputGroup), Times.Once());
+                broker.UpdateGroupAsync(inputGroup), Times.Once());
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

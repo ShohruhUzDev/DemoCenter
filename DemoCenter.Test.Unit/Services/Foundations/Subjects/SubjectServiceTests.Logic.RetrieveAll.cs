@@ -17,7 +17,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             IQueryable<Subject> expectedSubjects = storageSubjects;
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectAllSubjects()).Returns(storageSubjects);
+                broker.SelectAllSubjects()).Returns(storageSubjects);
 
             //when
             IQueryable<Subject> actualSubjects =
@@ -27,7 +27,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             actualSubjects.Should().BeEquivalentTo(expectedSubjects);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectAllSubjects(), Times.Once());
+                broker.SelectAllSubjects(), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

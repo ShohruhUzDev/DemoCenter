@@ -21,7 +21,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             Group expectedGroup = storedGroup.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectGroupByIdAsync(inputGroupId)).ReturnsAsync(storedGroup);
+                broker.SelectGroupByIdAsync(inputGroupId)).ReturnsAsync(storedGroup);
 
             //when
             Group actualGroup = await this.groupService.RetrieveGroupByIdAsync(inputGroupId);
@@ -30,7 +30,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroup.Should().BeEquivalentTo(expectedGroup);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectGroupByIdAsync(inputGroupId), Times.Once());
+                broker.SelectGroupByIdAsync(inputGroupId), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

@@ -34,9 +34,11 @@ namespace DemoCenter.Services.Foundations.Users
             this.storageBroker.SelectUserByIdAsync(userId);
 
  
-        public ValueTask<User> ModifyUserAsync(User user)
+        public async ValueTask<User> ModifyUserAsync(User user)
         {
-            throw new NotImplementedException();
+            User maybeUser=await this.storageBroker.SelectUserByIdAsync(user.Id);   
+
+            return await this.storageBroker.UpdateUserAsync(maybeUser); 
         }
 
         public  async ValueTask<User> RemoveUserByIdAsync(Guid userId)

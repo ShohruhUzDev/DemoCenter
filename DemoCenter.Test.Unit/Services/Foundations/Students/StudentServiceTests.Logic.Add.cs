@@ -19,7 +19,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             Student expectedStuden = persistedStudent.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-            broker.InsertStudentAsync(inputStudent)).ReturnsAsync(persistedStudent);
+                broker.InsertStudentAsync(inputStudent)).ReturnsAsync(persistedStudent);
 
             //when
             Student actualStudent = await this.studentService.AddStudentAsync(inputStudent);
@@ -29,7 +29,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudent.Should().BeEquivalentTo(expectedStuden);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.InsertStudentAsync(inputStudent), Times.Once);
+                 broker.InsertStudentAsync(inputStudent), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
         }

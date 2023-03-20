@@ -23,10 +23,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             Group expectedGroup = deletedGroup.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectGroupByIdAsync(inputGroupId)).ReturnsAsync(storageGroup);
+                 broker.SelectGroupByIdAsync(inputGroupId)).ReturnsAsync(storageGroup);
 
             this.storageBrokerMock.Setup(broker =>
-            broker.DeleteGroupAsync(expectedInputGroup)).ReturnsAsync(deletedGroup);
+               broker.DeleteGroupAsync(expectedInputGroup)).ReturnsAsync(deletedGroup);
 
             //when
             Group actualGroup = await this.groupService.RemoveGroupByIdAsync(inputGroupId);
@@ -35,10 +35,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroup.Should().BeEquivalentTo(expectedGroup);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectGroupByIdAsync(inputGroupId), Times.Once());
+                broker.SelectGroupByIdAsync(inputGroupId), Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
-            broker.DeleteGroupAsync(expectedInputGroup), Times.Once());
+                broker.DeleteGroupAsync(expectedInputGroup), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

@@ -23,10 +23,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             Student expectedStudent = deletedStudent.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectStudentByIdAsync(inputStudentId)).ReturnsAsync(storageStudent);
+                broker.SelectStudentByIdAsync(inputStudentId)).ReturnsAsync(storageStudent);
 
             this.storageBrokerMock.Setup(broker =>
-            broker.DeleteStudentAsync(expectedInputStudent)).ReturnsAsync(deletedStudent);
+                broker.DeleteStudentAsync(expectedInputStudent)).ReturnsAsync(deletedStudent);
 
             //when
             Student actualStudent = await this.studentService.RemoveStudentByIdAsync(inputStudentId);
@@ -35,10 +35,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudent.Should().BeEquivalentTo(expectedStudent);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectStudentByIdAsync(inputStudentId), Times.Once());
+                broker.SelectStudentByIdAsync(inputStudentId), Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
-            broker.DeleteStudentAsync(expectedInputStudent), Times.Once());
+                broker.DeleteStudentAsync(expectedInputStudent), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
