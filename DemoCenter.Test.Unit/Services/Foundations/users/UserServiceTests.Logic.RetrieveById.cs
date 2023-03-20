@@ -34,7 +34,6 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
                 broker.SelectUserByIdAsync(inputUserId), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-
         }
     }
 }
