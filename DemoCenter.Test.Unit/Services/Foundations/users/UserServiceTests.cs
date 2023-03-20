@@ -40,6 +40,19 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
         private static int GetRandomNumber() =>
            new IntRange(min: 2, max: 99).GetValue();
 
+        private static int GetRandomNegativeNumber() =>
+           -1 * new IntRange(min: 2, max: 10).GetValue();
+
+        private static User CreateRandomModifyUser(DateTimeOffset dates)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            User randomUser = CreateRandomUser(dates);
+
+            randomUser.CreatedDate = randomUser.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomUser;
+        }
+
         private static IQueryable<User> CreateRandomUsers()
         {
             return CreateUserFiller(date: GetRandomDateTime())
