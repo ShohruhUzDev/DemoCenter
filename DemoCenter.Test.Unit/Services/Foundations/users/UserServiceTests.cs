@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Net.Sockets;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
@@ -33,7 +35,16 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static User CreateRandomUser(DateTimeOffset date) =>
-            CreateUserFiller(date).Create();
+        CreateUserFiller(date).Create();
+
+        private static int GetRandomNumber() =>
+           new IntRange(min: 2, max: 99).GetValue();
+
+        private static IQueryable<User> CreateRandomUsers()
+        {
+            return CreateUserFiller(date: GetRandomDateTime())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
 
         private static User CreateRandomUser() =>
          CreateUserFiller(GetRandomDateTime()).Create();

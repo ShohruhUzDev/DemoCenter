@@ -25,27 +25,25 @@ namespace DemoCenter.Services.Foundations.Users
         }
 
         public ValueTask<User> AddUserAsync(User user) =>
-            this.storageBroker.InsertUserAsync(user);        
+            this.storageBroker.InsertUserAsync(user);              
 
-        public IQueryable<User> RetrieveAllUsers() =>
-            this.storageBroker.SelectAllUsers();
-
+        public IQueryable<User> RetrieveAllUsers()
+        {
+            throw new NotImplementedException();
+        }
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
             this.storageBroker.SelectUserByIdAsync(userId);
 
  
-        public async ValueTask<User> ModifyUserAsync(User user)
+        public ValueTask<User> ModifyUserAsync(User user)
         {
-            User maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
-            
-            return await this.storageBroker.UpdateUserAsync(maybeUser);
+            throw new NotImplementedException();
         }
 
-        public async ValueTask<User> RemoveUserByIdAsync(Guid userId)
+        public  ValueTask<User> RemoveUserByIdAsync(Guid userId)
         {
-            User maybeUser = await this.storageBroker.SelectUserByIdAsync(userId);
-
-            return await this.storageBroker.DeleteUserAsync(maybeUser);
+            throw new NotImplementedException();
         }
+
     }
 }

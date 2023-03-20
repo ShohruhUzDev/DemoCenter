@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using DemoCenter.Models.Users;
 using FluentAssertions;
 using Force.DeepCloner;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
@@ -21,16 +20,16 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             User storedUser = randomUser;
             User expectedUser = storedUser.DeepClone();
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(inputUserId)).ReturnsAsync(storedUser);
 
             //when
-            User actualUser=await this.userService.RetrieveUserByIdAsync(inputUserId);
+            User actualUser = await this.userService.RetrieveUserByIdAsync(inputUserId);
 
             //then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(inputUserId), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
