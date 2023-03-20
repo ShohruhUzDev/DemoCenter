@@ -34,7 +34,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             actualUser.Should().BeEquivalentTo(expectedUser);
 
             this.dateTimeBrokerMock.Verify(broker=>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrenDateTime(), Times.Never);
 
             this.storageBrokerMock.Verify(broker=>
                     broker.InsertUserAsync(inputUser), Times.Once);
