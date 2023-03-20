@@ -33,6 +33,7 @@ namespace DemoCenter.Services.Foundations.Users
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
             this.storageBroker.SelectUserByIdAsync(userId);
 
+ 
         public async ValueTask<User> ModifyUserAsync(User user)
         {
             User maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
