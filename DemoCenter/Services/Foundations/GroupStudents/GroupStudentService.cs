@@ -24,11 +24,9 @@ namespace DemoCenter.Services.Foundations.GroupStudents
             this.dateTimeBroker = dateTimeBroker;
         }
 
-        public ValueTask<GroupStudent> AddGroupStudentAsync(GroupStudent student)
-        {
-            throw new NotImplementedException();
-        }
-
+        public ValueTask<GroupStudent> AddGroupStudentAsync(GroupStudent student) =>
+            this.storageBroker.InsertGroupStudentAsync(student);
+        
         public IQueryable<GroupStudent> RetrieveAllGroupStudents()
         {
             throw new NotImplementedException();
