@@ -32,10 +32,9 @@ namespace DemoCenter.Services.Foundations.GroupStudents
             throw new NotImplementedException();
         }
 
-        public ValueTask<GroupStudent> RetrieveGroupStudentByIdAsync(Guid groupId, Guid studentId)
-        {
-            throw new NotImplementedException();
-        }
+        public ValueTask<GroupStudent> RetrieveGroupStudentByIdAsync(Guid groupId, Guid studentId) =>
+            this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
+        
         public ValueTask<GroupStudent> ModifyGroupStudentAsync(GroupStudent groupStudent)
         {
             throw new NotImplementedException();
