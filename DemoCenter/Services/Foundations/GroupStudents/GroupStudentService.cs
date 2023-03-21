@@ -35,9 +35,11 @@ namespace DemoCenter.Services.Foundations.GroupStudents
         public ValueTask<GroupStudent> RetrieveGroupStudentByIdAsync(Guid groupId, Guid studentId) =>
             this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
         
-        public ValueTask<GroupStudent> ModifyGroupStudentAsync(GroupStudent groupStudent)
+        public async ValueTask<GroupStudent> ModifyGroupStudentAsync(GroupStudent groupStudent)
         {
-            throw new NotImplementedException();
+            GroupStudent maybeGroupStudent =await
+                this.storageBroker.SelectGroupStudentByIdAsync(groupStudent.GroupId, groupStudent.StudentId);
+           return await this.storageBroker.UpdateGroupStudentAsync(groupStudent);
         }
 
         public ValueTask<GroupStudent> RemoveGroupStudentByIdAsync(Guid groupId, Guid studentId)
