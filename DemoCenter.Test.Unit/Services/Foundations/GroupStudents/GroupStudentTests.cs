@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Net.Sockets;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
@@ -29,6 +31,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static int GetRandomNumber() =>
+               new IntRange(min: 2, max: 99).GetValue();
+        private static IQueryable<GroupStudent> CreateRandomGroupStudents()
+        {
+            return CreateFillerGroupStudent(date: GetRandomDateTime())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
 
         private static GroupStudent CreateRandomGroupStudent(DateTimeOffset date) =>
             CreateFillerGroupStudent(date).Create();
