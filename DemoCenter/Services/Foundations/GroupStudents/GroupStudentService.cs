@@ -42,9 +42,12 @@ namespace DemoCenter.Services.Foundations.GroupStudents
            return await this.storageBroker.UpdateGroupStudentAsync(groupStudent);
         }
 
-        public ValueTask<GroupStudent> RemoveGroupStudentByIdAsync(Guid groupId, Guid studentId)
+        public async ValueTask<GroupStudent> RemoveGroupStudentByIdAsync(Guid groupId, Guid studentId)
         {
-            throw new NotImplementedException();
+            GroupStudent maybeGroupStudent =await
+                this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
+
+            return await this.storageBroker.DeleteGroupStudentAsync(maybeGroupStudent);
         }
     }
 }
