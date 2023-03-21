@@ -29,7 +29,6 @@ namespace DemoCenter.Services.Foundations.GroupStudents
             throw new NotImplementedException();
         }
 
-
         public IQueryable<GroupStudent> RetrieveAllGroupStudents()
         {
             throw new NotImplementedException();
