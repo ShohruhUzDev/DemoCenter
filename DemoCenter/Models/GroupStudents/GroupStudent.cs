@@ -11,5 +11,8 @@ namespace DemoCenter.Models.GroupStudents
 
         public Guid StudentId { get; set; }
         public Student Student { get; set; }
+
+        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset UpdatedDate { get; set; }
     }
 }
