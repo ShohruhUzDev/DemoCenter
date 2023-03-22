@@ -21,7 +21,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             Teacher expectedTeacher = persistedTeacher.DeepClone();
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDate);
+                broker.GetCurrentDateTime()).Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertTeacherAsync(inputTeacher)).ReturnsAsync(persistedTeacher);
@@ -33,7 +33,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             actualTeacher.Should().BeEquivalentTo(expectedTeacher);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertTeacherAsync(inputTeacher), Times.Once());

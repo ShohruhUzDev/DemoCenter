@@ -25,7 +25,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 new GroupDependencyException(failedGroupStorageException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Throws(sqlException);
+                broker.GetCurrentDateTime()).Throws(sqlException);
 
 
             //when
@@ -38,7 +38,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroupDependencyException.Should().BeEquivalentTo(expectedDependencyException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptonAs(
@@ -63,7 +63,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             var expectedGroupDependencyValidationException =
                 new GroupDependencyValidationException(alreadyExistsGroupException);
 
-            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrenDateTime())
+            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
                 .Throws(duplicateKeyException);
 
             // when
@@ -77,7 +77,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 expectedGroupDependencyValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(SameExceptonAs(
                 expectedGroupDependencyValidationException))), Times.Once);
@@ -101,7 +101,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             var expectedGroupDependencyValidationException =
                 new GroupDependencyValidationException(lockedGroupException);
 
-            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrenDateTime())
+            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
                 .Throws(dbUpdateConcurrencyException);
 
             //when
@@ -115,7 +115,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 .BeEquivalentTo(expectedGroupDependencyValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
                 SameExceptonAs(expectedGroupDependencyValidationException))), Times.Once);
@@ -142,7 +142,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 new GroupServiceException(failedGroupServiceException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime())
+                broker.GetCurrentDateTime())
                     .Throws(serviceException);
 
             //when
@@ -156,7 +156,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroupServiceException.Should().BeEquivalentTo(expectedGroupServiceException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(

@@ -21,7 +21,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             Student expectedStuden = persistedStudent.DeepClone();
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertStudentAsync(inputStudent)).ReturnsAsync(persistedStudent);
@@ -34,7 +34,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudent.Should().BeEquivalentTo(expectedStuden);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                  broker.InsertStudentAsync(inputStudent), Times.Once);

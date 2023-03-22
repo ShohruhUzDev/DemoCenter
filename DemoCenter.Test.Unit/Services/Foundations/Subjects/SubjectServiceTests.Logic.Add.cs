@@ -21,7 +21,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             Subject expectedSubject = persistedSubject.DeepClone();
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDate);
+                broker.GetCurrentDateTime()).Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertSubjectAsync(inputSubject)).ReturnsAsync(persistedSubject);
@@ -33,7 +33,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             actualSubject.Should().BeEquivalentTo(expectedSubject);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertSubjectAsync(inputSubject), Times.Once);

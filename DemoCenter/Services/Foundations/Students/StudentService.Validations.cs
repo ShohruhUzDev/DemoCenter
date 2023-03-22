@@ -92,7 +92,7 @@ namespace DemoCenter.Services.Foundations.Students
 
         private bool IsDateNotRecent(DateTimeOffset date)
         {
-            DateTimeOffset currentDateTime = dateTimeBroker.GetCurrenDateTime();
+            DateTimeOffset currentDateTime = dateTimeBroker.GetCurrentDateTime();
             TimeSpan timeDifference = currentDateTime.Subtract(date);
 
             return timeDifference.TotalSeconds is > 60 or < 0;

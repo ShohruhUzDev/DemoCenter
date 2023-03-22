@@ -24,7 +24,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             Guid userId = inputUser.Id;
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime())
+                broker.GetCurrentDateTime())
                     .Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
@@ -51,7 +51,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
                     Times.Once());
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(),
+                broker.GetCurrentDateTime(),
                     Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();

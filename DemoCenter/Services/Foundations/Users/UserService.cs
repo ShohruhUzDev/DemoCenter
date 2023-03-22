@@ -38,7 +38,7 @@ namespace DemoCenter.Services.Foundations.Users
         {
             User maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
 
-            DateTimeOffset date = this.dateTimeBroker.GetCurrenDateTime();
+            DateTimeOffset date = this.dateTimeBroker.GetCurrentDateTime();
             User users = await this.storageBroker.UpdateUserAsync(user);
 
             return users;

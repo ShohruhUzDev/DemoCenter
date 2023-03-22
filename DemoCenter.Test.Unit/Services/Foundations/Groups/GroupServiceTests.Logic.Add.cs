@@ -21,7 +21,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             Group expectedGroup = persistedGroup.DeepClone();
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
             broker.InsertGroupAsync(inputGroup)).ReturnsAsync(persistedGroup);
@@ -34,7 +34,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroup.Should().BeEquivalentTo(expectedGroup);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
             broker.InsertGroupAsync(inputGroup), Times.Once());

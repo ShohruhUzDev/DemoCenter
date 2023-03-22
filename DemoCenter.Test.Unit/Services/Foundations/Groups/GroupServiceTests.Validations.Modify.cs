@@ -79,7 +79,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 new GroupValidationException(invalidGroupException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime())
+                broker.GetCurrentDateTime())
                      .Returns(GetRandomDateTimeOffset);
 
 
@@ -94,7 +94,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 .BeEquivalentTo(expectedGroupValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                 broker.GetCurrenDateTime(), Times.Once);
+                 broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException)))
@@ -125,7 +125,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 new GroupValidationException(invalidGroupException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             //when
             ValueTask<Group> modifyGroupTask =
@@ -139,7 +139,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 .BeEquivalentTo(expectedGroupValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(
@@ -172,7 +172,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 new GroupValidationException(invalidGroupException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(dateTime);
+                broker.GetCurrentDateTime()).Returns(dateTime);
 
             //when
             ValueTask<Group> modifyGroupTask =
@@ -186,7 +186,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 .BeEquivalentTo(expectedGroupValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(
@@ -220,7 +220,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectGroupByIdAsync(nonExistGroup.Id)).ReturnsAsync(nullGroup);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(dateTime);
+                broker.GetCurrentDateTime()).Returns(dateTime);
 
             //when
             ValueTask<Group> modifyGroupTask =
@@ -237,7 +237,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectGroupByIdAsync(nonExistGroup.Id), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(
@@ -274,7 +274,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectGroupByIdAsync(groupId)).ReturnsAsync(storageGroup);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             //when
             ValueTask<Group> modifyGroup = this.groupService.ModifyGroupAsync(invalidGroup);
@@ -290,7 +290,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectGroupByIdAsync(groupId), Times.Once());
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(
@@ -324,7 +324,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectGroupByIdAsync(invalidGroup.Id)).ReturnsAsync(storageGroup);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(radomDateTime);
+                broker.GetCurrentDateTime()).Returns(radomDateTime);
 
             //when
             ValueTask<Group> modifyGroupTask = this.groupService.ModifyGroupAsync(invalidGroup);
@@ -340,7 +340,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectGroupByIdAsync(groupId), Times.Once());
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(
