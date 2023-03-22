@@ -125,16 +125,24 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 key: nameof(Teacher.CreatedDate),
                 values: $"Date is not same as {nameof(Teacher.UpdatedDate)}");
 
-            var expectedTeacherValidationException = new TeacherValidationException(invalidTeacherException);
+            var expectedTeacherValidationException = 
+                new TeacherValidationException(invalidTeacherException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(randomDate);
 
             //when
-            ValueTask<Teacher> addTeacherTask = this.teacherService.AddTeacherAsync(invalidTeacher);
+            ValueTask<Teacher> addTeacherTask = 
+                this.teacherService.AddTeacherAsync(invalidTeacher);
 
             TeacherValidationException actualTeacherValidationException =
                 await Assert.ThrowsAsync<TeacherValidationException>(addTeacherTask.AsTask);
 
             //then
             actualTeacherValidationException.Should().BeEquivalentTo(expectedTeacherValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+               broker.GetCurrenDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedTeacherValidationException))), Times.Once);
