@@ -75,7 +75,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             // when
             ValueTask<Teacher> deleteTeacherTask =
-                this.TeacherService.RemoveTeacherByIdAsync(someTeacherId);
+                this.teacherService.RemoveTeacherByIdAsync(someTeacherId);
 
             TeacherDependencyException actualTeacherDependencyException =
                 await Assert.ThrowsAsync<TeacherDependencyException>(
@@ -91,6 +91,46 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedTeacherDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
+        {
+            // given
+            Guid someTeacherId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedTeacherServiceException =
+                new FailedTeacherServiceException(serviceException);
+
+            var expectedTeacherServiceException =
+                new TeacherServiceException(failedTeacherServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTeacherByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Teacher> removeTeacherByIdTask =
+                this.TeacherService.RemoveTeacherByIdAsync(someTeacherId);
+
+            TeacherServiceException actualTeacherServiceException =
+                await Assert.ThrowsAsync<TeacherServiceException>(
+                    removeTeacherByIdTask.AsTask);
+
+            // then
+            actualTeacherServiceException.Should().BeEquivalentTo(
+                expectedTeacherServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeacherByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeacherServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
