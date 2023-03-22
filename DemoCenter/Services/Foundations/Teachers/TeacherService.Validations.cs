@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.Reflection.Metadata;
-using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 
@@ -19,6 +16,7 @@ namespace DemoCenter.Services.Foundations.Teachers
                 (Rule: IsInvalid(teacher.LastName), Parameter: nameof(Teacher.LastName)),
                 (Rule: IsInvalid(teacher.CreatedDate), Parameter: nameof(Teacher.CreatedDate)),
                 (Rule: IsInvalid(teacher.UpdatedDate), Parameter: nameof(Teacher.UpdatedDate)),
+                (Rule: IsNotRecent(teacher.CreatedDate), Parameter: nameof(Teacher.CreatedDate)),
 
                 (Rule: IsInvalid(
                     firstDate: teacher.CreatedDate,
@@ -57,7 +55,7 @@ namespace DemoCenter.Services.Foundations.Teachers
                    secondDate: storageTeacher.CreatedDate,
                    secondDateName: nameof(Teacher.CreatedDate)),
                    Parameter: nameof(Teacher.CreatedDate)),
-      
+
                (Rule: IsSame(
                    firstDate: inputTeacher.UpdatedDate,
                    secondDate: storageTeacher.UpdatedDate,
@@ -101,7 +99,7 @@ namespace DemoCenter.Services.Foundations.Teachers
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
-            Message="Date is not recent"
+            Message = "Date is not recent"
         };
 
         private static void ValidateTeacherId(Guid teacherId) =>

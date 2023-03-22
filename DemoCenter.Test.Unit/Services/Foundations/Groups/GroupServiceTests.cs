@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
 using DemoCenter.Models.Groups;
 using DemoCenter.Services.Foundations.Groups;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -31,6 +33,26 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 loggingBroker: loggingBrokerMock.Object,
                 dateTimeBroker: dateTimeBrokerMock.Object);
         }
+
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
+        }
+
+        private static SqlException CreateSqlException()=>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private IQueryable<Group> CreateRandomGroups()
         {
