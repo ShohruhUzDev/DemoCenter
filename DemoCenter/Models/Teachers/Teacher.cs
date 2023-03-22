@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DemoCenter.Models.Groups;
+using Newtonsoft.Json;
 
 namespace DemoCenter.Models.Teachers
 {
@@ -13,6 +14,7 @@ namespace DemoCenter.Models.Teachers
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
 
+        [JsonIgnore]
         public virtual IEnumerable<Group> Groups { get; set; }
 
     }
