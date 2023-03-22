@@ -96,7 +96,7 @@ namespace DemoCenter.Services.Foundations.Groups
 
         private bool IsDateNotRecent(DateTimeOffset date)
         {
-            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrenDateTime();
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
             TimeSpan timeDifference = currentDateTime.Subtract(date);
 
             return timeDifference.TotalSeconds is > 60 or < 0;

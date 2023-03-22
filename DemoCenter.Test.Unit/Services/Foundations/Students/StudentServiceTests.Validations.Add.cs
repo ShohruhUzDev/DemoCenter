@@ -126,7 +126,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 new StudentValidationException(invalidStudentException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDate);
+                broker.GetCurrentDateTime()).Returns(randomDate);
 
             //when
             ValueTask<Student> addStudentTask =
@@ -139,7 +139,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudentValidationException.Should().BeEquivalentTo(expectedStudentValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(
@@ -173,7 +173,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 new StudentValidationException(invalidStudentException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             //when
             ValueTask<Student> addStudentTask = this.studentService.AddStudentAsync(invalidStudent);
@@ -186,7 +186,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 expectedStudentValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

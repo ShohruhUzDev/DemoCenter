@@ -24,7 +24,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             Guid studentId = inputStudent.Id;
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDate);
+                broker.GetCurrentDateTime()).Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectStudentByIdAsync(studentId)).ReturnsAsync(storageStudent);
@@ -40,7 +40,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             actualStudent.Should().BeEquivalentTo(expectedStudent);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectStudentByIdAsync(studentId), Times.Once);

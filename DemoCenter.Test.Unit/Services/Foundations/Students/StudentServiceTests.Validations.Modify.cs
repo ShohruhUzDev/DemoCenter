@@ -89,7 +89,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 new StudentValidationException(invalidStudentException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(GetRandomDateTimeOffset);
+                broker.GetCurrentDateTime()).Returns(GetRandomDateTimeOffset);
 
             //when
             ValueTask<Student> modifyStudentTask =
@@ -104,7 +104,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 .BeEquivalentTo(expectedStudentValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -135,7 +135,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 new StudentValidationException(invalidStudentException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             //when
             ValueTask<Student> modifyStudentTask =
@@ -149,7 +149,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                   .BeEquivalentTo(expectedStudentValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedStudentValidationException))), Times.Once());
@@ -182,7 +182,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 new StudentValidationException(invalidStudentException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             //when
             ValueTask<Student> modifyStudentTask =
@@ -196,7 +196,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 .BeEquivalentTo(expectedStudentValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -230,7 +230,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 broker.SelectStudentByIdAsync(nonExistStudent.Id)).ReturnsAsync(nullStudent);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             //when
             ValueTask<Student> modifyStudentTask = this.studentService.ModifyStudentAsync(nonExistStudent);
@@ -246,7 +246,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 broker.SelectStudentByIdAsync(nonExistStudent.Id), Times.Once());
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedStudentValidationException))), Times.Once());
@@ -282,7 +282,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 broker.SelectStudentByIdAsync(studentId)).ReturnsAsync(storageStudent);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             //when
             ValueTask<Student> modifyStudentTask =
@@ -299,7 +299,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 broker.SelectStudentByIdAsync(studentId), Times.Once());
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedStudentValidatinException))), Times.Once);
@@ -332,7 +332,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 broker.SelectStudentByIdAsync(invalidStudent.Id)).ReturnsAsync(storageStudent);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             //when
             ValueTask<Student> modifyStudentTask =
@@ -353,7 +353,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                     expectedStudenValidationException))), Times.Once());
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

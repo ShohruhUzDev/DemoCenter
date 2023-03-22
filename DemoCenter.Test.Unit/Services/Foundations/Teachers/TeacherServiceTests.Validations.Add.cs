@@ -127,7 +127,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 new TeacherValidationException(invalidTeacherException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDate);
+                broker.GetCurrentDateTime()).Returns(randomDate);
 
             //when
             ValueTask<Teacher> addTeacherTask =
@@ -140,7 +140,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             actualTeacherValidationException.Should().BeEquivalentTo(expectedTeacherValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-               broker.GetCurrenDateTime(), Times.Once);
+               broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedTeacherValidationException))), Times.Once);
@@ -174,7 +174,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 new TeacherValidationException(invalidTeacherException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             //when
             ValueTask<Teacher> addTeacherTask = this.teacherService.AddTeacherAsync(invalidTeacher);
@@ -187,7 +187,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 expectedTeacherValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

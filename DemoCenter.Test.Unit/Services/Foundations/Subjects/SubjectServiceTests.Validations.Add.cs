@@ -119,7 +119,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 values: $"Date is not same as {nameof(Subject.UpdatedDate)}");
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDate);
+                broker.GetCurrentDateTime()).Returns(randomDate);
 
             var expectedSubjectValidationExeption = new SubjectValidationException(invalidSubjectException);
 
@@ -133,7 +133,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             actualSubjectValidationException.Should().BeEquivalentTo(expectedSubjectValidationExeption);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedSubjectValidationExeption))), Times.Once);
@@ -166,7 +166,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 new SubjectValidationException(invalidSubjectException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             //when
             ValueTask<Subject> addSubjectTask = this.subjectService.AddSubjectAsync(invalidSubject);
@@ -179,7 +179,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 expectedSubjectValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrenDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

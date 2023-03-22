@@ -4,7 +4,7 @@ namespace DemoCenter.Brokers.DateTimes
 {
     public class DateTimeBroker : IDateTimeBroker
     {
-        public DateTimeOffset GetCurrenDateTime() =>
+        public DateTimeOffset GetCurrentDateTime() =>
             DateTime.UtcNow;
     }
 }

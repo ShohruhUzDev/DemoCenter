@@ -1,6 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
+using EFxceptions.Models.Exceptions;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.Teachers
@@ -30,7 +34,54 @@ namespace DemoCenter.Services.Foundations.Teachers
 
                 throw CreateTeAndLogValidationException(notFoundTeacherException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedTeacherStorageException = new FailedTeacherStorageException(sqlException);
 
+                throw CreateAndLogCriticalDependencyException(failedTeacherStorageException);
+            }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var failedTeacherDependencyValidationException =
+                     new AlreadyExistTeacherException(duplicateKeyException);
+
+                throw CreateAndDependencyValidationException(failedTeacherDependencyValidationException);
+            }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedTeacherException = new LockedTeacherException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedTeacherException);
+            }
+            catch (Exception serviceException)
+            {
+                var failedTeacherServiceException = new FailedTeacherServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedTeacherServiceException);
+            }
+
+        }
+        private TeacherServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var teacherServiceException = new TeacherServiceException(exception);
+            this.loggingBroker.LogError(teacherServiceException);
+
+            return teacherServiceException;
+        }
+
+        private TeacherDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var teacherDependencyValidationException = new TeacherDependencyValidationException(exception);
+            this.loggingBroker.LogError(teacherDependencyValidationException);
+
+            return teacherDependencyValidationException;
+        }
+        private TeacherDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var teacherDependencyException = new TeacherDependencyException(exception);
+            this.loggingBroker.LogCritical(teacherDependencyException);
+
+            return teacherDependencyException;
         }
 
         private TeacherValidationException CreateTeAndLogValidationException(Xeption xeption)

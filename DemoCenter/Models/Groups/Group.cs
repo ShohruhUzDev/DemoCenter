@@ -16,9 +16,7 @@ namespace DemoCenter.Models.Groups
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
 
-        [JsonIgnore]
         public Teacher Teacher { get; set; }
-        [JsonIgnore]
         public Subject Subject { get; set; }
 
         [JsonIgnore]
