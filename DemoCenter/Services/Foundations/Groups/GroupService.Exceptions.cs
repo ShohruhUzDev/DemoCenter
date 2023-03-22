@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
@@ -12,7 +13,7 @@ namespace DemoCenter.Services.Foundations.Groups
     public partial class GroupService
     {
         private delegate ValueTask<Group> ReturningGroupFunction();
-
+        private delegate IQueryable<Group> ReturningGroupsFunction();
         private async ValueTask<Group> TryCatch(ReturningGroupFunction returningGroupFunction)
         {
             try
@@ -58,12 +59,26 @@ namespace DemoCenter.Services.Foundations.Groups
             }
         }
 
+        private  IQueryable<Group> TryCatch(ReturningGroupsFunction returningGroupsFunction)
+        {
+            try
+            {
+                return returningGroupsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedGroupStorageException = new FailedGroupStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedGroupStorageException);
+            }
+        }
+
         private GroupServiceException CreateAndLogServiceException(Exception exception)
         {
-            var groupServiceException=new GroupServiceException(exception); 
+            var groupServiceException = new GroupServiceException(exception);
             this.loggingBroker.LogError(groupServiceException);
 
-            return groupServiceException;   
+            return groupServiceException;
         }
         private GroupDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {

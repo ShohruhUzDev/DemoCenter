@@ -34,7 +34,7 @@ namespace DemoCenter.Services.Foundations.Groups
         });
 
         public IQueryable<Group> RetrieveAllGroups() =>
-            this.storageBroker.SelectAllGroups();
+          TryCatch( () =>  this.storageBroker.SelectAllGroups());
 
 
         public ValueTask<Group> RetrieveGroupByIdAsync(Guid groupId) =>
