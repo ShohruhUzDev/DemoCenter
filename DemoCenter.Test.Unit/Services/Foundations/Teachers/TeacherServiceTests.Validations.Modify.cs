@@ -85,7 +85,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 new TeacherValidationException(invalidTeacherException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime()).Returns(GetRandomDateTimeOffset);
+                broker.GetCurrentDateTime()).Returns(GetRandomDateTime);
 
             //when
             ValueTask<Teacher> modifyTeacherTask =
@@ -117,7 +117,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Teacher randomTeacher = CreateRandomTeacher(randomDateTime);
             Teacher invalidTeacher = randomTeacher;
             var invalidTeacherException = new InvalidTeacherException();
@@ -163,7 +163,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             int invalidSeconds)
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Teacher randomTeacher = CreateRandomTeacher(randomDateTime);
             Teacher inputTeacher = randomTeacher;
             inputTeacher.UpdatedDate = randomDateTime.AddMinutes(invalidSeconds);
@@ -209,7 +209,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         {
             //given
             int randomNegativeNumbers = GetRandomNegativeNumber();
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Teacher randomTeacher = CreateRandomTeacher(randomDateTime);
             Teacher nonExistTeacher = randomTeacher;
             nonExistTeacher.CreatedDate = randomDateTime.AddMinutes(randomNegativeNumbers);
@@ -258,7 +258,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             //given
             int randomNumber = GetRandomNegativeNumber();
             int randomMinutes = randomNumber;
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Teacher randomTeacher = CreateRandomModifyTeacher(randomDateTime);
             Teacher invalidTeacher = randomTeacher.DeepClone();
             Teacher storageTeacher = invalidTeacher.DeepClone();
@@ -310,7 +310,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Teacher randomTeacher = CreateRandomModifyTeacher(randomDateTime);
             Teacher invalidTeacher = randomTeacher;
             Teacher storageTeacher = randomTeacher.DeepClone();

@@ -14,7 +14,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
         public async Task ShouldAddStudentAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Student randomStudent = CreateRandomStudent(randomDateTime);
             Student inputStudent = randomStudent;
             Student persistedStudent = inputStudent;

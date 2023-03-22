@@ -84,7 +84,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 new SubjectValidationException(invalidSubjectException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime()).Returns(GetRandomDateTimeOffset);
+                broker.GetCurrentDateTime()).Returns(GetRandomDateTime);
 
             //when
             ValueTask<Subject> onModifySubjectTask =
@@ -116,7 +116,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdateDateIsSameAsCreatedDateAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Subject randomSubect = CreateRandomSubject(randomDateTime);
             Subject invalidSubject = randomSubect;
             var invalidSubjectException = new InvalidSubjectException();
@@ -162,7 +162,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             int invalidSeconds)
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Subject randomSubject = CreateRandomSubject(randomDateTime);
             Subject inputSubject = randomSubject;
             inputSubject.UpdatedDate = randomDateTime.AddMinutes(invalidSeconds);
@@ -209,7 +209,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         {
             //given
             int randomNegativNumbers = GetRandomNegativeNumber();
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Subject randomSubject = CreateRandomSubject(randomDateTime);
             Subject nonExistSubject = randomSubject;
             nonExistSubject.CreatedDate = randomDateTime.AddMinutes(randomNegativNumbers);
@@ -259,7 +259,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             //given
             int randomNumber = GetRandomNegativeNumber();
             int randomMinutes = randomNumber;
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Subject randomSubject = CreateRandomModifySubjects(randomDateTime);
             Subject invalidSubject = randomSubject.DeepClone();
             Subject storageSubject = randomSubject.DeepClone();
@@ -311,7 +311,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Subject randomSubject = CreateRandomModifySubjects(randomDateTime);
             Subject invalidSubject = randomSubject;
             Subject storageSubject = randomSubject.DeepClone();

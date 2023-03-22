@@ -34,7 +34,7 @@ namespace DemoCenter.Services.Foundations.Teachers
 
 
         public IQueryable<Teacher> RetrieveAllTeachers() =>
-            this.storageBroker.SelectAllTeachers();
+          TryCatch(() =>  this.storageBroker.SelectAllTeachers());
 
         public ValueTask<Teacher> RetrieveTeacherByIdAsync(Guid teacherId) =>
             TryCatch(async () =>

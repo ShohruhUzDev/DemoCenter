@@ -80,7 +80,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime())
-                     .Returns(GetRandomDateTimeOffset);
+                     .Returns(GetRandomDateTime);
 
 
             //when
@@ -112,7 +112,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Group randomGroup = CreateRandomGroup(randomDateTime);
             Group invalidGroup = randomGroup;
             var invalidGroupException = new InvalidGroupException();
@@ -158,7 +158,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdateDateIsNotRecentAndLogItAsync(int minuts)
         {
             //given
-            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            DateTimeOffset dateTime = GetRandomDateTime();
             Group randomGroup = CreateRandomGroup(dateTime);
             Group inputGroup = randomGroup;
             inputGroup.UpdatedDate = dateTime.AddMinutes(minuts);
@@ -205,7 +205,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         {
             //given
             int randomNegativeNumber = GetRandomNegativeNumber();
-            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            DateTimeOffset dateTime = GetRandomDateTime();
             Group randomGroup = CreateRandomGroup(dateTime);
             Group nonExistGroup = randomGroup;
             nonExistGroup.CreatedDate = dateTime.AddMinutes(randomNegativeNumber);
@@ -254,7 +254,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             //given
             int randomNumber = GetRandomNegativeNumber();
             int randomMinutes = randomNumber;
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Group randomGroup = CreateRandomModifyGroup(randomDateTime);
             Group invalidGroup = randomGroup.DeepClone();
             Group storageGroup = invalidGroup.DeepClone();
@@ -305,7 +305,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdateDateSameAsUpdateDateAndLogItAsync()
         {
             //given
-            DateTimeOffset radomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset radomDateTime = GetRandomDateTime();
             Group randomGroup = CreateRandomModifyGroup(radomDateTime);
             Group invalidGroup = randomGroup;
             Group storageGroup = randomGroup.DeepClone();

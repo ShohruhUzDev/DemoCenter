@@ -15,7 +15,7 @@ namespace DemoCenter.Models.Teachers
         public DateTimeOffset UpdatedDate { get; set; }
 
         [JsonIgnore]
-        public virtual IEnumerable<Group> Groups { get; set; }
+        public  IEnumerable<Group> Groups { get; set; }
 
     }
 }

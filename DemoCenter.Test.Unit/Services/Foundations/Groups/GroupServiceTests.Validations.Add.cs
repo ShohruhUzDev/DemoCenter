@@ -99,8 +99,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         {
             //given
 
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
-            DateTimeOffset anotherRandomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTime();
+            DateTimeOffset anotherRandomDateTime = GetRandomDateTime();
             Group randoGroup = CreateRandomGroup(randomDate);
             Group invalidGroup = randoGroup;
             invalidGroup.UpdatedDate = anotherRandomDateTime;
@@ -147,7 +147,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
          int invalidSeconds)
         {
             // given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             DateTimeOffset invalidRandomDateTime = randomDateTime.AddSeconds(invalidSeconds);
             Group randomInvalidGroup = CreateRandomGroup(invalidRandomDateTime);
             Group invalidGroup = randomInvalidGroup;
