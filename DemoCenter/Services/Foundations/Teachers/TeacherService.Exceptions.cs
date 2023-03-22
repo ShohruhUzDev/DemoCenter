@@ -53,6 +53,12 @@ namespace DemoCenter.Services.Foundations.Teachers
 
                 throw CreateAndDependencyValidationException(lockedTeacherException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedTeacherStorageException = new FailedTeacherStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedTeacherStorageException);
+            }
             catch (Exception serviceException)
             {
                 var failedTeacherServiceException = new FailedTeacherServiceException(serviceException);
@@ -60,6 +66,14 @@ namespace DemoCenter.Services.Foundations.Teachers
                 throw CreateAndLogServiceException(failedTeacherServiceException);
             }
 
+        }
+
+        private TeacherDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var teacherDependencyException = new TeacherDependencyException(exception);
+            this.loggingBroker.LogError(teacherDependencyException);
+
+            return teacherDependencyException;
         }
         private TeacherServiceException CreateAndLogServiceException(Exception exception)
         {
