@@ -115,7 +115,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             // when
             ValueTask<Teacher> removeTeacherByIdTask =
-                this.TeacherService.RemoveTeacherByIdAsync(someTeacherId);
+                this.teacherService.RemoveTeacherByIdAsync(someTeacherId);
 
             TeacherServiceException actualTeacherServiceException =
                 await Assert.ThrowsAsync<TeacherServiceException>(
