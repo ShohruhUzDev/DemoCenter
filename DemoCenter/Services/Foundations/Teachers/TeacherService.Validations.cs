@@ -18,7 +18,7 @@ namespace DemoCenter.Services.Foundations.Teachers
                 (Rule: IsInvalid(teacher.UpdatedDate), Parameter: nameof(Teacher.UpdatedDate)),
                 (Rule: IsNotRecent(teacher.CreatedDate), Parameter: nameof(Teacher.CreatedDate)),
 
-                (Rule: IsInvalid(
+                (Rule: IsNotSame(
                     firstDate: teacher.CreatedDate,
                     secondDate: teacher.UpdatedDate,
                     secondDateName: nameof(Teacher.UpdatedDate)),
