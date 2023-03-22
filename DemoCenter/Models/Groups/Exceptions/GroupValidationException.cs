@@ -6,8 +6,6 @@ namespace DemoCenter.Models.Groups.Exceptions
     {
         public GroupValidationException(Xeption innerException) :
             base(message: "Group validation error occured, fix the error and try again.", innerException)
-        {
-
-        }
+        { }
     }
 }
