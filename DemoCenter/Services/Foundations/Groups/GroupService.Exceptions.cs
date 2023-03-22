@@ -30,7 +30,7 @@ namespace DemoCenter.Services.Foundations.Groups
             }
             catch (SqlException sqlException)
             {
-                var failedGroupStorageException=new FailedGroupStorageException(sqlException);
+                var failedGroupStorageException = new FailedGroupStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedGroupStorageException);
             }
