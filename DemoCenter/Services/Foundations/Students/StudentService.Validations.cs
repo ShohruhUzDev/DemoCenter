@@ -19,9 +19,9 @@ namespace DemoCenter.Services.Foundations.Students
                 (Rule: IsInvalid(student.Phone), Parameter: nameof(Student.Phone)),
                 (Rule: IsInvalid(student.CreatedDate), Parameter: nameof(Student.CreatedDate)),
                 (Rule: IsInvalid(student.UpdatedDate), Parameter: nameof(Student.UpdatedDate)),
-                (Rule: IsNotRecent(student.CreatedDate), Parameter: nameof(student.CreatedDate)),
+                (Rule: IsNotRecent(student.CreatedDate), Parameter: nameof(Student.CreatedDate)),
 
-                (Rule: IsInvalid(
+                (Rule: IsNotSame(
                     firstDate: student.CreatedDate,
                     secondDate: student.UpdatedDate,
                     secondDateName: nameof(Student.UpdatedDate)),
@@ -125,14 +125,14 @@ namespace DemoCenter.Services.Foundations.Students
             Message = "Value is required"
         };
 
-        private static dynamic IsInvalid(
-            DateTimeOffset firstDate,
-            DateTimeOffset secondDate,
-            string secondDateName) => new
-            {
-                Condition = firstDate != secondDate,
-                Message = $"Date is not same as {secondDateName}"
-            };
+        //private static dynamic IsInvalid(
+        //    DateTimeOffset firstDate,
+        //    DateTimeOffset secondDate,
+        //    string secondDateName) => new
+        //    {
+        //        Condition = firstDate != secondDate,
+        //        Message = $"Date is not same as {secondDateName}"
+        //    };
 
         private static void ValidationStudentNotNull(Student student)
         {
