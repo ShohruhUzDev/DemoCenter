@@ -69,7 +69,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             //when
             ValueTask<Teacher> retrieveTeacherById =
-            this.TeacherService.RetrieveTeacherByIdAsync(someId);
+            this.teacherService.RetrieveTeacherByIdAsync(someId);
 
             TeacherServiceException actualTeacherServiceException =
                 await Assert.ThrowsAsync<TeacherServiceException>(retrieveTeacherById.AsTask);
