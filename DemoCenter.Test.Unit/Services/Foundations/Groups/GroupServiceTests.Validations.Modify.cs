@@ -73,7 +73,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                values: new[]
                {
                    "Value is required",
-                   "Date is not recent.",
+                   "Date is not recent",
                    $"Date is the same as {nameof(Group.CreatedDate)}"});
 
             var expectedGroupValidationException =
@@ -167,7 +167,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
 
             invalidGroupException.AddData(
                 key: nameof(Group.UpdatedDate),
-                values: "Date is not recent.");
+                values: "Date is not recent");
 
             var expectedGroupValidationException =
                 new GroupValidationException(invalidGroupException);
