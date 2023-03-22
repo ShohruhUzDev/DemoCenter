@@ -115,5 +115,57 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            Group randomGroup = CreateRandomGroup(randomDateTime);
+            Group someGroup = randomGroup;
+            someGroup.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            Guid GroupId = someGroup.Id;
+            var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var lockedGroupException =
+                new LockedGroupException(databaseUpdateConcurrencyException);
+
+            var expectedGroupDependencyValidationException =
+                new GroupDependencyValidationException(lockedGroupException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGroupByIdAsync(GroupId))
+                    .ThrowsAsync(databaseUpdateConcurrencyException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Group> modifyGroupTask =
+                this.groupService.ModifyGroupAsync(someGroup);
+
+            GroupDependencyValidationException actualGroupDependencyValidationException =
+                await Assert.ThrowsAsync<GroupDependencyValidationException>(
+                    modifyGroupTask.AsTask);
+
+            // then
+            actualGroupDependencyValidationException.Should().BeEquivalentTo(
+                expectedGroupDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupByIdAsync(GroupId), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptonAs(
+                    expectedGroupDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

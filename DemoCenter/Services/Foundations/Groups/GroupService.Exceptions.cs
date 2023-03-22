@@ -51,6 +51,12 @@ namespace DemoCenter.Services.Foundations.Groups
 
                 throw CreateAndDependencyValidationException(lockedGroupException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedGroupStorageException = new FailedGroupStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedGroupStorageException);
+            }
             catch (Exception serviceException)
             {
                 var failedGroupServiceException = new FailedGroupServiceException(serviceException);
@@ -77,6 +83,13 @@ namespace DemoCenter.Services.Foundations.Groups
 
                 throw CreateAndLogServiceException(failedGroupServiceException);
             }
+        }
+        private GroupDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var groupDependencyException = new GroupDependencyException(exception);
+            this.loggingBroker.LogError(groupDependencyException);
+
+            return groupDependencyException;
         }
 
         private GroupServiceException CreateAndLogServiceException(Exception exception)
