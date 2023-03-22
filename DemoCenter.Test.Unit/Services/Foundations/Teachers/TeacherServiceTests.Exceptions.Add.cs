@@ -1,13 +1,12 @@
-﻿using DemoCenter.Models.Teachers;
+﻿using System;
+using System.Threading.Tasks;
+using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
-using System.Net.Sockets;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
@@ -102,8 +101,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
 
             var lockedTeacherException = new LockedTeacherException(dbUpdateConcurrencyException);
-           
-            var expectedTeacherDependencyValidationException = 
+
+            var expectedTeacherDependencyValidationException =
                 new TeacherDependencyValidationException(lockedTeacherException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -123,11 +122,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(
                 SameExceptionAs(expectedTeacherDependencyValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.InsertTeacherAsync(It.IsAny<Teacher>()), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

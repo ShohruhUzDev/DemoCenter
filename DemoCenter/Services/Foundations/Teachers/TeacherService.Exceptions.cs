@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 using EFxceptions.Models.Exceptions;
@@ -52,7 +53,20 @@ namespace DemoCenter.Services.Foundations.Teachers
 
                 throw CreateAndDependencyValidationException(lockedTeacherException);
             }
+            catch (Exception serviceException)
+            {
+                var failedTeacherServiceException = new FailedTeacherServiceException(serviceException);
 
+                throw CreateAndLogServiceException(failedTeacherServiceException);
+            }
+
+        }
+        private TeacherServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var teacherServiceException = new TeacherServiceException(exception);
+            this.loggingBroker.LogError(teacherServiceException);
+
+            return teacherServiceException;
         }
 
         private TeacherDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
