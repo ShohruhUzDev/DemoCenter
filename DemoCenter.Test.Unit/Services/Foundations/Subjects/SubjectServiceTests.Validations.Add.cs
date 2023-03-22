@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DemoCenter.Models.Subjects.Exceptions;
-using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 using FluentAssertions;
+using Microsoft.AspNetCore.Antiforgery;
 using Moq;
 using Xunit;
 
@@ -108,16 +107,20 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         public async Task ShouldThrowValidationExceptionOnAddIfCreatedTimeIsNotSameUpdatedTimeAndLogIstAsync()
         {
             //given
-            int randomMinutes = GetRandomNumber();
+           
             DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            DateTimeOffset anotherDateTime = GetRandomDateTimeOffset();
             Subject randomSubject = CreateRandomSubject(randomDate);
             Subject invalidSubject = randomSubject;
-            invalidSubject.UpdatedDate = randomDate.AddMinutes(randomMinutes);
+            invalidSubject.UpdatedDate = anotherDateTime;
             var invalidSubjectException = new InvalidSubjectException();
 
             invalidSubjectException.AddData(
                 key: nameof(Subject.CreatedDate),
                 values: $"Date is not same as {nameof(Subject.UpdatedDate)}");
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(randomDate);
 
             var expectedSubjectValidationExeption = new SubjectValidationException(invalidSubjectException);
 
@@ -129,6 +132,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 
             //then
             actualSubjectValidationException.Should().BeEquivalentTo(expectedSubjectValidationExeption);
+
+            this.dateTimeBrokerMock.Verify(broker=>
+                broker.GetCurrenDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedSubjectValidationExeption))), Times.Once);

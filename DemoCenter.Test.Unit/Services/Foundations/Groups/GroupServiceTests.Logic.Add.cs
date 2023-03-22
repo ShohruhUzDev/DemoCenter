@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using FluentAssertions;
 using Force.DeepCloner;
@@ -13,10 +14,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldAddGroupAsync()
         {
             //given
-            Group randomGroup = CreateRandomGroup();
+            DateTimeOffset randomDateTime=GetRandomDateTimeOffset();
+            Group randomGroup = CreateRandomGroup(randomDateTime);
             Group inputGroup = randomGroup;
             Group persistedGroup = inputGroup;
             Group expectedGroup = persistedGroup.DeepClone();
+
+            this.dateTimeBrokerMock.Setup(broker=>
+                broker.GetCurrenDateTime()).Returns(randomDateTime);  
 
             this.storageBrokerMock.Setup(broker =>
             broker.InsertGroupAsync(inputGroup)).ReturnsAsync(persistedGroup);
@@ -27,6 +32,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
 
             //then
             actualGroup.Should().BeEquivalentTo(expectedGroup);
+
+            this.dateTimeBrokerMock.Verify(broker=>
+                broker.GetCurrenDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
             broker.InsertGroupAsync(inputGroup), Times.Once());

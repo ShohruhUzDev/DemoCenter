@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Subjects;
 using FluentAssertions;
 using Force.DeepCloner;
@@ -13,10 +14,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         public async Task ShouldAddSubjectAsync()
         {
             //given
-            Subject randomSubject = CreateRandomSubject();
+            DateTimeOffset randomDate=GetRandomDateTimeOffset();
+            Subject randomSubject = CreateRandomSubject(randomDate);
             Subject inputSubject = randomSubject;
             Subject persistedSubject = inputSubject;
             Subject expectedSubject = persistedSubject.DeepClone();
+
+            this.dateTimeBrokerMock.Setup(broker=>
+                broker.GetCurrenDateTime()).Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertSubjectAsync(inputSubject)).ReturnsAsync(persistedSubject);
@@ -27,10 +32,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             //then
             actualSubject.Should().BeEquivalentTo(expectedSubject);
 
+            this.dateTimeBrokerMock.Verify(broker=>
+                broker.GetCurrenDateTime(), Times.Once);
+
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertSubjectAsync(inputSubject), Times.Once);
 
             storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

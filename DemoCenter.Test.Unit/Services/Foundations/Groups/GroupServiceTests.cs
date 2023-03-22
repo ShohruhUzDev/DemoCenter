@@ -50,8 +50,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 secondsInFuture
             };
         }
-
-        private static SqlException CreateSqlException()=>
+        private static string GetRandomString() =>
+             new MnemonicString().GetValue();
+        private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private IQueryable<Group> CreateRandomGroups()

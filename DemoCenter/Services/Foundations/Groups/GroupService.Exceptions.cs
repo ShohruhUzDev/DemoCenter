@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Xeptions;
 
@@ -34,8 +35,22 @@ namespace DemoCenter.Services.Foundations.Groups
 
                 throw CreateAndLogCriticalDependencyException(failedGroupStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var failedTicketDependencyValidationException =
+                     new AlreadyExistGroupException(duplicateKeyException);
+
+                throw CreateAndDependencyValidationException(failedTicketDependencyValidationException);
+            }
         }
 
+        private GroupDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var groupDependencyValidationException = new GroupDependencyValidationException(exception);
+            this.loggingBroker.LogError(groupDependencyValidationException);
+
+            return groupDependencyValidationException;
+        }
         private GroupValidationException CreateAndLogValidationException(Xeption exception)
         {
             var groupValidationException = new GroupValidationException(exception);
