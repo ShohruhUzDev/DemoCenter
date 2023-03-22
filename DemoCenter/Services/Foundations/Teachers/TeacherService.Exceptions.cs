@@ -3,6 +3,7 @@ using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.Teachers
@@ -44,6 +45,12 @@ namespace DemoCenter.Services.Foundations.Teachers
                      new AlreadyExistTeacherException(duplicateKeyException);
 
                 throw CreateAndDependencyValidationException(failedTeacherDependencyValidationException);
+            }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedTeacherException = new LockedTeacherException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedTeacherException);
             }
 
         }
