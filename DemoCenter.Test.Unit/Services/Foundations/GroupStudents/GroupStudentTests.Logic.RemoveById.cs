@@ -14,10 +14,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
         public async Task ShouldRemoveGroupStudentByIdAsync()
         {
             //given
-            Guid randomStudentId= Guid.NewGuid();
-            Guid randomGroupId= Guid.NewGuid();
+            Guid randomStudentId = Guid.NewGuid();
+            Guid randomGroupId = Guid.NewGuid();
             Guid inputStudentId = randomStudentId;
-            Guid inputGroupId=randomGroupId;
+            Guid inputGroupId = randomGroupId;
             GroupStudent randomGroupStudent = CreateRandomGroupStudent();
             GroupStudent storageGroupStudent = randomGroupStudent;
             GroupStudent expectedInputGroupStudent = storageGroupStudent;
@@ -28,18 +28,18 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 broker.SelectGroupStudentByIdAsync(inputGroupId, inputStudentId))
                     .ReturnsAsync(storageGroupStudent);
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
                 broker.DeleteGroupStudentAsync(expectedInputGroupStudent))
                     .ReturnsAsync(deletedGroupStudent);
 
             //when
-            GroupStudent actualGroupStudent = await 
+            GroupStudent actualGroupStudent = await
                 this.groupStudentService.RemoveGroupStudentByIdAsync(inputGroupId, inputStudentId);
-           
+
             //then
             actualGroupStudent.Should().BeEquivalentTo(expectedGroupStudent);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectGroupStudentByIdAsync(inputGroupId, inputStudentId), Times.Once());
 
             this.storageBrokerMock.Verify(broker =>

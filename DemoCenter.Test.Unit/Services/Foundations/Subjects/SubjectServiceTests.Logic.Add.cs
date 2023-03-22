@@ -14,13 +14,13 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         public async Task ShouldAddSubjectAsync()
         {
             //given
-            DateTimeOffset randomDate=GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTimeOffset();
             Subject randomSubject = CreateRandomSubject(randomDate);
             Subject inputSubject = randomSubject;
             Subject persistedSubject = inputSubject;
             Subject expectedSubject = persistedSubject.DeepClone();
 
-            this.dateTimeBrokerMock.Setup(broker=>
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrenDateTime()).Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
@@ -32,7 +32,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             //then
             actualSubject.Should().BeEquivalentTo(expectedSubject);
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>

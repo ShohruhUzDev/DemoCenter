@@ -14,7 +14,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldThrowValidationExceptionOnRemoveIfIdIsInvalidAndLogItAsync()
         {
             //given
-            Guid invalidGroupId= Guid.Empty;
+            Guid invalidGroupId = Guid.Empty;
 
             var invalidGroupException = new InvalidGroupException();
 
@@ -22,10 +22,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 key: nameof(Group.Id),
                 values: "Id is required");
 
-            var expectedGroupValidationException=new GroupValidationException(invalidGroupException);
+            var expectedGroupValidationException = new GroupValidationException(invalidGroupException);
 
             //when
-            ValueTask<Group> onRemoveGroupTask=this.groupService.RemoveGroupByIdAsync(invalidGroupId);
+            ValueTask<Group> onRemoveGroupTask = this.groupService.RemoveGroupByIdAsync(invalidGroupId);
 
             GroupValidationException actualGroupValidationException =
                 await Assert.ThrowsAsync<GroupValidationException>(onRemoveGroupTask.AsTask);
@@ -33,10 +33,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             //then
             actualGroupValidationException.Should().BeEquivalentTo(expectedGroupValidationException);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.DeleteGroupAsync(It.IsAny<Group>()), Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -48,7 +48,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldThrowNotFounExceptionOnRetrieveIfGroupIsNotFoundAndLogItAsync()
         {
             //given
-            Guid randomGroupId= Guid.NewGuid();
+            Guid randomGroupId = Guid.NewGuid();
             Guid inputGroupId = randomGroupId;
             Group noGroup = null;
             var notFoundGroupException = new NotFoundGroupException(inputGroupId);
@@ -60,7 +60,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectGroupByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noGroup);
 
             //when
-            ValueTask<Group> onRemoveGroupTask=this.groupService.RemoveGroupByIdAsync(inputGroupId);
+            ValueTask<Group> onRemoveGroupTask = this.groupService.RemoveGroupByIdAsync(inputGroupId);
 
             GroupValidationException actualGroupValidationException =
                 await Assert.ThrowsAsync<GroupValidationException>(onRemoveGroupTask.AsTask);
@@ -68,10 +68,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             //then
             actualGroupValidationException.Should().BeEquivalentTo(expectedGroupValidationException);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectGroupByIdAsync(It.IsAny<Guid>()), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

@@ -36,7 +36,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
                     .ReturnsAsync(updatedUser);
 
             //when
-            User actualUser = 
+            User actualUser =
                 await this.userService.ModifyUserAsync(inputUser);
 
             //then

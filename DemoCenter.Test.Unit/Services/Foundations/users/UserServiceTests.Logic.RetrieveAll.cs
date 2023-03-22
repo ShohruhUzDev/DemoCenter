@@ -17,19 +17,19 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             IQueryable<User> storageUsers = randomUsers;
             IQueryable<User> expectedUsers = storageUsers;
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllUsers()).Returns(storageUsers);
 
             //when
-            IQueryable<User> actualUsers=this.userService.RetrieveAllUsers();
+            IQueryable<User> actualUsers = this.userService.RetrieveAllUsers();
 
             //then
             actualUsers.Should().BeEquivalentTo(expectedUsers);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                  broker.SelectAllUsers(), Times.Once);
 
-            this.storageBrokerMock.VerifyNoOtherCalls();    
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

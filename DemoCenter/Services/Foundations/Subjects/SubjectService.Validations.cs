@@ -90,7 +90,7 @@ namespace DemoCenter.Services.Foundations.Subjects
                 Condition = firstDate == secondDate,
                 Message = $"Date is the same as {secondDateName}"
             };
-   
+
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
@@ -114,7 +114,7 @@ namespace DemoCenter.Services.Foundations.Subjects
             Condition = String.IsNullOrWhiteSpace(text),
             Message = "Text is required"
         };
-     
+
         private static dynamic IsInvalid(int price) => new
         {
             Condition = price == default,

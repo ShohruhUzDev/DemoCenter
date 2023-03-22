@@ -4,7 +4,6 @@ using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 using FluentAssertions;
 using Force.DeepCloner;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
@@ -82,7 +81,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                   $"Date is the same as {nameof(Teacher.CreatedDate)}"
               });
 
-            var expectedTeacherValidationException=
+            var expectedTeacherValidationException =
                 new TeacherValidationException(invalidTeacherException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -99,14 +98,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             actualTeacherValidationException.Should()
                 .BeEquivalentTo(expectedTeacherValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTeacherValidationException))), Times.Once);   
+                    expectedTeacherValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTeacherAsync(It.IsAny<Teacher>()), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
@@ -114,18 +113,18 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
-        [Fact]  
+        [Fact]
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime=GetRandomDateTimeOffset   ();
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             Teacher randomTeacher = CreateRandomTeacher(randomDateTime);
             Teacher invalidTeacher = randomTeacher;
             var invalidTeacherException = new InvalidTeacherException();
 
             invalidTeacherException.AddData(
-                key:nameof(Teacher.UpdatedDate),
-                values:$"Date is the same as {nameof(Teacher.CreatedDate)}");
+                key: nameof(Teacher.UpdatedDate),
+                values: $"Date is the same as {nameof(Teacher.CreatedDate)}");
 
             var expectedTeacherValidationException =
                 new TeacherValidationException(invalidTeacherException);
@@ -141,8 +140,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 await Assert.ThrowsAsync<TeacherValidationException>(modifyTeacherTask.AsTask);
 
             //then
-           actualTeacherValidationException.Should()
-                .BeEquivalentTo(expectedTeacherValidationException);
+            actualTeacherValidationException.Should()
+                 .BeEquivalentTo(expectedTeacherValidationException);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeacherByIdAsync(invalidTeacher.Id), Times.Never);
@@ -167,7 +166,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             Teacher randomTeacher = CreateRandomTeacher(randomDateTime);
             Teacher inputTeacher = randomTeacher;
-            inputTeacher.UpdatedDate=randomDateTime.AddMinutes(invalidSeconds);
+            inputTeacher.UpdatedDate = randomDateTime.AddMinutes(invalidSeconds);
             var invalidTeacherException = new InvalidTeacherException();
 
             invalidTeacherException.AddData(
@@ -177,11 +176,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             var expectedTeacherValidationException =
                 new TeacherValidationException(invalidTeacherException);
 
-            this.dateTimeBrokerMock.Setup(broker=>
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrenDateTime()).Returns(randomDateTime);
 
             //when
-            ValueTask<Teacher> modifyTeacherTask=this.teacherService.ModifyTeacherAsync(inputTeacher);
+            ValueTask<Teacher> modifyTeacherTask = this.teacherService.ModifyTeacherAsync(inputTeacher);
 
             TeacherValidationException actualTeacherValidationException =
                 await Assert.ThrowsAsync<TeacherValidationException>(modifyTeacherTask.AsTask);
@@ -193,7 +192,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeacherByIdAsync(It.IsAny<Guid>()), Times.Never);
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -209,7 +208,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldThrowValidationExceptionOnModifyIfTeacherDoesNotExistAndLogItAsync()
         {
             //given
-            int randomNegativeNumbers=GetRandomNegativeNumber();
+            int randomNegativeNumbers = GetRandomNegativeNumber();
             DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             Teacher randomTeacher = CreateRandomTeacher(randomDateTime);
             Teacher nonExistTeacher = randomTeacher;
@@ -238,13 +237,13 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             actualTeacherValidationException.Should()
                 .BeEquivalentTo(expectedTeacherValidationException);
 
-            this.storageBrokerMock.Verify(broker=>
-                broker.SelectTeacherByIdAsync(nonExistTeacher.Id), Times.Once());   
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeacherByIdAsync(nonExistTeacher.Id), Times.Once());
 
-            this.dateTimeBrokerMock.Verify(broker=>
-                broker.GetCurrenDateTime(), Times.Once());  
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once());
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTeacherValidationException))), Times.Once);
 
@@ -257,14 +256,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedDateNotSameAsCreatedDateAndLogItAsync()
         {
             //given
-            int randomNumber=GetRandomNegativeNumber();
+            int randomNumber = GetRandomNegativeNumber();
             int randomMinutes = randomNumber;
             DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             Teacher randomTeacher = CreateRandomModifyTeacher(randomDateTime);
             Teacher invalidTeacher = randomTeacher.DeepClone();
-            Teacher storageTeacher=invalidTeacher.DeepClone();
-            storageTeacher.CreatedDate =storageTeacher.CreatedDate.AddMinutes(randomMinutes);
-            storageTeacher.UpdatedDate=storageTeacher.UpdatedDate.AddMinutes(randomMinutes);
+            Teacher storageTeacher = invalidTeacher.DeepClone();
+            storageTeacher.CreatedDate = storageTeacher.CreatedDate.AddMinutes(randomMinutes);
+            storageTeacher.UpdatedDate = storageTeacher.UpdatedDate.AddMinutes(randomMinutes);
             Guid teacherId = invalidTeacher.Id;
             var invalidTeacherException = new InvalidTeacherException();
 
@@ -275,7 +274,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             var expectedTeacherValidationExcepiton =
                 new TeacherValidationException(invalidTeacherException);
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectTeacherByIdAsync(teacherId)).ReturnsAsync(storageTeacher);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -292,10 +291,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             actualTeacherValidationException.Should()
                 .BeEquivalentTo(expectedTeacherValidationExcepiton);
 
-            this.storageBrokerMock.Verify(broker=>
-                broker.SelectTeacherByIdAsync(teacherId), Times.Once());    
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeacherByIdAsync(teacherId), Times.Once());
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
@@ -311,7 +310,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime=GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             Teacher randomTeacher = CreateRandomModifyTeacher(randomDateTime);
             Teacher invalidTeacher = randomTeacher;
             Teacher storageTeacher = randomTeacher.DeepClone();
@@ -326,7 +325,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             var expectedTeacherValidationException =
                 new TeacherValidationException(invalidTeacherException);
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectTeacherByIdAsync(teacherId)).ReturnsAsync(storageTeacher);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -341,15 +340,15 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             //then
             actualTeacherValidationException.Should()
-                .BeEquivalentTo(expectedTeacherValidationException);   
+                .BeEquivalentTo(expectedTeacherValidationException);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeacherByIdAsync(teacherId), Times.Once());
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTeacherValidationException))), Times.Once());
 

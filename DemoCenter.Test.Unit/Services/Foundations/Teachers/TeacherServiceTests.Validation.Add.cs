@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DemoCenter.Models.Teachers.Exceptions;
-using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 using FluentAssertions;
@@ -125,14 +123,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 key: nameof(Teacher.CreatedDate),
                 values: $"Date is not same as {nameof(Teacher.UpdatedDate)}");
 
-            var expectedTeacherValidationException = 
+            var expectedTeacherValidationException =
                 new TeacherValidationException(invalidTeacherException);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrenDateTime()).Returns(randomDate);
 
             //when
-            ValueTask<Teacher> addTeacherTask = 
+            ValueTask<Teacher> addTeacherTask =
                 this.teacherService.AddTeacherAsync(invalidTeacher);
 
             TeacherValidationException actualTeacherValidationException =

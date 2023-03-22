@@ -40,7 +40,7 @@ namespace DemoCenter.Services.Foundations.Teachers
             TryCatch(async () =>
             {
                 ValidateTeacherId(teacherId);
-                Teacher maybeTeacher= await this.storageBroker.SelectTeacherByIdAsync(teacherId);
+                Teacher maybeTeacher = await this.storageBroker.SelectTeacherByIdAsync(teacherId);
                 ValidateStoreageTeacherExist(maybeTeacher, teacherId);
 
                 return maybeTeacher;

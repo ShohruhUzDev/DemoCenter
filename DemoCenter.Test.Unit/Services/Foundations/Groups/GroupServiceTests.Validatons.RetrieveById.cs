@@ -52,14 +52,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             Group noGroup = null;
             var notFoundGroupValidationException = new NotFoundGroupException(someGroupId);
 
-            var expectedGroupValidationException=
+            var expectedGroupValidationException =
                 new GroupValidationException(notFoundGroupValidationException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectGroupByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noGroup);
 
             //when
-            ValueTask<Group> onRetrieveGroupByIdTask = 
+            ValueTask<Group> onRetrieveGroupByIdTask =
                 this.groupService.RetrieveGroupByIdAsync(someGroupId);
             GroupValidationException actualGroupValidationException =
                 await Assert.ThrowsAsync<GroupValidationException>(onRetrieveGroupByIdTask.AsTask);
@@ -71,7 +71,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectGroupByIdAsync(It.IsAny<Guid>()), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

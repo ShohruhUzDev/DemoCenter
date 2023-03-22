@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO.Compression;
 using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
@@ -307,11 +306,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         {
             //given
             DateTimeOffset radomDateTime = GetRandomDateTimeOffset();
-            Group randomGroup=CreateRandomModifyGroup(radomDateTime);
+            Group randomGroup = CreateRandomModifyGroup(radomDateTime);
             Group invalidGroup = randomGroup;
-            Group storageGroup=randomGroup.DeepClone();
+            Group storageGroup = randomGroup.DeepClone();
             invalidGroup.UpdatedDate = storageGroup.UpdatedDate;
-            Guid groupId=invalidGroup.Id;
+            Guid groupId = invalidGroup.Id;
             var invalidGroupException = new InvalidGroupException();
 
             invalidGroupException.AddData(
@@ -322,9 +321,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 new GroupValidationException(invalidGroupException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectGroupByIdAsync(invalidGroup.Id)).ReturnsAsync(storageGroup); 
+                broker.SelectGroupByIdAsync(invalidGroup.Id)).ReturnsAsync(storageGroup);
 
-            this.dateTimeBrokerMock.Setup(broker=>
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrenDateTime()).Returns(radomDateTime);
 
             //when
@@ -337,13 +336,13 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroupValidationException.Should()
                 .BeEquivalentTo(expectedGroupValidationException);
 
-            this.storageBrokerMock.Verify(broker=>
-                broker.SelectGroupByIdAsync(groupId), Times.Once());    
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupByIdAsync(groupId), Times.Once());
 
-            this.dateTimeBrokerMock.Verify(broker=>
-                broker.GetCurrenDateTime(), Times.Once());  
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once());
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(
                     expectedGroupValidationException))), Times.Once());
 

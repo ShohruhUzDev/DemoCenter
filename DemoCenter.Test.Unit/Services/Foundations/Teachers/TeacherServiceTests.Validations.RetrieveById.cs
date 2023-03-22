@@ -50,11 +50,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfTeacherNotFoundAndLogItAsync()
         {
             //given
-            Guid someTeacherId= Guid.NewGuid(); 
-            Teacher noTeacher= null;
-            var noutFoundTeacherException=new NotFoundTeacherException(someTeacherId);
+            Guid someTeacherId = Guid.NewGuid();
+            Teacher noTeacher = null;
+            var noutFoundTeacherException = new NotFoundTeacherException(someTeacherId);
 
-            var expectedTeacherValidationException = 
+            var expectedTeacherValidationException =
                 new TeacherValidationException(noutFoundTeacherException);
 
             this.storageBrokerMock.Setup(broker =>
@@ -70,10 +70,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             actualTeacherValidationException.Should()
                 .BeEquivalentTo(expectedTeacherValidationException);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeacherByIdAsync(It.IsAny<Guid>()), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedTeacherValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

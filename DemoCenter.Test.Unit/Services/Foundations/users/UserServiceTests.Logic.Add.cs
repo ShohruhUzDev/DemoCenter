@@ -20,7 +20,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             User persistedUser = inputUser;
             User expectedUser = persistedUser.DeepClone();
 
-            this.dateTimeBrokerMock.Setup(broker=>
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrenDateTime()).Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
@@ -28,15 +28,15 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
                 .ReturnsAsync(persistedUser);
 
             //when
-            User actualUser=await this.userService.AddUserAsync(inputUser);
+            User actualUser = await this.userService.AddUserAsync(inputUser);
 
             //then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Never);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                     broker.InsertUserAsync(inputUser), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

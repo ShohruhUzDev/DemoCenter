@@ -20,7 +20,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             GroupStudent persistedGroupStudent = inputGroupStudent;
             GroupStudent expectedGroupStudent = persistedGroupStudent.DeepClone();
 
-            this.dateTimeBrokerMock.Setup(broker=>
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrenDateTime()).Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
@@ -28,16 +28,16 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                     .ReturnsAsync(persistedGroupStudent);
 
             //when
-            GroupStudent actualGroupStudent = 
+            GroupStudent actualGroupStudent =
                 await this.groupStudentService.AddGroupStudentAsync(inputGroupStudent);
 
             //then
             actualGroupStudent.Should().BeEquivalentTo(expectedGroupStudent);
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Never());
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.InsertGroupStudentAsync(inputGroupStudent), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();

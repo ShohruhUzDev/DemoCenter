@@ -34,12 +34,12 @@ namespace DemoCenter.Services.Foundations.Users
             this.storageBroker.SelectUserByIdAsync(userId);
 
 
-        public  async ValueTask<User> ModifyUserAsync(User user)
+        public async ValueTask<User> ModifyUserAsync(User user)
         {
             User maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
 
             DateTimeOffset date = this.dateTimeBroker.GetCurrenDateTime();
-            User users =await  this.storageBroker.UpdateUserAsync(user);
+            User users = await this.storageBroker.UpdateUserAsync(user);
 
             return users;
         }

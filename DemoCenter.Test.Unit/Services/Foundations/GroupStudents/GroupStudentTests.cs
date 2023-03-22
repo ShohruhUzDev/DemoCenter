@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Sockets;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
@@ -48,7 +47,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
         private static Filler<GroupStudent> CreateFillerGroupStudent(DateTimeOffset date)
         {
-            var filler=new Filler<GroupStudent>();
+            var filler = new Filler<GroupStudent>();
 
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(date);
