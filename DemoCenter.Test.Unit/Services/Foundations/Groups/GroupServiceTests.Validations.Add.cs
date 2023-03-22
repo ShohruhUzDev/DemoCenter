@@ -98,18 +98,23 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameAsUpdatedDateAndLogItAsync()
         {
             //given
-            int randomMinutes = GetRandomNumber();
+            
             DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            DateTimeOffset anotherRandomDateTime = GetRandomDateTimeOffset();
             Group randoGroup = CreateRandomGroup(randomDate);
             Group invalidGroup = randoGroup;
-            invalidGroup.UpdatedDate = randomDate.AddMinutes(randomMinutes);
+            invalidGroup.UpdatedDate = anotherRandomDateTime;
             var invalidGroupException = new InvalidGroupException();
 
             invalidGroupException.AddData(
                 key: nameof(Group.CreatedDate),
                 values: $"Date is not same as {nameof(Group.UpdatedDate)}");
 
-            var expectedGroupValidationException = new GroupValidationException(invalidGroupException);
+            var expectedGroupValidationException =
+                new GroupValidationException(invalidGroupException);
+
+            this.dateTimeBrokerMock.Setup(broker=>
+                broker.GetCurrenDateTime()).Returns(randomDate);    
 
             //when
             ValueTask<Group> addGroupTask = this.groupService.AddGroupAsync(invalidGroup);
@@ -118,10 +123,15 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 await Assert.ThrowsAsync<GroupValidationException>(addGroupTask.AsTask);
 
             //then
-            actualGroupValidationException.Should().BeEquivalentTo(expectedGroupValidationException);
+            actualGroupValidationException.Should()
+                .BeEquivalentTo(expectedGroupValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker=>
+                broker.GetCurrenDateTime(), Times.Once());  
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException))), Times.Once());
+                broker.LogError(It.Is(SameExceptonAs(
+                    expectedGroupValidationException))), Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertGroupAsync(It.IsAny<Group>()), Times.Never());
@@ -145,7 +155,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
 
             invalidGroupException.AddData(
                 key: nameof(Group.CreatedDate),
-                values: "Date is not recent.");
+                values: "Date is not recent");
 
             var expectedGroupValidationException =
                 new GroupValidationException(invalidGroupException);
