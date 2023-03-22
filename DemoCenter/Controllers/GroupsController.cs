@@ -21,7 +21,7 @@ namespace DemoCenter.Controllers
         {
             try
             {
-                return await this.groupService.AddGroupAsync(group);
+                return Created(await this.groupService.AddGroupAsync(group));
             }
             catch (GroupValidationException groupValidationException)
             {
