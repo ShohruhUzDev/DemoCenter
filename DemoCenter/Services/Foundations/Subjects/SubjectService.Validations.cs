@@ -16,6 +16,7 @@ namespace DemoCenter.Services.Foundations.Subjects
                 (Rule: IsInvalid(subject.Price), Parameter: nameof(Subject.Price)),
                 (Rule: IsInvalid(subject.CreatedDate), Parameter: nameof(Subject.CreatedDate)),
                 (Rule: IsInvalid(subject.UpdatedDate), Parameter: nameof(Subject.UpdatedDate)),
+                (Rule: IsNotRecent(subject.CreatedDate), Parameter: nameof(Subject.CreatedDate)),
 
                 (Rule: IsInvalid(
                     firstDate: subject.CreatedDate,
