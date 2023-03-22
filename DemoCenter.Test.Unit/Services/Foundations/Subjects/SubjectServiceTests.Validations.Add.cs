@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DemoCenter.Models.Subjects.Exceptions;
+using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 using FluentAssertions;
@@ -130,6 +132,53 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedSubjectValidationExeption))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertSubjectAsync(It.IsAny<Subject>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidSeconds))]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotRecentAndLogItAsync(
+                  int invalidSeconds)
+        {
+            // given
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset invalidRandomDateTime = randomDateTime.AddSeconds(invalidSeconds);
+            Subject randomInvalidSubject = CreateRandomSubject(invalidRandomDateTime);
+            Subject invalidSubject = randomInvalidSubject;
+            var invalidSubjectException = new InvalidSubjectException();
+
+            invalidSubjectException.AddData(
+                key: nameof(Subject.CreatedDate),
+                values: "Date is not recent");
+
+            var expectedSubjectValidationException =
+                new SubjectValidationException(invalidSubjectException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<Subject> addSubjectTask = this.subjectService.AddSubjectAsync(invalidSubject);
+
+            SubjectValidationException actualSubjectValidationException =
+                await Assert.ThrowsAsync<SubjectValidationException>(addSubjectTask.AsTask);
+
+            // then
+            actualSubjectValidationException.Should().BeEquivalentTo(
+                expectedSubjectValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSubjectValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertSubjectAsync(It.IsAny<Subject>()), Times.Never);

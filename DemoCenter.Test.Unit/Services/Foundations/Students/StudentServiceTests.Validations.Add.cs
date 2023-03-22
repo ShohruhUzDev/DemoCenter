@@ -158,7 +158,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
 
             invalidStudentException.AddData(
                 key: nameof(Student.CreatedDate),
-                values: "Date is not recent.");
+                values: "Date is not recent");
 
             var expectedStudentValidationException =
                 new StudentValidationException(invalidStudentException);
