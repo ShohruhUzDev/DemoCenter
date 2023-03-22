@@ -45,5 +45,42 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllWhenAllServiceErrorOccursAndLogIt()
+        {
+            //given
+            string exceptionMessage = GetRandomString();
+            var serviceException = new Exception(exceptionMessage);
+
+            var failedTeacherServiceException =
+                new FailedTeacherServiceException(serviceException);
+
+            var expectedTeacherServiceException =
+                new TeacherServiceException(failedTeacherServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllTeachers()).Throws(serviceException);
+
+            //when
+            Action retrieveAllTeacherAction = () =>
+                this.teacherService.RetrieveAllTeachers();
+
+            TeacherServiceException actualTeacherServiceException =
+                Assert.Throws<TeacherServiceException>(retrieveAllTeacherAction);
+
+            //then
+            actualTeacherServiceException.Should().BeEquivalentTo(expectedTeacherServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllTeachers(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeacherServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
