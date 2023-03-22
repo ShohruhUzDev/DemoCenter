@@ -16,8 +16,10 @@ namespace DemoCenter.Models.Groups
         public Guid SubjectId { get; set; }    
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-
+       
+        [JsonIgnore]
         public Teacher Teacher { get; set; }
+        [JsonIgnore]
         public Subject Subject { get; set; }
 
         [JsonIgnore]

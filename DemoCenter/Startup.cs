@@ -1,4 +1,12 @@
+using DemoCenter.Brokers.DateTimes;
+using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
+using DemoCenter.Models.Teachers.Exceptions;
+using DemoCenter.Services.Foundations.Groups;
+using DemoCenter.Services.Foundations.Students;
+using DemoCenter.Services.Foundations.Subjects;
+using DemoCenter.Services.Foundations.Teachers;
+using DemoCenter.Services.Foundations.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +27,7 @@ namespace DemoCenter
         {
             services.AddDbContext<StorageBroker>();
             services.AddControllers();
+
             services.AddSwaggerGen(config =>
             {
                 config.SwaggerDoc(
@@ -26,7 +35,9 @@ namespace DemoCenter
                     info: new OpenApiInfo { Title = "DemoCenter", Version = "v1" });
             });
 
-            services.AddTransient<IStorageBroker, StorageBroker>();
+            RegisterBrokers(services);
+            AddFoundationServices(services);
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +56,21 @@ namespace DemoCenter
 
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers());
+        }
+        private static void RegisterBrokers(IServiceCollection services)
+        {
+            services.AddTransient<IStorageBroker, StorageBroker>();
+            services.AddTransient<ILoggingBroker, LoggingBroker>();
+            services.AddTransient<IDateTimeBroker, DateTimeBroker>();
+         
+        }
+
+        private static void AddFoundationServices(IServiceCollection services)
+        {
+            services.AddTransient<IGroupService, GroupService>();
+            services.AddTransient<IStudentService, StudentService>();
+            services.AddTransient<ISubjectService, SubjectService>();
+            services.AddTransient<ITeacherService, TeacherService>();
         }
     }
 }
