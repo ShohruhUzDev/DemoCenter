@@ -34,6 +34,23 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 dateTimeBroker: dateTimeBrokerMock.Object);
         }
 
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
+        }
+
         private static SqlException CreateSqlException()=>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 

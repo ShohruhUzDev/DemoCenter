@@ -24,6 +24,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrenDateTime()).Throws(sqlException);
 
+          
             //when
             ValueTask<Group> addGroupTask=this.groupService.AddGroupAsync(someGroup);
 
@@ -39,9 +40,6 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptonAs(
                     expectedDependencyException))), Times.Once);
-
-            this.storageBrokerMock.Verify(broker=>
-                broker.InsertGroupAsync(It.IsAny<Group>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
