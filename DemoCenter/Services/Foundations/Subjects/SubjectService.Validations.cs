@@ -18,7 +18,7 @@ namespace DemoCenter.Services.Foundations.Subjects
                 (Rule: IsInvalid(subject.UpdatedDate), Parameter: nameof(Subject.UpdatedDate)),
                 (Rule: IsNotRecent(subject.CreatedDate), Parameter: nameof(Subject.CreatedDate)),
 
-                (Rule: IsInvalid(
+                (Rule: IsNotSame(
                     firstDate: subject.CreatedDate,
                     secondDate: subject.UpdatedDate,
                     secondDateName: nameof(Subject.UpdatedDate)),
@@ -90,7 +90,7 @@ namespace DemoCenter.Services.Foundations.Subjects
                 Condition = firstDate == secondDate,
                 Message = $"Date is the same as {secondDateName}"
             };
-
+   
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
@@ -114,14 +114,14 @@ namespace DemoCenter.Services.Foundations.Subjects
             Condition = String.IsNullOrWhiteSpace(text),
             Message = "Text is required"
         };
-        private static dynamic IsInvalid(
-            DateTimeOffset firstDate,
-            DateTimeOffset secondDate,
-            string secondDateName) => new
-            {
-                Condition = firstDate != secondDate,
-                Message = $"Date is not same as {secondDateName}"
-            };
+        //private static dynamic IsInvalid(
+        //    DateTimeOffset firstDate,
+        //    DateTimeOffset secondDate,
+        //    string secondDateName) => new
+        //    {
+        //        Condition = firstDate != secondDate,
+        //        Message = $"Date is not same as {secondDateName}"
+        //    };
         private static dynamic IsInvalid(int price) => new
         {
             Condition = price == default,
