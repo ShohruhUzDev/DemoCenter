@@ -8,7 +8,7 @@ namespace DemoCenter.Services.Foundations.Students
 {
     public partial class StudentService
     {
-        private static void ValidateStudentOnAdd(Student student)
+        private  void ValidateStudentOnAdd(Student student)
         {
             ValidationStudentNotNull(student);
 
@@ -19,6 +19,7 @@ namespace DemoCenter.Services.Foundations.Students
                 (Rule: IsInvalid(student.Phone), Parameter: nameof(Student.Phone)),
                 (Rule: IsInvalid(student.CreatedDate), Parameter: nameof(Student.CreatedDate)),
                 (Rule: IsInvalid(student.UpdatedDate), Parameter: nameof(Student.UpdatedDate)),
+                (Rule: IsNotRecent(student.CreatedDate), Parameter: nameof(student.CreatedDate)),
 
                 (Rule: IsInvalid(
                     firstDate: student.CreatedDate,
