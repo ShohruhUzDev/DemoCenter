@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
+using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -44,6 +45,47 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldTrowDependencyValidationExceptionOnAddIfDuplicateErrorOccursAndLogItAsync()
+        {
+            // given
+            Group someGroup = CreateRandomGroup();
+            string someMessage = GetRandomString();
+            var duplicateKeyException = new DuplicateKeyException(someMessage);
+
+            var alreadyExistsGroupException =
+                new AlreadyExistGroupException(duplicateKeyException);
+
+            var expectedGroupDependencyValidationException =
+                new GroupDependencyValidationException(alreadyExistsGroupException);
+
+            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrenDateTime())
+                .Throws(duplicateKeyException);
+
+            // when
+            ValueTask<Group> addGroupTask = this.groupService.AddGroupAsync(someGroup);
+
+            GroupDependencyValidationException actualGroupDependencyValidationException =
+                await Assert.ThrowsAsync<GroupDependencyValidationException>(addGroupTask.AsTask);
+
+            // then
+            actualGroupDependencyValidationException.Should().BeEquivalentTo(
+                expectedGroupDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(SameExceptonAs(
+                expectedGroupDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker => broker.InsertGroupAsync(
+               It.IsAny<Group>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
