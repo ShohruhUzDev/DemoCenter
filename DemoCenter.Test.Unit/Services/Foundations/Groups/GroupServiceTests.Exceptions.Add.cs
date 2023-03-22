@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
 using EFxceptions.Models.Exceptions;
@@ -127,5 +128,46 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Group someGroup = CreateRandomGroup();
+            var serviceException = new Exception();
+
+            var failedGroupServiceException =
+                new FailedGroupServiceException(serviceException);
+
+            var expectedGroupServiceException =
+                new GroupServiceException(failedGroupServiceException);
+
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrenDateTime())
+                    .Throws(serviceException);
+
+            //when
+            ValueTask<Group> addGroupTask =
+                this.groupService.AddGroupAsync(someGroup);
+
+            GroupServiceException actualGroupServiceException =
+                await Assert.ThrowsAsync<GroupServiceException>(addGroupTask.AsTask);
+
+            //then
+            actualGroupServiceException.Should().BeEquivalentTo(expectedGroupServiceException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptonAs(
+                    expectedGroupServiceException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertGroupAsync(It.IsAny<Group>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
