@@ -80,6 +80,12 @@ namespace DemoCenter.Services.Foundations.Teachers
 
                 throw CreateAndLogCriticalDependencyException(failedTeacherStorageException);
             }
+            catch (Exception serviceException)
+            {
+                var failedTeacherServiceException = new FailedTeacherServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedTeacherServiceException);
+            }
         }
 
         private TeacherDependencyException CreateAndLogDependencyException(Xeption exception)
