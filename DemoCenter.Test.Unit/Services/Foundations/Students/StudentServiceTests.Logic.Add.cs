@@ -20,7 +20,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             Student persistedStudent = inputStudent;
             Student expectedStuden = persistedStudent.DeepClone();
 
-            this.dateTimeBrokerMock.Setup(broker=>
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrenDateTime()).Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>

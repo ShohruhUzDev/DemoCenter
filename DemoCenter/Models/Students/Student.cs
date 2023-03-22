@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using DemoCenter.Models.Groups;
 using DemoCenter.Models.GroupStudents;
 
 namespace DemoCenter.Models.Students
@@ -17,6 +16,6 @@ namespace DemoCenter.Models.Students
 
         [JsonIgnore]
         public virtual IEnumerable<GroupStudent> GroupStudents { get; set; }
-    
+
     }
 }

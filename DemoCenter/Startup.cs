@@ -1,12 +1,10 @@
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
-using DemoCenter.Models.Teachers.Exceptions;
 using DemoCenter.Services.Foundations.Groups;
 using DemoCenter.Services.Foundations.Students;
 using DemoCenter.Services.Foundations.Subjects;
 using DemoCenter.Services.Foundations.Teachers;
-using DemoCenter.Services.Foundations.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -37,7 +35,7 @@ namespace DemoCenter
 
             RegisterBrokers(services);
             AddFoundationServices(services);
-           
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +60,7 @@ namespace DemoCenter
             services.AddTransient<IStorageBroker, StorageBroker>();
             services.AddTransient<ILoggingBroker, LoggingBroker>();
             services.AddTransient<IDateTimeBroker, DateTimeBroker>();
-         
+
         }
 
         private static void AddFoundationServices(IServiceCollection services)

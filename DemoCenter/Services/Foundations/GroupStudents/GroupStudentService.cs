@@ -26,24 +26,24 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
         public ValueTask<GroupStudent> AddGroupStudentAsync(GroupStudent student) =>
             this.storageBroker.InsertGroupStudentAsync(student);
-        
+
         public IQueryable<GroupStudent> RetrieveAllGroupStudents() =>
             this.storageBroker.SelectAllGroupStudents();
- 
+
 
         public ValueTask<GroupStudent> RetrieveGroupStudentByIdAsync(Guid groupId, Guid studentId) =>
             this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
-        
+
         public async ValueTask<GroupStudent> ModifyGroupStudentAsync(GroupStudent groupStudent)
         {
-            GroupStudent maybeGroupStudent =await
+            GroupStudent maybeGroupStudent = await
                 this.storageBroker.SelectGroupStudentByIdAsync(groupStudent.GroupId, groupStudent.StudentId);
-           return await this.storageBroker.UpdateGroupStudentAsync(groupStudent);
+            return await this.storageBroker.UpdateGroupStudentAsync(groupStudent);
         }
 
         public async ValueTask<GroupStudent> RemoveGroupStudentByIdAsync(Guid groupId, Guid studentId)
         {
-            GroupStudent maybeGroupStudent =await
+            GroupStudent maybeGroupStudent = await
                 this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
 
             return await this.storageBroker.DeleteGroupStudentAsync(maybeGroupStudent);

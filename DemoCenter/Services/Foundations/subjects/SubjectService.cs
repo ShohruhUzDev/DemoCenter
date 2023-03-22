@@ -40,7 +40,7 @@ namespace DemoCenter.Services.Foundations.Subjects
             TryCatch(async () =>
             {
                 ValidateSubjectId(subjectId);
-                Subject maybeSubject= await this.storageBroker.SelectSubjectByIdAsync(subjectId);
+                Subject maybeSubject = await this.storageBroker.SelectSubjectByIdAsync(subjectId);
                 ValidatStorageSubjectExist(maybeSubject, subjectId);
 
                 return maybeSubject;

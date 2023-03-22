@@ -65,7 +65,7 @@ namespace DemoCenter.Services.Foundations.Groups
             }
         }
 
-        private  IQueryable<Group> TryCatch(ReturningGroupsFunction returningGroupsFunction)
+        private IQueryable<Group> TryCatch(ReturningGroupsFunction returningGroupsFunction)
         {
             try
             {
@@ -77,9 +77,9 @@ namespace DemoCenter.Services.Foundations.Groups
 
                 throw CreateAndLogCriticalDependencyException(failedGroupStorageException);
             }
-            catch(Exception serviceException)
+            catch (Exception serviceException)
             {
-                var failedGroupServiceException=new FailedGroupServiceException(serviceException);
+                var failedGroupServiceException = new FailedGroupServiceException(serviceException);
 
                 throw CreateAndLogServiceException(failedGroupServiceException);
             }

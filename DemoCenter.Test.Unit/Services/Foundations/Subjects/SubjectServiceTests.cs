@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Net.NetworkInformation;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
-using DemoCenter.Models.Students;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Services.Foundations.Subjects;
 using Moq;
@@ -71,7 +69,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         }
 
         private static int GetRandomNegativeNumber() =>
-          -1* new IntRange(min: 2, max: 99).GetValue();
+          -1 * new IntRange(min: 2, max: 99).GetValue();
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 99).GetValue();
 

@@ -32,9 +32,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             //then
             actualTeacherValidationException.Should()
-                .BeEquivalentTo(expectedTeacherValidationException);  
-            
-            this.loggingBrokerMock.Verify(broker=>
+                .BeEquivalentTo(expectedTeacherValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(
                     SameExceptionAs(expectedTeacherValidationException))), Times.Once);
 
@@ -50,12 +50,12 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldThrowNotFoundExceptionOnRemoveIfTeacherNotFoundAndLogItAsync()
         {
             //given
-            Guid randomTeacherId= Guid.NewGuid();
+            Guid randomTeacherId = Guid.NewGuid();
             Guid inputTeacherId = randomTeacherId;
             Teacher noTeacher = null;
-            var notFoundTeacherException=new NotFoundTeacherException(inputTeacherId);
+            var notFoundTeacherException = new NotFoundTeacherException(inputTeacherId);
 
-            var expectedTeacherValidationException = 
+            var expectedTeacherValidationException =
                 new TeacherValidationException(notFoundTeacherException);
 
             this.storageBrokerMock.Setup(broker =>
@@ -66,11 +66,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             TeacherValidationException actualTeacherValidationException =
                 await Assert.ThrowsAsync<TeacherValidationException>(onRemoveTeacherTask.AsTask);
-                           
+
             //then
             actualTeacherValidationException.Should().BeEquivalentTo(expectedTeacherValidationException);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeacherByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

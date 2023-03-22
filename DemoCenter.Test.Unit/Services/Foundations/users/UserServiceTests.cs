@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Sockets;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
@@ -22,7 +21,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
         public UserServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
-            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();  
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.userService = new UserService(
@@ -80,7 +79,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
 
         private static Filler<User> CreateUserFiller(DateTimeOffset date)
         {
-            var filler= new Filler<User>();
+            var filler = new Filler<User>();
 
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(date);

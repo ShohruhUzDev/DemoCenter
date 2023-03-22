@@ -98,7 +98,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameAsUpdatedDateAndLogItAsync()
         {
             //given
-            
+
             DateTimeOffset randomDate = GetRandomDateTimeOffset();
             DateTimeOffset anotherRandomDateTime = GetRandomDateTimeOffset();
             Group randoGroup = CreateRandomGroup(randomDate);
@@ -113,8 +113,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             var expectedGroupValidationException =
                 new GroupValidationException(invalidGroupException);
 
-            this.dateTimeBrokerMock.Setup(broker=>
-                broker.GetCurrenDateTime()).Returns(randomDate);    
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(randomDate);
 
             //when
             ValueTask<Group> addGroupTask = this.groupService.AddGroupAsync(invalidGroup);
@@ -126,8 +126,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroupValidationException.Should()
                 .BeEquivalentTo(expectedGroupValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker=>
-                broker.GetCurrenDateTime(), Times.Once());  
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptonAs(

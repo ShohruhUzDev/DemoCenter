@@ -122,14 +122,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 key: nameof(Student.CreatedDate),
                 values: $"Date is not same as {nameof(Student.UpdatedDate)}");
 
-            var expectedStudentValidationException = 
+            var expectedStudentValidationException =
                 new StudentValidationException(invalidStudentException);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrenDateTime()).Returns(randomDate);
 
             //when
-            ValueTask<Student> addStudentTask = 
+            ValueTask<Student> addStudentTask =
                 this.studentService.AddStudentAsync(invalidStudent);
 
             var actualStudentValidationException =
@@ -138,8 +138,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             //then
             actualStudentValidationException.Should().BeEquivalentTo(expectedStudentValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker=>
-                broker.GetCurrenDateTime(), Times.Once());  
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(

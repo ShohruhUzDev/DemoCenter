@@ -14,7 +14,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
         public async Task ShouldRetrieveGroupStudentByIdAsync()
         {
             //given
-            Guid randomGroupId= Guid.NewGuid();
+            Guid randomGroupId = Guid.NewGuid();
             Guid inputGroupId = randomGroupId;
             Guid randomStudentId = Guid.NewGuid();
             Guid inputStudentId = randomStudentId;
@@ -29,11 +29,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             //when
             GroupStudent actualGroupStudent = await
                 this.groupStudentService.RetrieveGroupStudentByIdAsync(inputGroupId, inputStudentId);
-            
+
             //then
             actualGroupStudent.Should().BeEquivalentTo(expectedGroupStudent);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectGroupStudentByIdAsync(inputGroupId, inputStudentId), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();

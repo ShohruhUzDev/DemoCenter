@@ -27,14 +27,14 @@ namespace DemoCenter.Services.Foundations.Groups
         public ValueTask<Group> AddGroupAsync(Group group) =>
         TryCatch(async () =>
         {
-          
+
             ValidateGroupOnAdd(group);
 
             return await this.storageBroker.InsertGroupAsync(group);
         });
 
         public IQueryable<Group> RetrieveAllGroups() =>
-          TryCatch( () =>  this.storageBroker.SelectAllGroups());
+          TryCatch(() => this.storageBroker.SelectAllGroups());
 
 
         public ValueTask<Group> RetrieveGroupByIdAsync(Guid groupId) =>
@@ -52,8 +52,8 @@ namespace DemoCenter.Services.Foundations.Groups
             {
                 ValidateGroupOnModify(group);
                 var maybeGroup = await this.storageBroker.SelectGroupByIdAsync(group.Id);
-               ValidateAgainstStorageGroupOnModify(inputGroup: group, storageGroup: maybeGroup);
-               
+                ValidateAgainstStorageGroupOnModify(inputGroup: group, storageGroup: maybeGroup);
+
                 return await this.storageBroker.UpdateGroupAsync(group);
             });
 

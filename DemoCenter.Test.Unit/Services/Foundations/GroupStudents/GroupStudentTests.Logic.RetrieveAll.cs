@@ -17,7 +17,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             IQueryable<GroupStudent> storageGroupStudents = randomGroupStudents;
             IQueryable<GroupStudent> expectedGroupStudents = storageGroupStudents;
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllGroupStudents())
                     .Returns(storageGroupStudents);
 

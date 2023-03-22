@@ -27,9 +27,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrenDateTime()).Throws(sqlException);
 
-          
+
             //when
-            ValueTask<Group> addGroupTask=this.groupService.AddGroupAsync(someGroup);
+            ValueTask<Group> addGroupTask = this.groupService.AddGroupAsync(someGroup);
 
             GroupDependencyException actualGroupDependencyException =
                 await Assert.ThrowsAsync<GroupDependencyException>(addGroupTask.AsTask);
@@ -141,7 +141,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             var expectedGroupServiceException =
                 new GroupServiceException(failedGroupServiceException);
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrenDateTime())
                     .Throws(serviceException);
 

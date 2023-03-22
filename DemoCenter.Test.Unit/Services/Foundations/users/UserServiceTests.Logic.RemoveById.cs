@@ -25,21 +25,21 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(inputUserId))
                     .ReturnsAsync(storageUser);
-            
-            this.storageBrokerMock.Setup(broker=>
+
+            this.storageBrokerMock.Setup(broker =>
                 broker.DeleteUserAsync(expectedInputUser))
                     .ReturnsAsync(deletedUser);
 
             //when
-            User actualUser=await this.userService.RemoveUserByIdAsync(inputUserId);
+            User actualUser = await this.userService.RemoveUserByIdAsync(inputUserId);
 
             //then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
-            this.storageBrokerMock.Verify(broker=>
-                broker.SelectUserByIdAsync(inputUserId), Times.Once()); 
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(inputUserId), Times.Once());
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.DeleteUserAsync(expectedInputUser), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.Reflection.Metadata;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 
@@ -8,7 +6,7 @@ namespace DemoCenter.Services.Foundations.Students
 {
     public partial class StudentService
     {
-        private  void ValidateStudentOnAdd(Student student)
+        private void ValidateStudentOnAdd(Student student)
         {
             ValidationStudentNotNull(student);
 
@@ -43,7 +41,7 @@ namespace DemoCenter.Services.Foundations.Students
                 (Rule: IsInvalid(student.CreatedDate), Parameter: nameof(Student.CreatedDate)),
                 (Rule: IsInvalid(student.UpdatedDate), Parameter: nameof(Student.UpdatedDate)),
                 (Rule: IsNotRecent(student.UpdatedDate), Parameter: nameof(student.UpdatedDate)),
-               
+
                 (Rule: IsSame(
                     firstDate: student.UpdatedDate,
                     secondDate: student.CreatedDate,
@@ -52,7 +50,7 @@ namespace DemoCenter.Services.Foundations.Students
                     Parameter: nameof(Student.UpdatedDate)));
         }
 
-        private  void ValidateAgainstStorageStudentOnModify(Student inputStudent, Student storageStudent)
+        private void ValidateAgainstStorageStudentOnModify(Student inputStudent, Student storageStudent)
         {
             ValidateStorageStudentExist(storageStudent, inputStudent.Id);
 

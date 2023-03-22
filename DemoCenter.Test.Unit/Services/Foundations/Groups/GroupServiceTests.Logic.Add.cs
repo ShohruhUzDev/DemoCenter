@@ -14,14 +14,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldAddGroupAsync()
         {
             //given
-            DateTimeOffset randomDateTime=GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             Group randomGroup = CreateRandomGroup(randomDateTime);
             Group inputGroup = randomGroup;
             Group persistedGroup = inputGroup;
             Group expectedGroup = persistedGroup.DeepClone();
 
-            this.dateTimeBrokerMock.Setup(broker=>
-                broker.GetCurrenDateTime()).Returns(randomDateTime);  
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime()).Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
             broker.InsertGroupAsync(inputGroup)).ReturnsAsync(persistedGroup);
@@ -33,7 +33,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             //then
             actualGroup.Should().BeEquivalentTo(expectedGroup);
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>

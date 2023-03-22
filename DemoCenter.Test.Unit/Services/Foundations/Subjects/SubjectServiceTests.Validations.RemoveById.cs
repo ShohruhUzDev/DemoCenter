@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DemoCenter.Models.Students.Exceptions;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 using FluentAssertions;
@@ -22,11 +21,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 key: nameof(Subject.Id),
                 values: "Id is required");
 
-            var expectedSubjectValidationException = 
+            var expectedSubjectValidationException =
                 new SubjectValidationException(invalidSubjectException);
 
             //when
-            ValueTask<Subject> onRemoveSubjectTask=this.subjectService
+            ValueTask<Subject> onRemoveSubjectTask = this.subjectService
                 .RemoveSubjectByIdAsync(invalidSubjectId);
 
             SubjectValidationException actualSubjectValidationException =
@@ -52,7 +51,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         public async Task ShouldThrowNotFoundExceptionOnRemoveIfStudentIsNotFoundAndLogItAsync()
         {
             //given
-            Guid randomSubjectId= Guid.NewGuid();
+            Guid randomSubjectId = Guid.NewGuid();
             Guid inputSubjectId = randomSubjectId;
             Subject noSubject = null;
             var notFoundSubjectException = new NotFoundSubjectException(inputSubjectId);
@@ -62,9 +61,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectSubjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noSubject);
-            
+
             //when
-            ValueTask<Subject> onRemoveSubjectTask=this.subjectService.RemoveSubjectByIdAsync(inputSubjectId);
+            ValueTask<Subject> onRemoveSubjectTask = this.subjectService.RemoveSubjectByIdAsync(inputSubjectId);
 
             SubjectValidationException actualSubjectValidationException =
                 await Assert.ThrowsAsync<SubjectValidationException>(onRemoveSubjectTask.AsTask);
@@ -73,10 +72,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             actualSubjectValidationException.Should()
                 .BeEquivalentTo(expectedSubjectValidationException);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectSubjectByIdAsync(It.IsAny<Guid>()), Times.Once());
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedSubjectValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
