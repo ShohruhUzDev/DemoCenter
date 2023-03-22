@@ -3,6 +3,7 @@ using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.Groups
@@ -41,6 +42,12 @@ namespace DemoCenter.Services.Foundations.Groups
                      new AlreadyExistGroupException(duplicateKeyException);
 
                 throw CreateAndDependencyValidationException(failedTicketDependencyValidationException);
+            }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedGroupException = new LockedGroupException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedGroupException);
             }
         }
 
