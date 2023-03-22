@@ -125,14 +125,6 @@ namespace DemoCenter.Services.Foundations.Students
             Message = "Value is required"
         };
 
-        //private static dynamic IsInvalid(
-        //    DateTimeOffset firstDate,
-        //    DateTimeOffset secondDate,
-        //    string secondDateName) => new
-        //    {
-        //        Condition = firstDate != secondDate,
-        //        Message = $"Date is not same as {secondDateName}"
-        //    };
 
         private static void ValidationStudentNotNull(Student student)
         {

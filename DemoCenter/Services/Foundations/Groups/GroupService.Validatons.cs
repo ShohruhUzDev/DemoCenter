@@ -124,14 +124,7 @@ namespace DemoCenter.Services.Foundations.Groups
             Condition = String.IsNullOrWhiteSpace(text),
             Message = "Text is required"
         };
-        //private static dynamic IsInvalid(
-        //   DateTimeOffset firstDate,
-        //   DateTimeOffset secondDate,
-        //   string secondDateName) => new
-        //   {
-        //       Condition = firstDate != secondDate,
-        //       Message = $"Date is not same as {secondDateName}"
-        //   };
+
         private static void ValidationGroupNotNull(Group group)
         {
             if (group is null)

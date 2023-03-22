@@ -114,14 +114,7 @@ namespace DemoCenter.Services.Foundations.Subjects
             Condition = String.IsNullOrWhiteSpace(text),
             Message = "Text is required"
         };
-        //private static dynamic IsInvalid(
-        //    DateTimeOffset firstDate,
-        //    DateTimeOffset secondDate,
-        //    string secondDateName) => new
-        //    {
-        //        Condition = firstDate != secondDate,
-        //        Message = $"Date is not same as {secondDateName}"
-        //    };
+     
         private static dynamic IsInvalid(int price) => new
         {
             Condition = price == default,
