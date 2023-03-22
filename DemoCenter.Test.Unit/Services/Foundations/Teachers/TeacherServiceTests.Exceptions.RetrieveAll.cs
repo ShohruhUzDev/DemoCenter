@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DemoCenter.Models.Teachers.Exceptions;
+using FluentAssertions;
+using Microsoft.Data.SqlClient;
 using Moq;
 using System;
 using Xunit;
@@ -24,7 +26,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             //when
             Action retrieveAllTeachersAction = () =>
-                this.TeacherService.RetrieveAllTeachers();
+                this.teacherService.RetrieveAllTeachers();
 
             TeacherDependencyException actualTeacherDependencyException =
                 Assert.Throws<TeacherDependencyException>(retrieveAllTeachersAction);
