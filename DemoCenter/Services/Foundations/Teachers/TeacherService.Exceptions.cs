@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Xeptions;
 
@@ -37,7 +38,22 @@ namespace DemoCenter.Services.Foundations.Teachers
 
                 throw CreateAndLogCriticalDependencyException(failedTeacherStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var failedTeacherDependencyValidationException =
+                     new AlreadyExistTeacherException(duplicateKeyException);
 
+                throw CreateAndDependencyValidationException(failedTeacherDependencyValidationException);
+            }
+
+        }
+
+        private TeacherDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var teacherDependencyValidationException = new TeacherDependencyValidationException(exception);
+            this.loggingBroker.LogError(teacherDependencyValidationException);
+
+            return teacherDependencyValidationException;
         }
         private TeacherDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
