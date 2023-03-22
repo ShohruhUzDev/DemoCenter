@@ -71,6 +71,12 @@ namespace DemoCenter.Services.Foundations.Groups
 
                 throw CreateAndLogCriticalDependencyException(failedGroupStorageException);
             }
+            catch(Exception serviceException)
+            {
+                var failedGroupServiceException=new FailedGroupServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedGroupServiceException);
+            }
         }
 
         private GroupServiceException CreateAndLogServiceException(Exception exception)
