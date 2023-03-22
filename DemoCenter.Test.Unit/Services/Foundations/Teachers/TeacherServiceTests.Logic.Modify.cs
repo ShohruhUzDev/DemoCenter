@@ -14,7 +14,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldModifyTeacherAsync()
         {
             //given
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTime();
             Teacher randomTeacher = CreateRandomModifyTeacher(randomDate);
             Teacher inputTeacher = randomTeacher;
             Teacher storageTeacher = inputTeacher.DeepClone();

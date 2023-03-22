@@ -14,7 +14,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldAddGroupAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Group randomGroup = CreateRandomGroup(randomDateTime);
             Group inputGroup = randomGroup;
             Group persistedGroup = inputGroup;

@@ -14,7 +14,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         public async Task ShouldModifySubjectAsync()
         {
             //given
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTime();
             Subject randomSubject = CreateRandomModifySubjects(randomDate);
             Subject inputSubject = randomSubject;
             Subject storageSubject = inputSubject.DeepClone();

@@ -14,7 +14,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
         public async Task ShouldModifyStudentAsync()
         {
             //given
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTime();
             Student randomStudent = CreateRandomModifyStudent(randomDate);
             Student inputStudent = randomStudent;
             Student storageStudent = inputStudent.DeepClone();

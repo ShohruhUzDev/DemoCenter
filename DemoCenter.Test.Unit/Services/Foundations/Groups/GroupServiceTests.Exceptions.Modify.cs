@@ -16,7 +16,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldThrowCriticalDependencyExceptionOnModifyIfSqlErrorOccursAndLogItAsync()
         {
             // given
-            DateTimeOffset someDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset someDateTime = GetRandomDateTime();
             Group randomGroup = CreateRandomGroup(someDateTime);
             Group someGroup = randomGroup;
             Guid GroupId = someGroup.Id;
@@ -66,7 +66,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         {
             // given
             int minutesInPast = GetRandomNegativeNumber();
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Group randomGroup = CreateRandomGroup(randomDateTime);
             Group someGroup = randomGroup;
             Guid GroupId = someGroup.Id;
@@ -118,7 +118,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         {
             // given
             int minutesInPast = GetRandomNegativeNumber();
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Group randomGroup = CreateRandomGroup(randomDateTime);
             Group someGroup = randomGroup;
             someGroup.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
@@ -169,7 +169,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         {
             // given
             int minuteInPast = GetRandomNegativeNumber();
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Group randomGroup = CreateRandomGroup(randomDateTime);
             Group someGroup = randomGroup;
             someGroup.CreatedDate = randomDateTime.AddMinutes(minuteInPast);

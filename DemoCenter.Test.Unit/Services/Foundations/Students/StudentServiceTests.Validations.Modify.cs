@@ -89,7 +89,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 new StudentValidationException(invalidStudentException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime()).Returns(GetRandomDateTimeOffset);
+                broker.GetCurrentDateTime()).Returns(GetRandomDateTime);
 
             //when
             ValueTask<Student> modifyStudentTask =
@@ -122,7 +122,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Student randomStudent = CreateRandomStudent(randomDateTime);
             Student invalidStudent = randomStudent;
             var invalidStudentException = new InvalidStudentException();
@@ -168,7 +168,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             int invalidSeconds)
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Student randomStudent = CreateRandomStudent(randomDateTime);
             Student inputStudent = randomStudent;
             inputStudent.UpdatedDate = randomDateTime.AddMinutes(invalidSeconds);
@@ -216,7 +216,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
         {
             //given
             int randomNegativeMinutes = GetRandomNegativeNumber();
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Student randomStudent = CreateRandomStudent(randomDateTime);
             Student nonExistStudent = randomStudent;
             nonExistStudent.CreatedDate = randomDateTime.AddMinutes(randomNegativeMinutes);
@@ -262,7 +262,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             //given
             int randomNumber = GetRandomNegativeNumber();
             int randomMinutes = randomNumber;
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Student randomStudent = CreateRandomModifyStudent(randomDateTime);
             Student invalidStudent = randomStudent.DeepClone();
             Student storageStudent = invalidStudent.DeepClone();
@@ -313,7 +313,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
         public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             Student randomStudent = CreateRandomModifyStudent(randomDateTime);
             Student invalidStudent = randomStudent;
             Student storageStudent = randomStudent.DeepClone();

@@ -14,7 +14,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         public async Task ShouldAddSubjectAsync()
         {
             //given
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTime();
             Subject randomSubject = CreateRandomSubject(randomDate);
             Subject inputSubject = randomSubject;
             Subject persistedSubject = inputSubject;

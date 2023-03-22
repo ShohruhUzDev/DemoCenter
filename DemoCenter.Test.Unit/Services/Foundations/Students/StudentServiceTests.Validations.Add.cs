@@ -112,7 +112,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
         {
             //given
             int randomMinutes = GetRandomNumber();
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTime();
             Student randomStudent = CreateRandomStudent(randomDate);
             Student invalidStudent = randomStudent;
             invalidStudent.UpdatedDate = randomDate.AddMinutes(randomMinutes);
@@ -159,7 +159,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                int invalidSeconds)
         {
             // given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             DateTimeOffset invalidRandomDateTime = randomDateTime.AddSeconds(invalidSeconds);
             Student randomInvalidStudent = CreateRandomStudent(invalidRandomDateTime);
             Student invalidStudent = randomInvalidStudent;

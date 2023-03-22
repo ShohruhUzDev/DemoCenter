@@ -4,6 +4,7 @@ using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -15,7 +16,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldThrowCriticalDependencyExceptionOnModifyIfSqlErrorOccursAndLogItAsync()
         {
             // given
-            DateTimeOffset someDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset someDateTime = GetRandomDateTime();
             Teacher randomTeacher = CreateRandomTeacher(someDateTime);
             Teacher someTeacher = randomTeacher;
             Guid TeacherId = someTeacher.Id;
@@ -59,5 +60,58 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnModifyIfDatabaseUpdateExceptionOccursAndLogItAsync()
+        {
+            // given
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Teacher randomTeacher = CreateRandomTeacher(randomDateTime);
+            Teacher someTeacher = randomTeacher;
+            Guid TeacherId = someTeacher.Id;
+            someTeacher.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            var databaseUpdateException = new DbUpdateException();
+
+            var failedTeacherException =
+                new FailedTeacherStorageException(databaseUpdateException);
+
+            var expectedTeacherDependencyException =
+                new TeacherDependencyException(failedTeacherException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTeacherByIdAsync(TeacherId))
+                    .ThrowsAsync(databaseUpdateException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Teacher> modifyTeacherTask =
+                this.teacherService.ModifyTeacherAsync(someTeacher);
+
+            TeacherDependencyException actualTeacherDependencyException =
+                 await Assert.ThrowsAsync<TeacherDependencyException>(
+                     modifyTeacherTask.AsTask);
+
+            // then
+            actualTeacherDependencyException.Should().BeEquivalentTo(
+                expectedTeacherDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeacherByIdAsync(TeacherId), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeacherDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+
     }
 }

@@ -14,7 +14,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         public async Task ShouldModifyGroupAsync()
         {
             //given
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTime();
             Group randomGroup = CreateRandomModifyGroup(randomDate);
             Group inputGroup = randomGroup;
             Group storageGroup = inputGroup.DeepClone();

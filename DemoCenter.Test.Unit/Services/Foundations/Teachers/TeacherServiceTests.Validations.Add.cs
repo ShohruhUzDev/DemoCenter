@@ -113,7 +113,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         {
             //given
             int randomMinutes = GetRandomNumber();
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTime();
             Teacher randomTeacher = CreateRandomTeacher(randomDate);
             Teacher invalidTeacher = randomTeacher;
             invalidTeacher.UpdatedDate = randomDate.AddMinutes(randomMinutes);
@@ -160,7 +160,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                  int invalidSeconds)
         {
             // given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             DateTimeOffset invalidRandomDateTime = randomDateTime.AddSeconds(invalidSeconds);
             Teacher randomInvalidTeacher = CreateRandomTeacher(invalidRandomDateTime);
             Teacher invalidTeacher = randomInvalidTeacher;

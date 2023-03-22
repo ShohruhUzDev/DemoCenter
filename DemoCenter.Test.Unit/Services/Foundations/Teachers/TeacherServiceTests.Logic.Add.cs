@@ -14,7 +14,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
         public async Task ShouldAddTeacherAsync()
         {
             //given
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTime();
             Teacher randomTeacher = CreateRandomTeacher(randomDate);
             Teacher inputTeacher = randomTeacher;
             Teacher persistedTeacher = inputTeacher;

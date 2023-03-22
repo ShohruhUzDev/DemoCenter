@@ -107,8 +107,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         {
             //given
 
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
-            DateTimeOffset anotherDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTime();
+            DateTimeOffset anotherDateTime = GetRandomDateTime();
             Subject randomSubject = CreateRandomSubject(randomDate);
             Subject invalidSubject = randomSubject;
             invalidSubject.UpdatedDate = anotherDateTime;
@@ -152,7 +152,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                   int invalidSeconds)
         {
             // given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             DateTimeOffset invalidRandomDateTime = randomDateTime.AddSeconds(invalidSeconds);
             Subject randomInvalidSubject = CreateRandomSubject(invalidRandomDateTime);
             Subject invalidSubject = randomInvalidSubject;
