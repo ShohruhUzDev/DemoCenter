@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
 using EFxceptions.Models.Exceptions;
@@ -49,8 +50,21 @@ namespace DemoCenter.Services.Foundations.Groups
 
                 throw CreateAndDependencyValidationException(lockedGroupException);
             }
+            catch (Exception serviceException)
+            {
+                var failedGroupServiceException = new FailedGroupServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedGroupServiceException);
+            }
         }
 
+        private GroupServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var groupServiceException=new GroupServiceException(exception); 
+            this.loggingBroker.LogError(groupServiceException);
+
+            return groupServiceException;   
+        }
         private GroupDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
             var groupDependencyValidationException = new GroupDependencyValidationException(exception);
@@ -67,10 +81,10 @@ namespace DemoCenter.Services.Foundations.Groups
         }
         private GroupDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
-            var groupDependencyException=new GroupDependencyException(exception);   
+            var groupDependencyException = new GroupDependencyException(exception);
             this.loggingBroker.LogCritical(groupDependencyException);
 
-            return groupDependencyException;    
+            return groupDependencyException;
         }
     }
 }
