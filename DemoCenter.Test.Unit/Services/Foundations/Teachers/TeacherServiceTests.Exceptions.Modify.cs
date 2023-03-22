@@ -163,5 +163,55 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            int minuteInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Teacher randomTeacher = CreateRandomTeacher(randomDateTime);
+            Teacher someTeacher = randomTeacher;
+            someTeacher.CreatedDate = randomDateTime.AddMinutes(minuteInPast);
+            var serviceException = new Exception();
+
+            var failedTeacherException =
+                new FailedTeacherServiceException(serviceException);
+
+            var expectedTeacherServiceException =
+                new TeacherServiceException(failedTeacherException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTeacherByIdAsync(someTeacher.Id))
+                    .ThrowsAsync(serviceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Teacher> modifyTeacherTask =
+                this.TeacherService.ModifyTeacherAsync(someTeacher);
+
+            TeacherServiceException actualTeacherServiceException =
+                await Assert.ThrowsAsync<TeacherServiceException>(
+                    modifyTeacherTask.AsTask);
+
+            // then
+            actualTeacherServiceException.Should().BeEquivalentTo(
+                expectedTeacherServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeacherByIdAsync(someTeacher.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeacherServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
