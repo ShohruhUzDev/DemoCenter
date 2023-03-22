@@ -189,7 +189,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             // when
             ValueTask<Teacher> modifyTeacherTask =
-                this.TeacherService.ModifyTeacherAsync(someTeacher);
+                this.teacherService.ModifyTeacherAsync(someTeacher);
 
             TeacherServiceException actualTeacherServiceException =
                 await Assert.ThrowsAsync<TeacherServiceException>(
