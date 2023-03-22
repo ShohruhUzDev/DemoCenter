@@ -3,7 +3,9 @@ using DemoCenter.Models.Teachers.Exceptions;
 using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -32,7 +34,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 await Assert.ThrowsAsync<TeacherDependencyException>(addTeacherTask.AsTask);
 
             //then
-            actualTeacherDependencyException.Should().BeEquivalentTo(expectedTeacherDependencyException);
+            actualTeacherDependencyException.Should()
+                .BeEquivalentTo(expectedTeacherDependencyException);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrenDateTime(), Times.Once);
@@ -90,5 +93,45 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnAddIfDbConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            Teacher someTeacher = CreateRandomTeacher();
+            var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var lockedTeacherException = new LockedTeacherException(dbUpdateConcurrencyException);
+           
+            var expectedTeacherDependencyValidationException = 
+                new TeacherDependencyValidationException(lockedTeacherException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrenDateTime())
+                    .Throws(dbUpdateConcurrencyException);
+
+            // when
+            ValueTask<Teacher> addTeacherTask = this.teacherService.AddTeacherAsync(someTeacher);
+
+            TeacherDependencyValidationException actualTeacherDependencyValidationException =
+                 await Assert.ThrowsAsync<TeacherDependencyValidationException>(addTeacherTask.AsTask);
+
+            // then
+            actualTeacherDependencyValidationException.Should()
+                .BeEquivalentTo(expectedTeacherDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrenDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(
+                SameExceptionAs(expectedTeacherDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.InsertTeacherAsync(It.IsAny<Teacher>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
