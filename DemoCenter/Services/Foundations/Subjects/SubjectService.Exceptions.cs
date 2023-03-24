@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 using EFxceptions.Models.Exceptions;
@@ -51,8 +52,21 @@ namespace DemoCenter.Services.Foundations.Subjects
                
                 throw CreateAndDependencyValidationException(lockedSubjectException);   
             }
+            catch(Exception exception)
+            {
+                var failedSubjectServiceException=new SubjectServiceException(exception);
+
+                throw CreateAndLogServiceException(failedSubjectServiceException);
+            }
         }
 
+        private SubjectServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var subjectServceException=new SubjectServiceException(exception);
+            this.loggingBroker.LogError(subjectServceException);
+
+            return subjectServceException;
+        }
         private SubjectDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
             var subjectDependencyValidationException = new SubjectDependencyValidationException(exception);
