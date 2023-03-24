@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.Subjects
@@ -36,8 +38,21 @@ namespace DemoCenter.Services.Foundations.Subjects
                var failedSubjectStorageException=new FailedSubjectStorageException(sqlException);
                 throw CreateAndLogCriticalDependencyException(failedSubjectStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsSubjectException = new AlreadyExistsSubjectException(duplicateKeyException);
+
+                throw CreateAndDependencyValidationException(alreadyExistsSubjectException);
+            }
         }
 
+        private SubjectDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var subjectDependencyValidationException = new SubjectDependencyValidationException(exception);
+            this.loggingBroker.LogError(subjectDependencyValidationException);
+
+            return subjectDependencyValidationException;    
+        }
         private SubjectDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
             var subjectDependencyException=new SubjectDependencyException(exception);
