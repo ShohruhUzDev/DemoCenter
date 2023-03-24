@@ -162,6 +162,55 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            int minuteInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Subject randomSubject = CreateRandomSubject(randomDateTime);
+            Subject someSubject = randomSubject;
+            someSubject.CreatedDate = randomDateTime.AddMinutes(minuteInPast);
+            var serviceException = new Exception();
 
+            var failedSubjectException =
+                new FailedSubjectServiceException(serviceException);
+
+            var expectedSubjectServiceException =
+                new SubjectServiceException(failedSubjectException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSubjectByIdAsync(someSubject.Id))
+                    .ThrowsAsync(serviceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Subject> modifySubjectTask =
+                this.subjectService.ModifySubjectAsync(someSubject);
+
+            SubjectServiceException actualSubjectServiceException =
+                await Assert.ThrowsAsync<SubjectServiceException>(
+                    modifySubjectTask.AsTask);
+
+            // then
+            actualSubjectServiceException.Should().BeEquivalentTo(
+                expectedSubjectServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSubjectByIdAsync(someSubject.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSubjectServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
