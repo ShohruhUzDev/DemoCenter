@@ -140,7 +140,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             Subject someSubject = CreateRandomSubject();
             var serviceException = new Exception();
 
-            var failedSubjectServiceException=new FailedSubjectStorageException(serviceException);
+            var failedSubjectServiceException=new SubjectServiceException(serviceException);
 
             var expectedSubjectServiceException = 
                 new SubjectServiceException(failedSubjectServiceException);

@@ -5,7 +5,6 @@ using DemoCenter.Models.Subjects.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.Subjects
@@ -35,9 +34,9 @@ namespace DemoCenter.Services.Foundations.Subjects
 
                 throw CreateAndLogValidationExcetion(notFoundSubjectException);
             }
-            catch(SqlException sqlException)
+            catch (SqlException sqlException)
             {
-               var failedSubjectStorageException=new FailedSubjectStorageException(sqlException);
+                var failedSubjectStorageException = new FailedSubjectStorageException(sqlException);
                 throw CreateAndLogCriticalDependencyException(failedSubjectStorageException);
             }
             catch (DuplicateKeyException duplicateKeyException)
@@ -46,15 +45,15 @@ namespace DemoCenter.Services.Foundations.Subjects
 
                 throw CreateAndDependencyValidationException(alreadyExistsSubjectException);
             }
-            catch(DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
-                var lockedSubjectException=new LockedSubjectException(dbUpdateConcurrencyException);    
-               
-                throw CreateAndDependencyValidationException(lockedSubjectException);   
+                var lockedSubjectException = new LockedSubjectException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedSubjectException);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
-                var failedSubjectServiceException=new SubjectServiceException(exception);
+                var failedSubjectServiceException = new SubjectServiceException(exception);
 
                 throw CreateAndLogServiceException(failedSubjectServiceException);
             }
@@ -62,7 +61,7 @@ namespace DemoCenter.Services.Foundations.Subjects
 
         private SubjectServiceException CreateAndLogServiceException(Exception exception)
         {
-            var subjectServceException=new SubjectServiceException(exception);
+            var subjectServceException = new SubjectServiceException(exception);
             this.loggingBroker.LogError(subjectServceException);
 
             return subjectServceException;
@@ -72,11 +71,11 @@ namespace DemoCenter.Services.Foundations.Subjects
             var subjectDependencyValidationException = new SubjectDependencyValidationException(exception);
             this.loggingBroker.LogError(subjectDependencyValidationException);
 
-            return subjectDependencyValidationException;    
+            return subjectDependencyValidationException;
         }
         private SubjectDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
-            var subjectDependencyException=new SubjectDependencyException(exception);
+            var subjectDependencyException = new SubjectDependencyException(exception);
             this.loggingBroker.LogCritical(subjectDependencyException);
 
             return subjectDependencyException;
