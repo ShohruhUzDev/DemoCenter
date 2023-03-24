@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Services.Foundations.Subjects;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -48,6 +50,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 secondsInFuture
             };
         }
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
+
+        private static SqlException CreateSqlException()=>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));   
 
         private Subject CreateRandomModifySubjects(DateTimeOffset date)
         {
