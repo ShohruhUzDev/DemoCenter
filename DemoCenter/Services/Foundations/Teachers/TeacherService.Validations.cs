@@ -14,6 +14,7 @@ namespace DemoCenter.Services.Foundations.Teachers
                 (Rule: IsInvalid(teacher.Id), Parameter: nameof(Teacher.Id)),
                 (Rule: IsInvalid(teacher.FirstName), Parameter: nameof(Teacher.FirstName)),
                 (Rule: IsInvalid(teacher.LastName), Parameter: nameof(Teacher.LastName)),
+                (Rule: IsInvalid(teacher.Phone), Parameter: nameof(Teacher.Phone)),
                 (Rule: IsInvalid(teacher.CreatedDate), Parameter: nameof(Teacher.CreatedDate)),
                 (Rule: IsInvalid(teacher.UpdatedDate), Parameter: nameof(Teacher.UpdatedDate)),
                 (Rule: IsNotRecent(teacher.CreatedDate), Parameter: nameof(Teacher.CreatedDate)),
@@ -34,6 +35,7 @@ namespace DemoCenter.Services.Foundations.Teachers
                 (Rule: IsInvalid(teacher.Id), Parameter: nameof(Teacher.Id)),
                 (Rule: IsInvalid(teacher.FirstName), Parameter: nameof(Teacher.FirstName)),
                 (Rule: IsInvalid(teacher.LastName), Parameter: nameof(Teacher.LastName)),
+                (Rule: IsInvalid(teacher.Phone), Parameter: nameof(Teacher.Phone)),
                 (Rule: IsInvalid(teacher.CreatedDate), Parameter: nameof(Teacher.CreatedDate)),
                 (Rule: IsInvalid(teacher.UpdatedDate), Parameter: nameof(Teacher.UpdatedDate)),
                 (Rule: IsNotRecent(teacher.UpdatedDate), Parameter: nameof(Teacher.UpdatedDate)),
@@ -120,7 +122,7 @@ namespace DemoCenter.Services.Foundations.Teachers
         private static dynamic IsInvalid(DateTimeOffset date) => new
         {
             Condition = date == default,
-            Message = "Value si required"
+            Message = "Value is required"
         };
 
         private static dynamic IsInvalid(

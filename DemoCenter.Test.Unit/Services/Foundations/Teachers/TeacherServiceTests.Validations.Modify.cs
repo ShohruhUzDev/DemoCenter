@@ -50,8 +50,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             //given
             var invalidTeacher = new Teacher
             {
-                FirstName = invalidString,
-                LastName = invalidString,
+                FirstName = invalidString
+              
             };
 
             var invalidTeacherException = new InvalidTeacherException();
@@ -66,6 +66,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             invalidTeacherException.AddData(
                 key: nameof(Teacher.LastName),
+                values: "Text is required");
+
+            invalidTeacherException.AddData(
+                key: nameof(Teacher.Phone),
                 values: "Text is required");
 
             invalidTeacherException.AddData(
@@ -269,7 +273,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
 
             invalidTeacherException.AddData(
                 key: nameof(Teacher.CreatedDate),
-                values: $"Date is not the same as {nameof(Teacher.CreatedDate)}");
+                values: $"Date is not same as {nameof(Teacher.CreatedDate)}");
 
             var expectedTeacherValidationExcepiton =
                 new TeacherValidationException(invalidTeacherException);
