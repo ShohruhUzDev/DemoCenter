@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
+using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -48,5 +49,48 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnAddIfDuplicateErrorOccursAndLogItAsync()
+        {
+            //given
+            Subject someSubject = CreateRandomSubject();
+            string someMessage = GetRandomString();
+            var duplicateKeyException = new DuplicateKeyException(someMessage);
+
+            var alreadyExistsSubjectException =
+                new AlreadyExistsSubjectException(duplicateKeyException);
+
+            var expextedSubjectDependencyValidationException=
+                new SubjectDependencyValidationException(alreadyExistsSubjectException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Throws(duplicateKeyException);
+
+            //when
+            ValueTask<Subject> addSubjectTask = this.subjectService.AddSubjectAsync(someSubject);
+
+            SubjectDependencyValidationException actualSubjectDependencyValidationException =
+                await Assert.ThrowsAsync<SubjectDependencyValidationException>(addSubjectTask.AsTask);
+
+            //then
+            actualSubjectDependencyValidationException.Should()
+                .BeEquivalentTo(expextedSubjectDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expextedSubjectDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertSubjectAsync(It.IsAny<Subject>()), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }

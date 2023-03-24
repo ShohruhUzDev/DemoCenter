@@ -50,6 +50,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 secondsInFuture
             };
         }
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
 
         private static SqlException CreateSqlException()=>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));   
