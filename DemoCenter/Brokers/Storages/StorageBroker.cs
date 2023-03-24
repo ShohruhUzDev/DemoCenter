@@ -41,7 +41,7 @@ namespace DemoCenter.Brokers.Storages
         private async ValueTask<T> UpdateAsync<T>(T @object)
         {
             var broker = new StorageBroker(configuration);
-            broker.Entry(@object).State |= EntityState.Modified;
+            broker.Entry(@object).State = EntityState.Modified;
             await broker.SaveChangesAsync();
 
             return @object;
@@ -50,7 +50,7 @@ namespace DemoCenter.Brokers.Storages
         private async ValueTask<T> DeleteAsync<T>(T @object)
         {
             var broker = new StorageBroker(configuration);
-            broker.Entry(@object).State &= ~EntityState.Deleted;
+            broker.Entry(@object).State = EntityState.Deleted;
             await broker.SaveChangesAsync();
 
             return @object;

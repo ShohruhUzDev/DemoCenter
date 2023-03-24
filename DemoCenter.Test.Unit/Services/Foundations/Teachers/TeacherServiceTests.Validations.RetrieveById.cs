@@ -36,7 +36,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 .BeEquivalentTo(expectedTeacherValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedTeacherValidationException))), Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeacherValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeacherByIdAsync(It.IsAny<Guid>()), Times.Never);
@@ -61,7 +62,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 broker.SelectTeacherByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noTeacher);
 
             //when
-            ValueTask<Teacher> onRetrieveTeacherTask = this.teacherService.RetrieveTeacherByIdAsync(someTeacherId);
+            ValueTask<Teacher> onRetrieveTeacherTask = 
+                this.teacherService.RetrieveTeacherByIdAsync(someTeacherId);
 
             TeacherValidationException actualTeacherValidationException =
                 await Assert.ThrowsAsync<TeacherValidationException>(onRetrieveTeacherTask.AsTask);
@@ -74,7 +76,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 broker.SelectTeacherByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedTeacherValidationException))), Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeacherValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
