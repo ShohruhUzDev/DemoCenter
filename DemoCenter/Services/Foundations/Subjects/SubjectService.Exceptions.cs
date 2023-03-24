@@ -3,6 +3,7 @@ using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using Xeptions;
 
@@ -43,6 +44,12 @@ namespace DemoCenter.Services.Foundations.Subjects
                 var alreadyExistsSubjectException = new AlreadyExistsSubjectException(duplicateKeyException);
 
                 throw CreateAndDependencyValidationException(alreadyExistsSubjectException);
+            }
+            catch(DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedSubjectException=new LockedSubjectException(dbUpdateConcurrencyException);    
+               
+                throw CreateAndDependencyValidationException(lockedSubjectException);   
             }
         }
 
