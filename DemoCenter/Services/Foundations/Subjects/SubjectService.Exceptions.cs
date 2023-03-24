@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
@@ -11,13 +12,14 @@ namespace DemoCenter.Services.Foundations.Subjects
 {
     public partial class SubjectService
     {
-        private delegate ValueTask<Subject> ReturningSubjectFunctions();
+        private delegate ValueTask<Subject> ReturningSubjectFunction();
+        private delegate IQueryable<Subject> ReturningSubjectFunctions();
 
-        private async ValueTask<Subject> TryCatch(ReturningSubjectFunctions returningSubjectFunctions)
+        private async ValueTask<Subject> TryCatch(ReturningSubjectFunction returningSubjectFunction)
         {
             try
             {
-                return await returningSubjectFunctions();
+                return await returningSubjectFunction();
             }
             catch (NullSubjectException nulSubjectException)
             {
@@ -53,12 +55,25 @@ namespace DemoCenter.Services.Foundations.Subjects
             }
             catch (Exception exception)
             {
-                var failedSubjectServiceException = new SubjectServiceException(exception);
+                var failedSubjectServiceException = new FailedSubjectServiceException(exception);
 
                 throw CreateAndLogServiceException(failedSubjectServiceException);
             }
         }
 
+        private IQueryable<Subject> TryCatch(ReturningSubjectFunctions returningSubjectFunctions)
+        {
+            try
+            {
+                return returningSubjectFunctions();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedSubjectStorageException = new FailedSubjectStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedSubjectStorageException);
+            }
+        }
         private SubjectServiceException CreateAndLogServiceException(Exception exception)
         {
             var subjectServceException = new SubjectServiceException(exception);

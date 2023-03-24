@@ -63,11 +63,12 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 new SubjectServiceException(failedSubjectServiceException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectSubjectByIdAsync(It.IsAny<Guid>())).ThrowsAsync(serviceException);
+                broker.SelectSubjectByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
 
             // when
             ValueTask<Subject> retrieveSubjectById =
-            this.SubjectService.RetrieveSubjectByIdAsync(someId);
+            this.subjectService.RetrieveSubjectByIdAsync(someId);
 
             SubjectServiceException actualSubjectServiceException =
                 await Assert.ThrowsAsync<SubjectServiceException>(retrieveSubjectById.AsTask);
