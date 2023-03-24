@@ -36,7 +36,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 .BeEquivalentTo(expectedTeacherValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedTeacherValidationException))), Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeacherValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeacherByIdAsync(It.IsAny<Guid>()), Times.Never);
