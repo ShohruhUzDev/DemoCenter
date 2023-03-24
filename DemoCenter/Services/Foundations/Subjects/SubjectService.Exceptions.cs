@@ -53,6 +53,12 @@ namespace DemoCenter.Services.Foundations.Subjects
 
                 throw CreateAndDependencyValidationException(lockedSubjectException);
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedSubjectStorageException = new FailedSubjectStorageException(dbUpdateException);
+
+                throw CreateAndDependencyException(failedSubjectStorageException);
+            }
             catch (Exception exception)
             {
                 var failedSubjectServiceException = new FailedSubjectServiceException(exception);
@@ -79,6 +85,13 @@ namespace DemoCenter.Services.Foundations.Subjects
 
                 throw CreateAndLogServiceException(failedSubjectServiceException);
             }
+        }
+        private SubjectDependencyException CreateAndDependencyException(Xeption exception)
+        {
+            var subjectDependencyException = new SubjectDependencyException(exception);
+            this.loggingBroker.LogError(subjectDependencyException);
+
+            return subjectDependencyException;  
         }
         private SubjectServiceException CreateAndLogServiceException(Exception exception)
         {
