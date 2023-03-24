@@ -73,6 +73,12 @@ namespace DemoCenter.Services.Foundations.Subjects
 
                 throw CreateAndLogCriticalDependencyException(failedSubjectStorageException);
             }
+            catch(Exception exception)
+            {
+                var failedSubjectServiceException=new FailedSubjectServiceException(exception);
+
+                throw CreateAndLogServiceException(failedSubjectServiceException);
+            }
         }
         private SubjectServiceException CreateAndLogServiceException(Exception exception)
         {
