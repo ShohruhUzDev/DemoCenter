@@ -97,6 +97,45 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
+        {
+            // given
+            Guid someSubjectId = Guid.NewGuid();
+            var serviceException = new Exception();
 
+            var failedSubjectServiceException =
+                new FailedSubjectServiceException(serviceException);
+
+            var expectedSubjectServiceException =
+                new SubjectServiceException(failedSubjectServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSubjectByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Subject> removeSubjectByIdTask =
+                this.subjectService.RemoveSubjectByIdAsync(someSubjectId);
+
+            SubjectServiceException actualSubjectServiceException =
+                await Assert.ThrowsAsync<SubjectServiceException>(
+                    removeSubjectByIdTask.AsTask);
+
+            // then
+            actualSubjectServiceException.Should().BeEquivalentTo(
+                expectedSubjectServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSubjectByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSubjectServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
