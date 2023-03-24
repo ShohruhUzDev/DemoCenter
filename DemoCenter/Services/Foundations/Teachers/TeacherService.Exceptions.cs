@@ -22,18 +22,15 @@ namespace DemoCenter.Services.Foundations.Teachers
             }
             catch (NullTeacherException nullTeacherException)
             {
-
-                throw CreateTeAndLogValidationException(nullTeacherException);
+                throw CreateAndLogValidationException(nullTeacherException);
             }
             catch (InvalidTeacherException invalidTeacherException)
             {
-
-                throw CreateTeAndLogValidationException(invalidTeacherException);
+                throw CreateAndLogValidationException(invalidTeacherException);
             }
             catch (NotFoundTeacherException notFoundTeacherException)
             {
-
-                throw CreateTeAndLogValidationException(notFoundTeacherException);
+                throw CreateAndLogValidationException(notFoundTeacherException);
             }
             catch (SqlException sqlException)
             {
@@ -118,7 +115,7 @@ namespace DemoCenter.Services.Foundations.Teachers
             return teacherDependencyException;
         }
 
-        private TeacherValidationException CreateTeAndLogValidationException(Xeption xeption)
+        private TeacherValidationException CreateAndLogValidationException(Xeption xeption)
         {
             var teacherValidationException =
                 new TeacherValidationException(xeption);
