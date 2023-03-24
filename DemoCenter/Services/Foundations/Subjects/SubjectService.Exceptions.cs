@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DemoCenter.Models.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
+using Microsoft.Data.SqlClient;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.Subjects
@@ -30,6 +31,19 @@ namespace DemoCenter.Services.Foundations.Subjects
 
                 throw CreateAndLogValidationExcetion(notFoundSubjectException);
             }
+            catch(SqlException sqlException)
+            {
+               var failedSubjectStorageException=new FailedSubjectStorageException(sqlException);
+                throw CreateAndLogCriticalDependencyException(failedSubjectStorageException);
+            }
+        }
+
+        private SubjectDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var subjectDependencyException=new SubjectDependencyException(exception);
+            this.loggingBroker.LogCritical(subjectDependencyException);
+
+            return subjectDependencyException;
         }
 
         private SubjectValidationException CreateAndLogValidationExcetion(Xeption xeption)
