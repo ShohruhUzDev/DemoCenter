@@ -140,7 +140,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
 
             // when
             ValueTask<Student> modifyStudentTask =
-                this.StudentService.ModifyStudentAsync(someStudent);
+                this.studentService.ModifyStudentAsync(someStudent);
 
             StudentDependencyValidationException actualStudentDependencyValidationException =
                 await Assert.ThrowsAsync<StudentDependencyValidationException>(
@@ -159,6 +159,56 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedStudentDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            int minuteInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Student randomStudent = CreateRandomStudent(randomDateTime);
+            Student someStudent = randomStudent;
+            someStudent.CreatedDate = randomDateTime.AddMinutes(minuteInPast);
+            var serviceException = new Exception();
+
+            var failedStudentException =
+                new FailedStudentServiceException(serviceException);
+
+            var expectedStudentServiceException =
+                new StudentServiceException(failedStudentException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectStudentByIdAsync(someStudent.Id))
+                    .ThrowsAsync(serviceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Student> modifyStudentTask =
+                this.studentService.ModifyStudentAsync(someStudent);
+
+            StudentServiceException actualStudentServiceException =
+                await Assert.ThrowsAsync<StudentServiceException>(
+                    modifyStudentTask.AsTask);
+
+            // then
+            actualStudentServiceException.Should().BeEquivalentTo(
+                expectedStudentServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStudentByIdAsync(someStudent.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStudentServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
