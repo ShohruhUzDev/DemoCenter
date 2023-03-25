@@ -3,6 +3,9 @@ using Moq;
 using System.Threading.Tasks;
 using System;
 using Xunit;
+using DemoCenter.Models.Students.Exceptions;
+using DemoCenter.Models.Students;
+using FluentAssertions;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Students
 {
@@ -27,7 +30,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
 
             // when
             ValueTask<Student> retrieveStudentByIdTask =
-                this.StudentService.RetrieveStudentByIdAsync(someId);
+                this.studentService.RetrieveStudentByIdAsync(someId);
 
             StudentDependencyException actaulStudentDependencyException =
                 await Assert.ThrowsAsync<StudentDependencyException>(
