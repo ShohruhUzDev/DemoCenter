@@ -78,6 +78,12 @@ namespace DemoCenter.Services.Foundations.Students
 
                 throw CreateAndLogCriticalDependencyException(failedStudentStorageException);
             }
+            catch(Exception exception)
+            {
+                var failedStudentServiceException=new FailedStudentServiceException(exception);
+
+                throw CreateAndLogServiceException(failedStudentServiceException);
+            }
         }
         private StudentDependencyException CreateAndLogDependencyException(Xeption exception)
         {

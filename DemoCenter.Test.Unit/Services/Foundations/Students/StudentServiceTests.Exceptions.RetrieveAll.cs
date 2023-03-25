@@ -64,7 +64,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
 
             // when
             Action retrieveAllStudentAction = () =>
-                this.StudentService.RetrieveAllStudents();
+                this.studentService.RetrieveAllStudents();
 
             StudentServiceException actualStudentServiceException =
                 Assert.Throws<StudentServiceException>(retrieveAllStudentAction);
