@@ -51,5 +51,42 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetrieveByIdAsyncIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Guid someId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedStudentServiceException =
+                new FailedStudentServiceException(serviceException);
+
+            var expectedStudentServiceExcpetion =
+                new StudentServiceException(failedStudentServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectStudentByIdAsync(It.IsAny<Guid>())).ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Student> retrieveStudentById =
+            this.studentService.RetrieveStudentByIdAsync(someId);
+
+            StudentServiceException actualStudentServiceException =
+                await Assert.ThrowsAsync<StudentServiceException>(retrieveStudentById.AsTask);
+
+            // then
+            actualStudentServiceException.Should().BeEquivalentTo(expectedStudentServiceExcpetion);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStudentByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedStudentServiceExcpetion))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
