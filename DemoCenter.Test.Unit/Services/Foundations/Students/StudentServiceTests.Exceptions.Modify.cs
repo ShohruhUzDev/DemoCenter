@@ -6,6 +6,7 @@ using Xunit;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Students
 {
@@ -59,5 +60,58 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnModifyIfDatabaseUpdateExceptionOccursAndLogItAsync()
+        {
+            // given
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Student randomStudent = CreateRandomStudent(randomDateTime);
+            Student someStudent = randomStudent;
+            Guid StudentId = someStudent.Id;
+            someStudent.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            var databaseUpdateException = new DbUpdateException();
+
+            var failedStudentException =
+                new FailedStudentStorageException(databaseUpdateException);
+
+            var expectedStudentDependencyException =
+                new StudentDependencyException(failedStudentException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectStudentByIdAsync(StudentId))
+                    .ThrowsAsync(databaseUpdateException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Student> modifyStudentTask =
+                this.studentService.ModifyStudentAsync(someStudent);
+
+            StudentDependencyException actualStudentDependencyException =
+                 await Assert.ThrowsAsync<StudentDependencyException>(
+                     modifyStudentTask.AsTask);
+
+            // then
+            actualStudentDependencyException.Should().BeEquivalentTo(
+                expectedStudentDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStudentByIdAsync(StudentId), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStudentDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }
