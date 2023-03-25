@@ -50,6 +50,12 @@ namespace DemoCenter.Services.Foundations.Students
 
                 throw CreateAndDependencyValidationException(lockedStudentException);
             }
+            catch(DbUpdateException dbUpdateException)
+            {
+                var failedStudentStorageException=new FailedStudentStorageException(dbUpdateException);
+
+                throw CreateAndLogDependencyException(failedStudentStorageException);
+            }
             catch(Exception exception)
             {
                 var failedStudentServiceException=new FailedStudentServiceException(exception);
@@ -58,6 +64,13 @@ namespace DemoCenter.Services.Foundations.Students
             }
         }
 
+        private StudentDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var studentDependencyException=new StudentDependencyException(exception);
+            this.loggingBroker.LogError(studentDependencyException);
+
+            return studentDependencyException;  
+        }
         private StudentServiceException CreateAndLogServiceException(Exception exception)
         {
             var studentServiceException=new StudentServiceException(exception); 
