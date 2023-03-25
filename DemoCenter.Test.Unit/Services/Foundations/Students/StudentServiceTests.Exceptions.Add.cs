@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
+using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -42,6 +43,47 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertStudentAsync(It.IsAny<Student>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldTrowDependencyValidationExceptionOnAddIfDuplicateErrorOccursAndLogItAsync()
+        {
+            // given
+            Student someStudent = CreateRandomStudent();
+            string someMessage = GetRandomString();
+            var duplicateKeyException = new DuplicateKeyException(someMessage);
+
+            var alreadyExistsStudentException =
+                new AlreadyExistsStudentException(duplicateKeyException);
+
+            var expectedStudentDependencyValidationException =
+                new StudentDependencyValidationException(alreadyExistsStudentException);
+
+            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
+                .Throws(duplicateKeyException);
+
+            // when
+            ValueTask<Student> addStudentTask = this.studentService.AddStudentAsync(someStudent);
+
+            StudentDependencyValidationException actualStudentDependencyValidationException =
+                await Assert.ThrowsAsync<StudentDependencyValidationException>(addStudentTask.AsTask);
+
+            // then
+            actualStudentDependencyValidationException.Should().BeEquivalentTo(
+                expectedStudentDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(SameExceptionAs(
+                expectedStudentDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker => broker.InsertStudentAsync(
+               It.IsAny<Student>()), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

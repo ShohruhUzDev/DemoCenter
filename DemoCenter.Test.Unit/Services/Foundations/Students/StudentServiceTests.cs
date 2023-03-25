@@ -33,6 +33,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 this.loggingBrokerMock.Object);
         }
 
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
+
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetSafeUninitializedObject(typeof(SqlException));
 
