@@ -148,7 +148,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
 
             // when
             ValueTask<Student> addStudentTask =
-                this.StudentService.AddStudentAsync(someStudent);
+                this.studentService.AddStudentAsync(someStudent);
 
             StudentServiceException actualStudentServiceException =
                 await Assert.ThrowsAsync<StudentServiceException>(addStudentTask.AsTask);
