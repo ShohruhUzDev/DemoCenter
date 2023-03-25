@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
 using DemoCenter.Models.Students;
 using DemoCenter.Services.Foundations.Students;
+using FluentAssertions.Formatting;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -29,6 +32,12 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 this.dateTimeBrokerMock.Object,
                 this.loggingBrokerMock.Object);
         }
+
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
+
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetSafeUninitializedObject(typeof(SqlException));
 
         public static TheoryData<int> InvalidSeconds()
         {

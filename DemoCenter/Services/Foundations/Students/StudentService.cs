@@ -34,7 +34,7 @@ namespace DemoCenter.Services.Foundations.Students
 
 
         public IQueryable<Student> RetrieveAllStudents() =>
-            this.storageBroker.SelectAllStudents();
+            TryCatch(() =>this.storageBroker.SelectAllStudents());
 
         public ValueTask<Student> RetrieveStudentByIdAsync(Guid studentId) =>
             TryCatch(async () =>
