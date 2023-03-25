@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
@@ -12,6 +13,7 @@ namespace DemoCenter.Services.Foundations.Students
     public partial class StudentService
     {
         private delegate ValueTask<Student> ReturningStudentFunction();
+        private delegate IQueryable<Student> ReturningStudentFunctions();
 
         private async ValueTask<Student> TryCatch(ReturningStudentFunction returningStudentFunction)
         {
@@ -64,6 +66,19 @@ namespace DemoCenter.Services.Foundations.Students
             }
         }
 
+        private IQueryable<Student> TryCatch(ReturningStudentFunctions returningStudentFunctions)
+        {
+            try
+            {
+                return returningStudentFunctions();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedStudentStorageException = new FailedStudentStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedStudentStorageException);
+            }
+        }
         private StudentDependencyException CreateAndLogDependencyException(Xeption exception)
         {
             var studentDependencyException=new StudentDependencyException(exception);
