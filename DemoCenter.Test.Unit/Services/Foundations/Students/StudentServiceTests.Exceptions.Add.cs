@@ -106,7 +106,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Students
                 .Throws(dbUpdateConcurrencyException);
 
             // when
-            ValueTask<Student> addStudentTask = this.StudentService.AddStudentAsync(someStudent);
+            ValueTask<Student> addStudentTask = this.studentService.AddStudentAsync(someStudent);
 
             StudentDependencyValidationException actualStudentDependencyValidationException =
                 await Assert.ThrowsAsync<StudentDependencyValidationException>(addStudentTask.AsTask);

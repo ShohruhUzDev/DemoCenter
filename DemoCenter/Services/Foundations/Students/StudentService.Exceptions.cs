@@ -3,6 +3,7 @@ using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.Students
@@ -30,30 +31,36 @@ namespace DemoCenter.Services.Foundations.Students
             {
                 throw CreateAndLogValidationException(notFoundStudentException);
             }
-            catch(SqlException sqlException)
+            catch (SqlException sqlException)
             {
-                var failedStudentStorageException=new FailedStudentStorageException(sqlException);
+                var failedStudentStorageException = new FailedStudentStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedStudentStorageException);
             }
-            catch(DuplicateKeyException duplicateKeyException)
+            catch (DuplicateKeyException duplicateKeyException)
             {
-                var alreadyExistsStudentException=new AlreadyExistsStudentException(duplicateKeyException); 
+                var alreadyExistsStudentException = new AlreadyExistsStudentException(duplicateKeyException);
 
                 throw CreateAndDependencyValidationException(alreadyExistsStudentException);
+            }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedStudentException = new LockedStudentException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedStudentException);
             }
         }
 
         private StudentDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
-            var studentDependencyValidationException=new StudentDependencyValidationException(exception);   
+            var studentDependencyValidationException = new StudentDependencyValidationException(exception);
             this.loggingBroker.LogError(studentDependencyValidationException);
 
             return studentDependencyValidationException;
         }
         private StudentDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
-            var studentDependencyException=new StudentDependencyException(exception);   
+            var studentDependencyException = new StudentDependencyException(exception);
             this.loggingBroker.LogCritical(studentDependencyException);
 
             return studentDependencyException;
