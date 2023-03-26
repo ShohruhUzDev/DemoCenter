@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
 using DemoCenter.Services.Foundations.Students;
@@ -45,6 +46,25 @@ namespace DemoCenter.Controllers
             catch (StudentServiceException studentServiceException)
             {
                 return InternalServerError(studentServiceException.InnerException);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<Student>> GetAllStudents()
+        {
+            try
+            {
+                IQueryable<Student> allStudents = this.studentService.RetrieveAllStudents();
+
+                return Ok(allStudents);
+            }
+            catch (StudentDependencyException studentDependencyException)
+            {
+                return InternalServerError(studentDependencyException.InnerException);
+            }
+            catch(StudentServiceException studentServiceException)
+            {
+                return InternalServerError(studentServiceException.InnerException); 
             }
         }
 
