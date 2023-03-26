@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DemoCenter.Models.Students;
 using DemoCenter.Models.Students.Exceptions;
@@ -65,6 +66,35 @@ namespace DemoCenter.Controllers
             catch(StudentServiceException studentServiceException)
             {
                 return InternalServerError(studentServiceException.InnerException); 
+            }
+        }
+
+        [HttpGet("{studentId}")]
+        public async ValueTask<ActionResult<Student>> GetStudentByIdAsync(Guid studentId)
+        {
+            try
+            {
+                Student student = await this.studentService.RemoveStudentByIdAsync(studentId);
+
+                return Ok(student);
+            }
+            catch (StudentDependencyException studentDependencyException)
+            {
+                return InternalServerError(studentDependencyException.InnerException);
+            }
+            catch(StudentValidationException studentValidationException)
+                when(studentValidationException.InnerException is InvalidStudentException)
+            {
+                return BadRequest(studentValidationException.InnerException);
+            }
+            catch (StudentValidationException studentValidationException)
+                when (studentValidationException.InnerException is NotFoundStudentException)
+            {
+                return BadRequest(studentValidationException.InnerException);
+            }
+            catch (StudentServiceException studentServiceException)
+            {
+                return InternalServerError(studentServiceException.InnerException);
             }
         }
 
