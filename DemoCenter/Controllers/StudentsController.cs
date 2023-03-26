@@ -63,9 +63,9 @@ namespace DemoCenter.Controllers
             {
                 return InternalServerError(studentDependencyException.InnerException);
             }
-            catch(StudentServiceException studentServiceException)
+            catch (StudentServiceException studentServiceException)
             {
-                return InternalServerError(studentServiceException.InnerException); 
+                return InternalServerError(studentServiceException.InnerException);
             }
         }
 
@@ -74,7 +74,7 @@ namespace DemoCenter.Controllers
         {
             try
             {
-                Student student = await this.studentService.RemoveStudentByIdAsync(studentId);
+                Student student = await this.studentService.RetrieveStudentByIdAsync(studentId);
 
                 return Ok(student);
             }
@@ -82,8 +82,8 @@ namespace DemoCenter.Controllers
             {
                 return InternalServerError(studentDependencyException.InnerException);
             }
-            catch(StudentValidationException studentValidationException)
-                when(studentValidationException.InnerException is InvalidStudentException)
+            catch (StudentValidationException studentValidationException)
+                when (studentValidationException.InnerException is InvalidStudentException)
             {
                 return BadRequest(studentValidationException.InnerException);
             }
@@ -98,5 +98,73 @@ namespace DemoCenter.Controllers
             }
         }
 
+        [HttpPut]
+        public async ValueTask<ActionResult<Student>> PutStudentAsync(Student student)
+        {
+            try
+            {
+                Student updatedStudent = await this.studentService.ModifyStudentAsync(student);
+
+                return Ok(updatedStudent);
+            }
+            catch (StudentValidationException studentValidationException)
+                when (studentValidationException.InnerException is NotFoundStudentException)
+            {
+                return NotFound(studentValidationException.InnerException);
+            }
+            catch (StudentValidationException studentValidationException)
+            {
+                return BadRequest(studentValidationException.InnerException);
+            }
+            catch (StudentDependencyValidationException studentDependencyValidationException)
+            {
+                return BadRequest(studentDependencyValidationException);
+            }
+            catch (StudentDependencyException studentDependencyException)
+            {
+                return InternalServerError(studentDependencyException.InnerException);
+            }
+            catch (StudentServiceException studentServiceException)
+            {
+                return InternalServerError(studentServiceException.InnerException);
+            }
+        }
+
+        [HttpDelete("{studentId}")]
+        public async ValueTask<ActionResult<Student>> DeleteStudentAsync(Guid studentId)
+        {
+            try
+            {
+                Student deletedStudent = await this.studentService.RemoveStudentByIdAsync(studentId);
+
+                return Ok(deletedStudent);
+            }
+            catch (StudentValidationException studentValidationException)
+                when (studentValidationException.InnerException is NotFoundStudentException)
+            {
+                return NotFound(studentValidationException.InnerException);
+            }
+            catch (StudentValidationException studentValidationException)
+            {
+                return BadRequest(studentValidationException.InnerException);
+            }
+            catch (StudentDependencyValidationException studentDependencyValidationException)
+                when (studentDependencyValidationException.InnerException is LockedStudentException)
+            {
+                return Locked(studentDependencyValidationException.InnerException);
+            }
+            catch (StudentDependencyValidationException studentDependencyValidationException)
+            {
+                return BadRequest(studentDependencyValidationException.InnerException);
+            }
+            catch (StudentDependencyException studentDependencyException)
+            {
+                return InternalServerError(studentDependencyException.InnerException);
+            }
+            catch (StudentServiceException studentServiceException)
+            {
+                return InternalServerError(studentServiceException.InnerException);
+            }
+        }
     }
 }
