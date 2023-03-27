@@ -83,13 +83,13 @@ namespace DemoCenter.Services.Foundations.Users
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
-            //catch (Exception serviceException)
-            //{
-            //    var failedUserServiceException =
-            //        new FailedUserServiceException(serviceException);
+            catch (Exception serviceException)
+            {
+                var failedUserServiceException =
+                    new FailedUserServiceException(serviceException);
 
-            //    throw CreateAndLogServiceException(failedUserServiceException);
-            //}
+                throw CreateAndLogServiceException(failedUserServiceException);
+            }
         }
 
         private UserDependencyException CreateAndLogDependencyException(Xeption exception)
