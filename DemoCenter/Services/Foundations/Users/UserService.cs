@@ -8,7 +8,7 @@ using DemoCenter.Models.Users;
 
 namespace DemoCenter.Services.Foundations.Users
 {
-    public class UserService : IUserService
+    public partial class UserService : IUserService
     {
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
@@ -25,7 +25,12 @@ namespace DemoCenter.Services.Foundations.Users
         }
 
         public ValueTask<User> AddUserAsync(User user) =>
-            this.storageBroker.InsertUserAsync(user);
+        TryCatch(async () =>
+        {
+            ValidateUserOnAdd(user);
+            return await this.storageBroker.InsertUserAsync(user);
+
+        });
 
         public IQueryable<User> RetrieveAllUsers() =>
             this.storageBroker.SelectAllUsers();
