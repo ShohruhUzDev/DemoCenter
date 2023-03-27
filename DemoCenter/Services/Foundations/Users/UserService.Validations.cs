@@ -55,6 +55,30 @@ namespace DemoCenter.Services.Foundations.Users
 
                (Rule: IsNotRecent(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
         }
+        private static void ValidateAginstStorageUserOnModify(User inputUser, User storageUser)
+        {
+            ValidateStorageUser(storageUser, inputUser.Id);
+
+            //Validate(
+            //    (Rule: IsNotSame(
+            //        firstDate: inputUser.CreatedDate,
+            //        secondDate: storageUser.CreatedDate,
+            //        secondDateName: nameof(User.CreatedDate)),
+            //    Parameter: nameof(User.CreatedDate)),
+
+            //    (Rule: IsSame(
+            //        firstDate: inputUser.UpdatedDate,
+            //        secondDate: storageUser.UpdatedDate,
+            //        secondDateName: nameof(User.UpdatedDate)),
+            //    Parameter: nameof(User.UpdatedDate)));
+        }
+        private static void ValidateStorageUser(User maybeUser, Guid userId)
+        {
+            if (maybeUser is null)
+            {
+                throw new NotFoundUserException(userId);
+            }
+        }
 
         private static dynamic IsSame(
            DateTimeOffset firstDate,

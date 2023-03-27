@@ -44,7 +44,7 @@ namespace DemoCenter.Services.Foundations.Users
         {
             ValidateUserOnModify(user);
             User maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
-
+            ValidateAginstStorageUserOnModify(user, maybeUser);
             return await this.storageBroker.UpdateUserAsync(user); ;
         });
         
