@@ -72,6 +72,9 @@ namespace DemoCenter.Services.Foundations.Users
             //        secondDateName: nameof(User.UpdatedDate)),
             //    Parameter: nameof(User.UpdatedDate)));
         }
+        private void ValidateUserId(Guid userId) =>
+          Validate((Rule: IsInvalid(userId), Parameter: nameof(User.Id)));
+
         private static void ValidateStorageUser(User maybeUser, Guid userId)
         {
             if (maybeUser is null)
