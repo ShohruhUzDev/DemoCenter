@@ -33,27 +33,40 @@ namespace DemoCenter.Services.Foundations.Users
         });
 
         public IQueryable<User> RetrieveAllUsers() =>
-            this.storageBroker.SelectAllUsers();
+        TryCatch(() =>
+        {
+            return this.storageBroker.SelectAllUsers();
+
+        });
 
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
-            this.storageBroker.SelectUserByIdAsync(userId);
-
-
-        public async ValueTask<User> ModifyUserAsync(User user)
+        TryCatch(async () =>
         {
-            User maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
-
-            DateTimeOffset date = this.dateTimeBroker.GetCurrentDateTime();
-            User users = await this.storageBroker.UpdateUserAsync(user);
-
-            return users;
-        }
-
-        public async ValueTask<User> RemoveUserByIdAsync(Guid userId)
-        {
+            ValidateUserId(userId);
             User maybeUser = await this.storageBroker.SelectUserByIdAsync(userId);
+            ValidateStorageUser(maybeUser, userId);
 
+            return maybeUser;
+        });
+
+
+        public ValueTask<User> ModifyUserAsync(User user) =>
+        TryCatch(async () =>
+        {
+            ValidateUserOnModify(user);
+            User maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
+            ValidateAginstStorageUserOnModify(user, maybeUser);
+            return await this.storageBroker.UpdateUserAsync(user); ;
+        });
+
+
+        public ValueTask<User> RemoveUserByIdAsync(Guid userId) =>
+        TryCatch(async () =>
+        {
+            ValidateUserId(userId);
+            User maybeUser = await this.storageBroker.SelectUserByIdAsync(userId);
+            ValidateStorageUser(maybeUser, userId);
             return await this.storageBroker.DeleteUserAsync(maybeUser);
-        }
+        });
     }
 }

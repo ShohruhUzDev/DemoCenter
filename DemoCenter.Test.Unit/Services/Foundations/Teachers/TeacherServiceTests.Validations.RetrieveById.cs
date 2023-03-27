@@ -62,7 +62,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
                 broker.SelectTeacherByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noTeacher);
 
             //when
-            ValueTask<Teacher> onRetrieveTeacherTask = 
+            ValueTask<Teacher> onRetrieveTeacherTask =
                 this.teacherService.RetrieveTeacherByIdAsync(someTeacherId);
 
             TeacherValidationException actualTeacherValidationException =

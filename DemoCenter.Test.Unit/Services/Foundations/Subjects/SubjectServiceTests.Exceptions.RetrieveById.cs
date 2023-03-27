@@ -18,7 +18,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             Guid someId = Guid.NewGuid();
             SqlException sqlException = CreateSqlException();
 
-            var failedSubjectStorageException=new FailedSubjectStorageException(sqlException);
+            var failedSubjectStorageException = new FailedSubjectStorageException(sqlException);
 
             var expectedSubjectDependencyException =
                 new SubjectDependencyException(failedSubjectStorageException);
@@ -28,7 +28,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                      .ThrowsAsync(sqlException);
 
             //when
-            ValueTask<Subject> retrieveSubjectTask=
+            ValueTask<Subject> retrieveSubjectTask =
                 this.subjectService.RetrieveSubjectByIdAsync(someId);
 
             SubjectDependencyException actualSubjectDependencyException =
@@ -38,14 +38,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             actualSubjectDependencyException.Should()
                 .BeEquivalentTo(expectedSubjectDependencyException);
 
-            this.storageBrokerMock.Verify(broker=>
-                broker.SelectSubjectByIdAsync(It.IsAny<Guid>()), Times.Once()); 
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSubjectByIdAsync(It.IsAny<Guid>()), Times.Once());
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
-                    expectedSubjectDependencyException))),Times.Once);
+                    expectedSubjectDependencyException))), Times.Once);
 
-            this.storageBrokerMock.VerifyNoOtherCalls(); 
+            this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }

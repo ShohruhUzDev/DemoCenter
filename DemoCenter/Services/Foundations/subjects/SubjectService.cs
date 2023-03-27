@@ -34,7 +34,7 @@ namespace DemoCenter.Services.Foundations.Subjects
         });
 
         public IQueryable<Subject> RetrieveAllSubjects() =>
-            TryCatch(() =>this.storageBroker.SelectAllSubjects());
+            TryCatch(() => this.storageBroker.SelectAllSubjects());
 
         public ValueTask<Subject> RetrieveSubjectByIdAsync(Guid subjectId) =>
             TryCatch(async () =>

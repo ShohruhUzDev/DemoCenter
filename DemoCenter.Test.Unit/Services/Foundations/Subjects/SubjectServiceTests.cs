@@ -53,8 +53,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 
-        private static SqlException CreateSqlException()=>
-            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));   
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private Subject CreateRandomModifySubjects(DateTimeOffset date)
         {

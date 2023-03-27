@@ -17,27 +17,27 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         public async Task ShouldTrowCriticalDependencyExceptionOnAddIfSqlErrorOccursAndLogItAsync()
         {
             //given
-            Subject someSubject=CreateRandomSubject();
+            Subject someSubject = CreateRandomSubject();
             SqlException sqlException = CreateSqlException();
             var failedSubjectStorageException = new FailedSubjectStorageException(sqlException);
 
             var expectedSubjectDependencyException =
                 new SubjectDependencyException(failedSubjectStorageException);
 
-            this.dateTimeBrokerMock.Setup(broker=>
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Throws(sqlException);
 
             //when
-            ValueTask<Subject> addSubjectTask=this.subjectService.AddSubjectAsync(someSubject);
+            ValueTask<Subject> addSubjectTask = this.subjectService.AddSubjectAsync(someSubject);
 
             SubjectDependencyException actualSubjectDependencyException =
                 await Assert.ThrowsAsync<SubjectDependencyException>(addSubjectTask.AsTask);
 
             //then
             actualSubjectDependencyException.Should()
-                .BeEquivalentTo(expectedSubjectDependencyException); 
-            
-            this.dateTimeBrokerMock.Verify(broker=>
+                .BeEquivalentTo(expectedSubjectDependencyException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
@@ -63,7 +63,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             var alreadyExistsSubjectException =
                 new AlreadyExistsSubjectException(duplicateKeyException);
 
-            var expextedSubjectDependencyValidationException=
+            var expextedSubjectDependencyValidationException =
                 new SubjectDependencyValidationException(alreadyExistsSubjectException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -109,19 +109,19 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 broker.GetCurrentDateTime()).Throws(dbUpdateConcurrencyException);
 
             //when
-            ValueTask<Subject> addSubjectTask=this.subjectService.AddSubjectAsync(someSubject);
+            ValueTask<Subject> addSubjectTask = this.subjectService.AddSubjectAsync(someSubject);
 
             SubjectDependencyValidationException actualSubjectDependencyValidationException =
                 await Assert.ThrowsAsync<SubjectDependencyValidationException>(addSubjectTask.AsTask);
 
             //then
             actualSubjectDependencyValidationException.Should()
-                .BeEquivalentTo(expectedSubjectDependencyValidationException);   
+                .BeEquivalentTo(expectedSubjectDependencyValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedSubjectDependencyValidationException))), Times.Once);
 
@@ -140,16 +140,16 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             Subject someSubject = CreateRandomSubject();
             var serviceException = new Exception();
 
-            var failedSubjectServiceException=new FailedSubjectServiceException(serviceException);
+            var failedSubjectServiceException = new FailedSubjectServiceException(serviceException);
 
-            var expectedSubjectServiceException = 
+            var expectedSubjectServiceException =
                 new SubjectServiceException(failedSubjectServiceException);
 
-            this.dateTimeBrokerMock.Setup(broker=>
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Throws(serviceException);
 
             //when
-            ValueTask<Subject> addSubjectTask=this.subjectService.AddSubjectAsync(someSubject);
+            ValueTask<Subject> addSubjectTask = this.subjectService.AddSubjectAsync(someSubject);
 
             SubjectServiceException actualSubjectServiceException =
                 await Assert.ThrowsAsync<SubjectServiceException>(addSubjectTask.AsTask);
@@ -157,14 +157,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             //then
             actualSubjectServiceException.Should().BeEquivalentTo(expectedSubjectServiceException);
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedSubjectServiceException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.InsertSubjectAsync(It.IsAny<Subject>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

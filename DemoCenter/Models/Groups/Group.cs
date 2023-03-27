@@ -20,6 +20,6 @@ namespace DemoCenter.Models.Groups
         public Subject Subject { get; set; }
 
         [JsonIgnore]
-        public  IEnumerable<GroupStudent> GroupStudents { get; set; }
+        public IEnumerable<GroupStudent> GroupStudents { get; set; }
     }
 }

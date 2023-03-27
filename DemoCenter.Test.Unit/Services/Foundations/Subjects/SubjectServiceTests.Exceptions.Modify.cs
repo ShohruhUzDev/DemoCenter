@@ -16,10 +16,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
         public async Task ShouldThrowCriticalDependencyExceptionOnModifyIfSqlErrorOccursAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDate=GetRandomDateTime();
+            DateTimeOffset randomDate = GetRandomDateTime();
             Subject randomSubject = CreateRandomSubject(randomDate);
             Subject someSubject = randomSubject;
-            Guid someId=someSubject.Id;
+            Guid someId = someSubject.Id;
             SqlException sqlException = CreateSqlException();
 
             var failedSubjectStorageException =
@@ -32,7 +32,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
                 broker.GetCurrentDateTime()).Throws(sqlException);
 
             //when
-            ValueTask<Subject> modifySubjectTask=
+            ValueTask<Subject> modifySubjectTask =
                 this.subjectService.ModifySubjectAsync(someSubject);
 
             SubjectDependencyException actualSubjectDependencyException =
@@ -45,11 +45,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             this.dateTimeBrokerMock.Verify(Brokers =>
                 Brokers.GetCurrentDateTime(), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedSubjectDependencyException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectSubjectByIdAsync(someId), Times.Never);
 
             this.storageBrokerMock.Verify(broker =>
@@ -73,7 +73,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             someSubject.CreatedDate = randomDate.AddMinutes(minutesInPas);
             var databaseUpdateException = new DbUpdateException();
 
-            var failedSubjectStorageException=
+            var failedSubjectStorageException =
                 new FailedSubjectStorageException(databaseUpdateException);
 
             var expectedSubjectDependencyException =
@@ -82,7 +82,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectSubjectByIdAsync(someId)).ThrowsAsync(databaseUpdateException);
 
-            this.dateTimeBrokerMock.Setup(broker=>
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(randomDate);
 
             //when
@@ -96,10 +96,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Subjects
             actualSubjectDependencyException.Should()
                 .BeEquivalentTo(expectedSubjectDependencyException);
 
-            this.storageBrokerMock.Verify(broker=>
-                broker.SelectSubjectByIdAsync(someId), Times.Once());   
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSubjectByIdAsync(someId), Times.Once());
 
-            this.dateTimeBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>

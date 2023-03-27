@@ -31,6 +31,66 @@ namespace DemoCenter.Services.Foundations.Users
                     Parameter: nameof(User.CreatedDate)));
         }
 
+        private void ValidateUserOnModify(User user)
+        {
+            ValidateUserNotNull(user);
+
+            Validate(
+                (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
+                (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
+                (Rule: IsInvalid(user.LastName), Parameter: nameof(User.LastName)),
+                (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
+                (Rule: IsInvalid(user.PhoneNumber), Parameter: nameof(User.PhoneNumber)),
+                (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
+                (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
+                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
+                (Rule: IsInvalid(user.Password), Parameter: nameof(User.Password)),
+
+                (Rule: IsSame(
+                    firstDate: user.UpdatedDate,
+                    secondDate: user.CreatedDate,
+                    secondDateName: nameof(User.CreatedDate)),
+
+                    Parameter: nameof(User.UpdatedDate)),
+
+               (Rule: IsNotRecent(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
+        }
+        private static void ValidateAginstStorageUserOnModify(User inputUser, User storageUser)
+        {
+            ValidateStorageUser(storageUser, inputUser.Id);
+
+            //Validate(
+            //    (Rule: IsNotSame(
+            //        firstDate: inputUser.CreatedDate,
+            //        secondDate: storageUser.CreatedDate,
+            //        secondDateName: nameof(User.CreatedDate)),
+            //    Parameter: nameof(User.CreatedDate)),
+
+            //    (Rule: IsSame(
+            //        firstDate: inputUser.UpdatedDate,
+            //        secondDate: storageUser.UpdatedDate,
+            //        secondDateName: nameof(User.UpdatedDate)),
+            //    Parameter: nameof(User.UpdatedDate)));
+        }
+        private void ValidateUserId(Guid userId) =>
+          Validate((Rule: IsInvalid(userId), Parameter: nameof(User.Id)));
+
+        private static void ValidateStorageUser(User maybeUser, Guid userId)
+        {
+            if (maybeUser is null)
+            {
+                throw new NotFoundUserException(userId);
+            }
+        }
+
+        private static dynamic IsSame(
+           DateTimeOffset firstDate,
+           DateTimeOffset secondDate,
+           string secondDateName) => new
+           {
+               Condition = firstDate != default && firstDate == secondDate,
+               Message = $"Date is same as {secondDateName}"
+           };
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
