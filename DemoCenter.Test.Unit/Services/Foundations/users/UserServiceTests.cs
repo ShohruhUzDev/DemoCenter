@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
@@ -7,6 +8,7 @@ using DemoCenter.Models.Users;
 using DemoCenter.Services.Foundations.Users;
 using Moq;
 using Tynamix.ObjectFiller;
+using Xeptions;
 using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Users
@@ -46,6 +48,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
                 secondsInFuture
             };
         }
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+          actualException => actualException.SameExceptionAs(expectedException);
+
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
