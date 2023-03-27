@@ -1,10 +1,10 @@
-﻿using DemoCenter.Models.Users;
-using Moq;
+﻿using System;
 using System.Threading.Tasks;
-using System;
+using DemoCenter.Models.Users;
+using FluentAssertions;
+using Moq;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xunit;
-using FluentAssertions;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Users
 {

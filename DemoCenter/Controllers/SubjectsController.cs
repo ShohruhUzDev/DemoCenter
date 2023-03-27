@@ -159,7 +159,7 @@ namespace DemoCenter.Controllers
             {
                 return BadRequest(subjectDependencyValidationException.InnerException);
             }
-            catch(SubjectDependencyException subjectDependencyException)
+            catch (SubjectDependencyException subjectDependencyException)
             {
                 return InternalServerError(subjectDependencyException.InnerException);
             }

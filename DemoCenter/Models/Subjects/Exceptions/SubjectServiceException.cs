@@ -7,6 +7,6 @@ namespace DemoCenter.Models.Subjects.Exceptions
     {
         public SubjectServiceException(Exception innerException)
             : base(message: "Subject service error occured, contact support.", innerException)
-        {}
+        { }
     }
 }

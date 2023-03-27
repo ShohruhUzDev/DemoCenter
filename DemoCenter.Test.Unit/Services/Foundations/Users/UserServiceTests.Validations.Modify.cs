@@ -1,8 +1,8 @@
-﻿using DemoCenter.Models.Users;
+﻿using System;
+using System.Threading.Tasks;
+using DemoCenter.Models.Users;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xunit;
 

@@ -1,12 +1,12 @@
-﻿using DemoCenter.Models.Users;
-using Microsoft.Data.SqlClient;
-using Moq;
+﻿using System;
 using System.Threading.Tasks;
-using System;
+using DemoCenter.Models.Users;
+using FluentAssertions;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Moq;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xunit;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Users
 {

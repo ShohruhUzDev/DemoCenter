@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
-using System;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xunit;
 

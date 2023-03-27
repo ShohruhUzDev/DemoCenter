@@ -1,11 +1,11 @@
-﻿using DemoCenter.Models.Users;
+﻿using System;
+using System.Threading.Tasks;
+using DemoCenter.Models.Users;
 using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xunit;
 
@@ -123,7 +123,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(
                 SameExceptionAs(expectedUserDependencyValidationException))), Times.Once);
 

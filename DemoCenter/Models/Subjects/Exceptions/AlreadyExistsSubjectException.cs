@@ -7,6 +7,6 @@ namespace DemoCenter.Models.Subjects.Exceptions
     {
         public AlreadyExistsSubjectException(Exception innerException)
             : base(message: "Subject already exist.", innerException)
-        {}
+        { }
     }
 }

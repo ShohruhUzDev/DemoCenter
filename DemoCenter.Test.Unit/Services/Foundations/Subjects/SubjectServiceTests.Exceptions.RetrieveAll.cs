@@ -1,8 +1,8 @@
-﻿using DemoCenter.Models.Subjects.Exceptions;
+﻿using System;
+using DemoCenter.Models.Subjects.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
-using System;
 using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Subjects

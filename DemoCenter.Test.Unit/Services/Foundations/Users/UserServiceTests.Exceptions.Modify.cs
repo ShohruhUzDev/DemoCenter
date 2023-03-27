@@ -109,7 +109,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
-      
+
         [Fact]
         public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
         {

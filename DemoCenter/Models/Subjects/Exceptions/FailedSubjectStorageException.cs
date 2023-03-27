@@ -5,8 +5,8 @@ namespace DemoCenter.Models.Subjects.Exceptions
 {
     public class FailedSubjectStorageException : Xeption
     {
-        public FailedSubjectStorageException(Exception innerException) 
-            : base (message : "Failed subject storage error occured, contact support", innerException)
-        {}
+        public FailedSubjectStorageException(Exception innerException)
+            : base(message: "Failed subject storage error occured, contact support", innerException)
+        { }
     }
 }

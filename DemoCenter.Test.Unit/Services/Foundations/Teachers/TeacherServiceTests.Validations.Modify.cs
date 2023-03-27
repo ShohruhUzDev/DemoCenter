@@ -51,7 +51,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Teachers
             var invalidTeacher = new Teacher
             {
                 FirstName = invalidString
-              
+
             };
 
             var invalidTeacherException = new InvalidTeacherException();

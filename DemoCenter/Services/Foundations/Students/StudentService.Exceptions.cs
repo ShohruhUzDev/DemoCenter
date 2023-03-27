@@ -52,15 +52,15 @@ namespace DemoCenter.Services.Foundations.Students
 
                 throw CreateAndDependencyValidationException(lockedStudentException);
             }
-            catch(DbUpdateException dbUpdateException)
+            catch (DbUpdateException dbUpdateException)
             {
-                var failedStudentStorageException=new FailedStudentStorageException(dbUpdateException);
+                var failedStudentStorageException = new FailedStudentStorageException(dbUpdateException);
 
                 throw CreateAndLogDependencyException(failedStudentStorageException);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
-                var failedStudentServiceException=new FailedStudentServiceException(exception);
+                var failedStudentServiceException = new FailedStudentServiceException(exception);
 
                 throw CreateAndLogServiceException(failedStudentServiceException);
             }
@@ -78,23 +78,23 @@ namespace DemoCenter.Services.Foundations.Students
 
                 throw CreateAndLogCriticalDependencyException(failedStudentStorageException);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
-                var failedStudentServiceException=new FailedStudentServiceException(exception);
+                var failedStudentServiceException = new FailedStudentServiceException(exception);
 
                 throw CreateAndLogServiceException(failedStudentServiceException);
             }
         }
         private StudentDependencyException CreateAndLogDependencyException(Xeption exception)
         {
-            var studentDependencyException=new StudentDependencyException(exception);
+            var studentDependencyException = new StudentDependencyException(exception);
             this.loggingBroker.LogError(studentDependencyException);
 
-            return studentDependencyException;  
+            return studentDependencyException;
         }
         private StudentServiceException CreateAndLogServiceException(Exception exception)
         {
-            var studentServiceException=new StudentServiceException(exception); 
+            var studentServiceException = new StudentServiceException(exception);
             this.loggingBroker.LogError(studentServiceException);
 
             return studentServiceException;

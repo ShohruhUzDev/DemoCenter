@@ -1,11 +1,11 @@
-﻿using DemoCenter.Models.Users;
+﻿using System;
+using System.Threading.Tasks;
+using DemoCenter.Models.Users;
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
-using System.Threading.Tasks;
-using System;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xunit;
-using FluentAssertions;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Users
 {
@@ -18,8 +18,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             Guid someId = Guid.NewGuid();
             SqlException sqlException = CreateSqlException();
             var failedUserStorageException = new FailedUserStorageException(sqlException);
-            
-            var expectedUserDependencyException = 
+
+            var expectedUserDependencyException =
                 new UserDependencyException(failedUserStorageException);
 
             this.storageBrokerMock.Setup(broker =>

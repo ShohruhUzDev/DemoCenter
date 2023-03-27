@@ -79,9 +79,9 @@ namespace DemoCenter.Services.Foundations.Subjects
 
                 throw CreateAndLogCriticalDependencyException(failedSubjectStorageException);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
-                var failedSubjectServiceException=new FailedSubjectServiceException(exception);
+                var failedSubjectServiceException = new FailedSubjectServiceException(exception);
 
                 throw CreateAndLogServiceException(failedSubjectServiceException);
             }
@@ -91,7 +91,7 @@ namespace DemoCenter.Services.Foundations.Subjects
             var subjectDependencyException = new SubjectDependencyException(exception);
             this.loggingBroker.LogError(subjectDependencyException);
 
-            return subjectDependencyException;  
+            return subjectDependencyException;
         }
         private SubjectServiceException CreateAndLogServiceException(Exception exception)
         {

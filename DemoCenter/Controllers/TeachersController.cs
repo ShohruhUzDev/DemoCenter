@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DemoCenter.Models.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 using DemoCenter.Services.Foundations.Teachers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using RESTFulSense.Controllers;
 
 namespace DemoCenter.Controllers
@@ -142,28 +140,28 @@ namespace DemoCenter.Controllers
                 return Ok(deletedTeacher);
             }
             catch (TeacherValidationException teacherValidationException)
-                when(teacherValidationException.InnerException is NotFoundTeacherException)
+                when (teacherValidationException.InnerException is NotFoundTeacherException)
             {
                 return NotFound(teacherValidationException.InnerException);
             }
-            catch(TeacherValidationException teacherValidationException)
+            catch (TeacherValidationException teacherValidationException)
             {
                 return BadRequest(teacherValidationException.InnerException);
             }
-            catch(TeacherDependencyValidationException teaacherDependencyValidationException)
-                when(teaacherDependencyValidationException.InnerException is LockedTeacherException)
+            catch (TeacherDependencyValidationException teaacherDependencyValidationException)
+                when (teaacherDependencyValidationException.InnerException is LockedTeacherException)
             {
                 return Locked(teaacherDependencyValidationException.InnerException);
             }
-            catch(TeacherDependencyValidationException teacherDependencyValidationException)
+            catch (TeacherDependencyValidationException teacherDependencyValidationException)
             {
                 return BadRequest(teacherDependencyValidationException.InnerException);
             }
-            catch(TeacherDependencyException teacherDependencyException)
+            catch (TeacherDependencyException teacherDependencyException)
             {
                 return InternalServerError(teacherDependencyException.InnerException);
             }
-            catch(TeacherServiceException teacherServiceException)
+            catch (TeacherServiceException teacherServiceException)
             {
                 return InternalServerError(teacherServiceException.InnerException);
             }

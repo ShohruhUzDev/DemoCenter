@@ -1,11 +1,11 @@
-﻿using Microsoft.Data.SqlClient;
-using Moq;
+﻿using System;
 using System.Threading.Tasks;
-using System;
-using Xunit;
-using DemoCenter.Models.Students.Exceptions;
 using DemoCenter.Models.Students;
+using DemoCenter.Models.Students.Exceptions;
 using FluentAssertions;
+using Microsoft.Data.SqlClient;
+using Moq;
+using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Students
 {
