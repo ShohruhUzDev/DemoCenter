@@ -52,6 +52,13 @@ namespace DemoCenter.Services.Foundations.Users
 
                 throw CreateAndLogDependencyValidationException(lockedUserException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedUserStorageException);
+            }
             catch (Exception serviceException)
             {
                 var failedUserServiceException =
@@ -60,6 +67,13 @@ namespace DemoCenter.Services.Foundations.Users
                 throw CreateAndLogServiceException(failedUserServiceException);
             }
 
+        }
+        private UserDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var userDependencyException = new UserDependencyException(exception);
+            this.loggingBroker.LogError(userDependencyException);
+
+            return userDependencyException;
         }
         private UserServiceException CreateAndLogServiceException(Xeption exception)
         {
