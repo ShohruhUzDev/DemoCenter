@@ -39,8 +39,10 @@ namespace DemoCenter.Services.Foundations.Users
         TryCatch(async () =>
         {
             ValidateUserId(userId);
+            User maybeUser= await this.storageBroker.SelectUserByIdAsync(userId);
+            ValidateStorageUser(maybeUser, userId);
 
-            return await this.storageBroker.SelectUserByIdAsync(userId);
+            return maybeUser;
         });
 
 
