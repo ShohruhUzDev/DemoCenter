@@ -5,6 +5,7 @@ using DemoCenter.Services.Foundations.Groups;
 using DemoCenter.Services.Foundations.Students;
 using DemoCenter.Services.Foundations.Subjects;
 using DemoCenter.Services.Foundations.Teachers;
+using DemoCenter.Services.Foundations.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -69,6 +70,7 @@ namespace DemoCenter
             services.AddTransient<IStudentService, StudentService>();
             services.AddTransient<ISubjectService, SubjectService>();
             services.AddTransient<ITeacherService, TeacherService>();
+            services.AddTransient<IUserService, UserService>();
         }
     }
 }
