@@ -21,8 +21,7 @@ namespace DemoCenter.Services.Foundations.Users
                 (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
                 (Rule: IsInvalid(user.Password), Parameter: nameof(User.Password)),
                 (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
-            //    (Rule: IsNotRecent(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
-            //    (Rule: IsInvalid(user.Password), Parameter: nameof(User.Password)),
+                (Rule: IsNotRecent(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
 
                 (Rule: IsNotSame(
                     firstDate: user.CreatedDate,
@@ -32,6 +31,19 @@ namespace DemoCenter.Services.Foundations.Users
                     Parameter: nameof(User.CreatedDate)));
         }
 
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
         private static dynamic IsNotSame(
            DateTimeOffset firstDate,
            DateTimeOffset secondDate,
