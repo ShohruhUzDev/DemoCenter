@@ -77,6 +77,10 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
                 values: "Text is required");
 
             invalidUserException.AddData(
+             key: nameof(User.PhoneNumber),
+             values: "Text is required");
+
+            invalidUserException.AddData(
                 key: nameof(User.BirthDate),
                 values: "Value is required");
 

@@ -1,4 +1,5 @@
-﻿using DemoCenter.Models.Users;
+﻿using System;
+using DemoCenter.Models.Users;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 
 namespace DemoCenter.Services.Foundations.Users
@@ -10,14 +11,16 @@ namespace DemoCenter.Services.Foundations.Users
         {
             ValidateUserNotNull(user);
 
-            //Validate(
-            //    (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
-            //    (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
-            //    (Rule: IsInvalid(user.LastName), Parameter: nameof(User.LastName)),
-            //    (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
-            //    (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
-            //    (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
-            //    (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
+            Validate(
+                (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
+                (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
+                (Rule: IsInvalid(user.LastName), Parameter: nameof(User.LastName)),
+                (Rule: IsInvalid(user.PhoneNumber), Parameter: nameof(User.PhoneNumber)),
+                (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
+                (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
+                (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
+                (Rule: IsInvalid(user.Password), Parameter: nameof(User.Password)),
+                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
             //    (Rule: IsNotRecent(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
             //    (Rule: IsInvalid(user.Password), Parameter: nameof(User.Password)),
 
@@ -28,6 +31,24 @@ namespace DemoCenter.Services.Foundations.Users
 
             //        Parameter: nameof(User.CreatedDate)));
         }
+
+        private static dynamic IsInvalid(Guid id) => new
+        {
+            Condition = id == default,
+            Message = "Id is required"
+        };
+
+        private static dynamic IsInvalid(string text) => new
+        {
+            Condition = string.IsNullOrWhiteSpace(text),
+            Message = "Text is required"
+        };
+
+        private static dynamic IsInvalid(DateTimeOffset date) => new
+        {
+            Condition = date == default,
+            Message = "Value is required"
+        };
 
         private static void ValidateUserNotNull(User user)
         {

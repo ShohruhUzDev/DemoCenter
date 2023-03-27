@@ -24,7 +24,11 @@ namespace DemoCenter.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(nullUserException);
             }
-          
+            catch (InvalidUserException invalidUserException)
+            {
+                throw CreateAndLogValidationException(invalidUserException);
+            }
+
         }
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)
