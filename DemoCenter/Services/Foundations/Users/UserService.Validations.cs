@@ -35,15 +35,16 @@ namespace DemoCenter.Services.Foundations.Users
         {
             ValidateUserNotNull(user);
 
-            //Validate(
-            //    (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
-            //    (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
-            //    (Rule: IsInvalid(user.LastName), Parameter: nameof(User.LastName)),
-            //    (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
-            //    (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
-            //    (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
-            //    (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
-            //    (Rule: IsInvalid(user.Password), Parameter: nameof(User.Password)),
+            Validate(
+                (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
+                (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
+                (Rule: IsInvalid(user.LastName), Parameter: nameof(User.LastName)),
+                (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
+                (Rule: IsInvalid(user.PhoneNumber), Parameter: nameof(User.PhoneNumber)),
+                (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
+                (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
+                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
+                (Rule: IsInvalid(user.Password), Parameter: nameof(User.Password)));
 
             //    (Rule: IsSame(
             //        firstDate: user.UpdatedDate,

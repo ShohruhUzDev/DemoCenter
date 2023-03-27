@@ -110,7 +110,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
                     expectedUserValidationException))), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Never);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertUserAsync(It.IsAny<User>()), Times.Never);
