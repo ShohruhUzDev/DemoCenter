@@ -46,7 +46,22 @@ namespace DemoCenter.Services.Foundations.Users
 
                 throw CreateAndDependencyValidationException(alreadyExistsUserException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedUserException = new LockedUserException(dbUpdateConcurrencyException);
 
+                throw CreateAndLogDependencyValidationException(lockedUserException);
+            }
+
+        }
+        private UserDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var userDependencyValidationException =
+                new UserDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(userDependencyValidationException);
+
+            return userDependencyValidationException;
         }
         private UserDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
