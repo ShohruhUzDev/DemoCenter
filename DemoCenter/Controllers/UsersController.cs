@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DemoCenter.Models.Users;
 using DemoCenter.Services.Foundations.Users;
@@ -61,6 +62,36 @@ namespace DemoCenter.Controllers
             catch (UserDependencyException userDependencyException)
             {
                 return InternalServerError(userDependencyException.InnerException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                return InternalServerError(userServiceException.InnerException);
+            }
+        }
+
+        [HttpGet("{userId}")]
+        public async ValueTask<ActionResult<User>> GetUserByIdAsync(Guid userId)
+        {
+            try
+            {
+                User user = await this.userService.RetrieveUserByIdAsync(userId);
+
+                return Ok(user);
+            }
+            catch (UserDependencyException userDependencyException)
+            {
+                return InternalServerError($"{userDependencyException.InnerException}");
+            }
+            catch (UserValidationException userValidationException)
+                when (userValidationException.InnerException is InvalidUserException)
+            {
+                return BadRequest(userValidationException.InnerException);
+
+            }
+            catch(UserValidationException userValidationException)
+                when(userValidationException.InnerException is NotFoundUserException)
+            {
+                return NotFound(userValidationException.InnerException);
             }
             catch(UserServiceException userServiceException)
             {
