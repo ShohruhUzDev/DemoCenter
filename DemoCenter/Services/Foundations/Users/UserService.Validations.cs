@@ -51,9 +51,9 @@ namespace DemoCenter.Services.Foundations.Users
                     secondDate: user.CreatedDate,
                     secondDateName: nameof(User.CreatedDate)),
 
-                    Parameter: nameof(User.UpdatedDate)));
+                    Parameter: nameof(User.UpdatedDate)),
 
-            //    (Rule: IsNotRecent(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
+               (Rule: IsNotRecent(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
         }
 
         private static dynamic IsSame(

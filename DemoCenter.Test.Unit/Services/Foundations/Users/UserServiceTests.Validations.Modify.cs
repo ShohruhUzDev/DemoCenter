@@ -167,7 +167,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
         }
 
         [Theory]
-        [MemberData(nameof(MinutsBeforeOrAfter))]
+        [MemberData(nameof(InvalidSeconds))]
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minuts)
         {
             // given
