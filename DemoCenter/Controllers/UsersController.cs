@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using DemoCenter.Models.Users;
 using DemoCenter.Services.Foundations.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -29,18 +30,37 @@ namespace DemoCenter.Controllers
             {
                 return BadRequest(userValidationException.InnerException);
             }
-            catch(UserDependencyValidationException userDependencyValidationException)
-                when(userDependencyValidationException.InnerException is AlreadyExistsUserException)
-            { 
-                return Conflict(userDependencyValidationException.InnerException);        
-            }
-            catch(UserDependencyValidationException userDepedencyValidationException)
+            catch (UserDependencyValidationException userDependencyValidationException)
+                when (userDependencyValidationException.InnerException is AlreadyExistsUserException)
             {
-                return BadRequest(userDepedencyValidationException.InnerException); 
+                return Conflict(userDependencyValidationException.InnerException);
             }
-            catch(UserDependencyException userDepedencyException)
+            catch (UserDependencyValidationException userDepedencyValidationException)
+            {
+                return BadRequest(userDepedencyValidationException.InnerException);
+            }
+            catch (UserDependencyException userDepedencyException)
             {
                 return InternalServerError(userDepedencyException.InnerException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                return InternalServerError(userServiceException.InnerException);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<User>> GetAllUsers()
+        {
+            try
+            {
+                IQueryable<User> allUsers = this.userService.RetrieveAllUsers();
+
+                return Ok(allUsers);
+            }
+            catch (UserDependencyException userDependencyException)
+            {
+                return InternalServerError(userDependencyException.InnerException);
             }
             catch(UserServiceException userServiceException)
             {
