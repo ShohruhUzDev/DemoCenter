@@ -39,9 +39,24 @@ namespace DemoCenter.Services.Foundations.Users
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsUserException =
+                    new AlreadyExistsUserException(duplicateKeyException);
+
+                throw CreateAndDependencyValidationException(alreadyExistsUserException);
+            }
 
         }
+        private UserDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var userDependencyValidationException =
+                new UserDependencyValidationException(exception);
 
+            this.loggingBroker.LogError(userDependencyValidationException);
+
+            return userDependencyValidationException;
+        }
         private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
         {
             var userDependencyException = new UserDependencyException(exeption);
