@@ -98,5 +98,37 @@ namespace DemoCenter.Controllers
                 return InternalServerError(userServiceException.InnerException);
             }
         }
+
+        [HttpPut]
+        public async ValueTask<ActionResult<User>> PutUserAsync(User user)
+        {
+            try
+            {
+               User updatedUser=await this.userService.ModifyUserAsync(user);
+
+                return Ok(updatedUser);
+            }
+            catch (UserValidationException userValidationException)
+                when(userValidationException.InnerException is NotFoundUserException)
+            {
+                return NotFound(userValidationException.InnerException);
+            }
+            catch(UserValidationException userValidationException)
+            {
+                return BadRequest(userValidationException.InnerException);
+            }
+            catch(UserDependencyValidationException userDepedencyValidationException)
+            {
+                return BadRequest(userDepedencyValidationException.InnerException);
+            }
+            catch(UserDependencyException userDependencyException)
+            {
+                return InternalServerError(userDependencyException.InnerException); 
+            }
+            catch(UserServiceException userServiceException)
+            {
+                return InternalServerError(userServiceException.InnerException);    
+            }
+        }
     }
 }
