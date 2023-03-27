@@ -56,11 +56,13 @@ namespace DemoCenter.Services.Foundations.Users
         });
 
 
-        public async ValueTask<User> RemoveUserByIdAsync(Guid userId)
+        public  ValueTask<User> RemoveUserByIdAsync(Guid userId) =>
+        TryCatch(async () =>
         {
+            ValidateUserId(userId);
             User maybeUser = await this.storageBroker.SelectUserByIdAsync(userId);
-
+            //ValidateStorageUser(maybeUser, userId);
             return await this.storageBroker.DeleteUserAsync(maybeUser);
-        }
+        });
     }
 }
