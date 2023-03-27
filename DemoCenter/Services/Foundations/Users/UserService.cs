@@ -61,7 +61,7 @@ namespace DemoCenter.Services.Foundations.Users
         {
             ValidateUserId(userId);
             User maybeUser = await this.storageBroker.SelectUserByIdAsync(userId);
-            //ValidateStorageUser(maybeUser, userId);
+            ValidateStorageUser(maybeUser, userId);
             return await this.storageBroker.DeleteUserAsync(maybeUser);
         });
     }
