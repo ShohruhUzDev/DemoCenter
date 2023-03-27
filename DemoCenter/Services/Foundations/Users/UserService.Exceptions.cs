@@ -32,9 +32,23 @@ namespace DemoCenter.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(notFoundUserException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+            }
 
         }
 
+        private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
+        {
+            var userDependencyException = new UserDependencyException(exeption);
+            this.loggingBroker.LogCritical(userDependencyException);
+
+            return userDependencyException;
+        }
         private UserValidationException CreateAndLogValidationException(Xeption exception)
         {
             var userValidationException =

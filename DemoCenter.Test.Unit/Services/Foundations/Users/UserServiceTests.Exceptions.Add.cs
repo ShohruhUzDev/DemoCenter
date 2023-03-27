@@ -1,4 +1,5 @@
 ﻿using DemoCenter.Models.Users;
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using System.Threading.Tasks;
