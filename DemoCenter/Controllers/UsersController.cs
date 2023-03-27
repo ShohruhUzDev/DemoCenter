@@ -88,12 +88,12 @@ namespace DemoCenter.Controllers
                 return BadRequest(userValidationException.InnerException);
 
             }
-            catch(UserValidationException userValidationException)
-                when(userValidationException.InnerException is NotFoundUserException)
+            catch (UserValidationException userValidationException)
+                when (userValidationException.InnerException is NotFoundUserException)
             {
                 return NotFound(userValidationException.InnerException);
             }
-            catch(UserServiceException userServiceException)
+            catch (UserServiceException userServiceException)
             {
                 return InternalServerError(userServiceException.InnerException);
             }
@@ -104,31 +104,69 @@ namespace DemoCenter.Controllers
         {
             try
             {
-               User updatedUser=await this.userService.ModifyUserAsync(user);
+                User updatedUser = await this.userService.ModifyUserAsync(user);
 
                 return Ok(updatedUser);
             }
             catch (UserValidationException userValidationException)
-                when(userValidationException.InnerException is NotFoundUserException)
+                when (userValidationException.InnerException is NotFoundUserException)
             {
                 return NotFound(userValidationException.InnerException);
             }
-            catch(UserValidationException userValidationException)
+            catch (UserValidationException userValidationException)
             {
                 return BadRequest(userValidationException.InnerException);
             }
-            catch(UserDependencyValidationException userDepedencyValidationException)
+            catch (UserDependencyValidationException userDepedencyValidationException)
             {
                 return BadRequest(userDepedencyValidationException.InnerException);
             }
+            catch (UserDependencyException userDependencyException)
+            {
+                return InternalServerError(userDependencyException.InnerException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                return InternalServerError(userServiceException.InnerException);
+            }
+        }
+
+        [HttpDelete("{userId}")]
+        public async ValueTask<ActionResult<User>> DeleteUserAsync(Guid userId)
+        {
+            try
+            {
+                User deletedUser = await this.userService.RemoveUserByIdAsync(userId);
+
+                return Ok(deletedUser);
+            }
+            catch (UserValidationException userValidationException)
+                when (userValidationException.InnerException is NotFoundUserException)
+            {
+                return NotFound(userValidationException.InnerException);
+            }
+            catch (UserValidationException userValidationException)
+            {
+                return BadRequest(userValidationException.InnerException);
+            }
+            catch (UserDependencyValidationException userDepedencyValidationException)
+                when (userDepedencyValidationException.InnerException is LockedUserException)
+            {
+                return Locked(userDepedencyValidationException.InnerException);
+            }
+            catch (UserDependencyValidationException userDepedencyValidationException)
+            {
+                return Locked(userDepedencyValidationException.InnerException);
+            }
             catch(UserDependencyException userDependencyException)
             {
-                return InternalServerError(userDependencyException.InnerException); 
+                return InternalServerError(userDependencyException.InnerException);
             }
             catch(UserServiceException userServiceException)
             {
                 return InternalServerError(userServiceException.InnerException);    
             }
+
         }
     }
 }
