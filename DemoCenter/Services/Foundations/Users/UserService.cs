@@ -39,15 +39,15 @@ namespace DemoCenter.Services.Foundations.Users
             this.storageBroker.SelectUserByIdAsync(userId);
 
 
-        public async ValueTask<User> ModifyUserAsync(User user)
+        public  ValueTask<User> ModifyUserAsync(User user) =>
+        TryCatch(async () =>
         {
+            ValidateUserOnModify(user);
             User maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
 
-            DateTimeOffset date = this.dateTimeBroker.GetCurrentDateTime();
-            User users = await this.storageBroker.UpdateUserAsync(user);
-
-            return users;
-        }
+            return await this.storageBroker.UpdateUserAsync(user); ;
+        });
+        
 
         public async ValueTask<User> RemoveUserByIdAsync(Guid userId)
         {

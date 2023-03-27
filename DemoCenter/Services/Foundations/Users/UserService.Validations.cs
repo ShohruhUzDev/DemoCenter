@@ -31,6 +31,29 @@ namespace DemoCenter.Services.Foundations.Users
                     Parameter: nameof(User.CreatedDate)));
         }
 
+        private void ValidateUserOnModify(User user)
+        {
+            ValidateUserNotNull(user);
+
+            //Validate(
+            //    (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
+            //    (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
+            //    (Rule: IsInvalid(user.LastName), Parameter: nameof(User.LastName)),
+            //    (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
+            //    (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
+            //    (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
+            //    (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
+            //    (Rule: IsInvalid(user.Password), Parameter: nameof(User.Password)),
+
+            //    (Rule: IsSame(
+            //        firstDate: user.UpdatedDate,
+            //        secondDate: user.CreatedDate,
+            //        secondDateName: nameof(User.CreatedDate)),
+
+            //        Parameter: nameof(User.UpdatedDate)),
+
+            //    (Rule: IsNotRecent(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
+        }
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
