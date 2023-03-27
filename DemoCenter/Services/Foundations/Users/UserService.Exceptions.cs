@@ -1,10 +1,10 @@
-﻿using DemoCenter.Models.Users;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using DemoCenter.Models.Users;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xeptions;
 
@@ -13,6 +13,7 @@ namespace DemoCenter.Services.Foundations.Users
     public partial class UserService
     {
         private delegate ValueTask<User> ReturningUserFunction();
+        private delegate IQueryable<User> ReturningUserFunctions();
 
         private async ValueTask<User> TryCatch(ReturningUserFunction returningUserFunction)
         {
@@ -68,6 +69,29 @@ namespace DemoCenter.Services.Foundations.Users
             }
 
         }
+
+        private IQueryable<User> TryCatch(ReturningUserFunctions returningUsersFunctions)
+        {
+            try
+            {
+                return returningUsersFunctions();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+            }
+            //catch (Exception serviceException)
+            //{
+            //    var failedUserServiceException =
+            //        new FailedUserServiceException(serviceException);
+
+            //    throw CreateAndLogServiceException(failedUserServiceException);
+            //}
+        }
+
         private UserDependencyException CreateAndLogDependencyException(Xeption exception)
         {
             var userDependencyException = new UserDependencyException(exception);

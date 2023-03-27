@@ -33,13 +33,17 @@ namespace DemoCenter.Services.Foundations.Users
         });
 
         public IQueryable<User> RetrieveAllUsers() =>
-            this.storageBroker.SelectAllUsers();
+        TryCatch(() =>
+        {
+            return this.storageBroker.SelectAllUsers();
+
+        });
 
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
         TryCatch(async () =>
         {
             ValidateUserId(userId);
-            User maybeUser= await this.storageBroker.SelectUserByIdAsync(userId);
+            User maybeUser = await this.storageBroker.SelectUserByIdAsync(userId);
             ValidateStorageUser(maybeUser, userId);
 
             return maybeUser;
@@ -56,7 +60,7 @@ namespace DemoCenter.Services.Foundations.Users
         });
 
 
-        public  ValueTask<User> RemoveUserByIdAsync(Guid userId) =>
+        public ValueTask<User> RemoveUserByIdAsync(Guid userId) =>
         TryCatch(async () =>
         {
             ValidateUserId(userId);
