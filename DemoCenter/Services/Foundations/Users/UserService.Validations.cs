@@ -44,17 +44,26 @@ namespace DemoCenter.Services.Foundations.Users
                 (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
                 (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
                 (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
-                (Rule: IsInvalid(user.Password), Parameter: nameof(User.Password)));
+                (Rule: IsInvalid(user.Password), Parameter: nameof(User.Password)),
 
-            //    (Rule: IsSame(
-            //        firstDate: user.UpdatedDate,
-            //        secondDate: user.CreatedDate,
-            //        secondDateName: nameof(User.CreatedDate)),
+                (Rule: IsSame(
+                    firstDate: user.UpdatedDate,
+                    secondDate: user.CreatedDate,
+                    secondDateName: nameof(User.CreatedDate)),
 
-            //        Parameter: nameof(User.UpdatedDate)),
+                    Parameter: nameof(User.UpdatedDate)));
 
             //    (Rule: IsNotRecent(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
         }
+
+        private static dynamic IsSame(
+           DateTimeOffset firstDate,
+           DateTimeOffset secondDate,
+           string secondDateName) => new
+           {
+               Condition = firstDate != default && firstDate == secondDate,
+               Message = $"Date is same as {secondDateName}"
+           };
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
