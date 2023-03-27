@@ -52,7 +52,23 @@ namespace DemoCenter.Services.Foundations.Users
 
                 throw CreateAndLogDependencyValidationException(lockedUserException);
             }
+            catch (Exception serviceException)
+            {
+                var failedUserServiceException =
+                    new FailedUserServiceException(serviceException);
 
+                throw CreateAndLogServiceException(failedUserServiceException);
+            }
+
+        }
+        private UserServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var userServiceException =
+                new UserServiceException(exception);
+
+            this.loggingBroker.LogError(userServiceException);
+
+            return userServiceException;
         }
         private UserDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
         {
