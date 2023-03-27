@@ -151,7 +151,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Users
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Never());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
