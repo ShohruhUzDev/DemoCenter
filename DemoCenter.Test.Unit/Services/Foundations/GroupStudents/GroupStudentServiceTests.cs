@@ -10,14 +10,14 @@ using Tynamix.ObjectFiller;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {
-    public partial class GroupStudentTests
+    public partial class GroupStudentServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly IGroupStudentService groupStudentService;
 
-        public GroupStudentTests()
+        public GroupStudentServiceTests()
         {
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
