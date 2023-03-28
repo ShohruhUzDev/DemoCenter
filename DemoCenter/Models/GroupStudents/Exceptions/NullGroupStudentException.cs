@@ -1,6 +1,6 @@
 ﻿using Xeptions;
 
-namespace Taarafo.Core.Models.GroupPosts.Exceptions
+namespace Taarafo.Core.Models.GroupStudents.Exceptions
 {
     public class NullGroupStudentException : Xeption
     {

@@ -1,16 +1,12 @@
-﻿// ---------------------------------------------------------------
-// Copyright (c) Coalition of the Good-Hearted Engineers
-// FREE TO USE TO CONNECT THE WORLD
-// ---------------------------------------------------------------
-
+﻿
 using System;
 using Xeptions;
 
-namespace Taarafo.Core.Models.GroupPosts.Exceptions
+namespace Taarafo.Core.Models.GroupStudents.Exceptions
 {
-    public class InvalidGroupPostReferenceException : Xeption
+    public class InvalidGroupStudentReferenceException : Xeption
     {
-        public InvalidGroupPostReferenceException(Exception innerException)
+        public InvalidGroupStudentReferenceException(Exception innerException)
             : base(message: "Invalid group post reference error occurred.", innerException)
         { }
     }
