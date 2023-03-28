@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
 using DemoCenter.Services.Foundations.Groups;
@@ -51,5 +53,26 @@ namespace DemoCenter.Controllers
             }
 
         }
+
+        [HttpGet]
+        public ActionResult<IQueryable<Group>> GetAllGroups()
+        {
+            try
+            {
+                IQueryable<Group> allGroups = this.groupService.RetrieveAllGroups();
+
+                return Ok(allGroups);
+            }
+            catch (GroupDependencyException groupDepdencyException)
+            {
+                return InternalServerError(groupDepdencyException.InnerException);
+            }
+            catch(GroupServiceException groupServiceException)
+            {
+                return InternalServerError(groupServiceException.InnerException);   
+            }
+        }
+
+        
     }
 }
