@@ -47,10 +47,10 @@ namespace DemoCenter.Services.Foundations.Groups
             }
             catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
             {
-                var invalidCommentReferenceException =
+                var invalidGroupReferenceException =
                     new InvalidGroupReferenceException(foreignKeyConstraintConflictException);
 
-                throw CreateAndLogDependencyValidationException(invalidCommentReferenceException);
+                throw CreateAndLogDependencyValidationException(invalidGroupReferenceException);
             }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {

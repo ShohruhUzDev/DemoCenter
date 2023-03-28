@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
 using DemoCenter.Models.Groups.Exceptions;
+using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogCritical(It.Is(SameExceptonAs(
+                broker.LogCritical(It.Is(SameExceptionAs(
                     expectedGroupDependencyException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
@@ -105,13 +106,70 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void ShouldThrowValidationExceptionOnModifyIfReferenceErrorOccursAndLogItAsync()
+        {
+            // given
+            Group foreignKeyConflictedGroup = CreateRandomGroup();
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+
+            var foreignKeyConstraintConflictException =
+                new ForeignKeyConstraintConflictException(exceptionMessage);
+
+            var invalidGroupReferenceException =
+                new InvalidGroupReferenceException(foreignKeyConstraintConflictException);
+
+            var expectedGroupDependencyValidationException =
+                new GroupDependencyValidationException(invalidGroupReferenceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            // when
+            ValueTask<Group> modifyGroupTask =
+                this.groupService.ModifyGroupAsync(foreignKeyConflictedGroup);
+
+            GroupDependencyValidationException actualGroupDependencyValidationException =
+                await Assert.ThrowsAsync<GroupDependencyValidationException>(
+                    modifyGroupTask.AsTask);
+
+            // then
+            actualGroupDependencyValidationException.Should().BeEquivalentTo(
+                expectedGroupDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupByIdAsync(foreignKeyConflictedGroup.Id),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateGroupAsync(foreignKeyConflictedGroup),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+
 
         [Fact]
         public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
@@ -157,7 +215,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -207,7 +265,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

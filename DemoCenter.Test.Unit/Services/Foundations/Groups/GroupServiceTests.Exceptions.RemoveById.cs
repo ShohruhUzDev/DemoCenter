@@ -46,7 +46,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectGroupByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
@@ -90,7 +90,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectGroupByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogCritical(It.Is(SameExceptonAs(
+                broker.LogCritical(It.Is(SameExceptionAs(
                     expectedGroupDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -131,7 +131,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectGroupByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

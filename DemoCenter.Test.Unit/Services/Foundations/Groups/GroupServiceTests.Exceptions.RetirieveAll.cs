@@ -39,7 +39,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectAllGroups(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogCritical(It.Is(SameExceptonAs(
+                broker.LogCritical(It.Is(SameExceptionAs(
                     expectedGroupDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -76,7 +76,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectAllGroups(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
