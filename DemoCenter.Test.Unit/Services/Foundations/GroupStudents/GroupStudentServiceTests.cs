@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
@@ -7,6 +8,7 @@ using DemoCenter.Models.GroupStudents;
 using DemoCenter.Services.Foundations.GroupStudents;
 using Moq;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {
@@ -38,6 +40,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             return CreateFillerGroupStudent(date: GetRandomDateTime())
                 .Create(count: GetRandomNumber()).AsQueryable();
         }
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+          actualException => actualException.SameExceptionAs(expectedException);
 
         private static GroupStudent CreateRandomGroupStudent(DateTimeOffset date) =>
             CreateFillerGroupStudent(date).Create();
