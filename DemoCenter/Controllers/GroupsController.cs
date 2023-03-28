@@ -73,6 +73,32 @@ namespace DemoCenter.Controllers
             }
         }
 
-        
+        [HttpGet("{groupId}")]
+        public async ValueTask<ActionResult<Group>> GetGroupByIdAsync(Guid groupId)
+        {
+            try
+            {
+                Group group = await this.groupService.RetrieveGroupByIdAsync(groupId);
+
+                return Ok(group);
+            }
+            catch (GroupValidationException groupValidationException)
+                when (groupValidationException.InnerException is NotFoundGroupException)
+            {
+                return NotFound(groupValidationException.InnerException);
+            }
+            catch (GroupValidationException groupValidationException)
+            {
+                return BadRequest(groupValidationException.InnerException);
+            }
+            catch (GroupDependencyException groupDepedencyException)
+            {
+                return InternalServerError(groupDepedencyException.InnerException);
+            }
+            catch (GroupServiceException groupServiceException)
+            {
+                return InternalServerError(groupServiceException.InnerException);
+            }
+        }
     }
 }
