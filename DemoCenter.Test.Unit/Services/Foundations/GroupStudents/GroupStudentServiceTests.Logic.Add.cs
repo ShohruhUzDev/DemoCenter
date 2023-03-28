@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {
-    public partial class GroupStudentTests
+    public partial class GroupStudentServiceTests
     {
         [Fact]
         public async Task ShouldAddGroupStudentAsync()

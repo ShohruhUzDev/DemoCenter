@@ -8,33 +8,42 @@ using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {
-    public partial class GroupStudentTests
+    public partial class GroupStudentServiceTests
     {
         [Fact]
-        public async Task ShouldRetrieveGroupStudentByIdAsync()
+        public async Task ShouldRemoveGroupStudentByIdAsync()
         {
             //given
-            Guid randomGroupId = Guid.NewGuid();
-            Guid inputGroupId = randomGroupId;
             Guid randomStudentId = Guid.NewGuid();
+            Guid randomGroupId = Guid.NewGuid();
             Guid inputStudentId = randomStudentId;
+            Guid inputGroupId = randomGroupId;
             GroupStudent randomGroupStudent = CreateRandomGroupStudent();
-            GroupStudent storedGroupStudent = randomGroupStudent;
-            GroupStudent expectedGroupStudent = storedGroupStudent.DeepClone();
+            GroupStudent storageGroupStudent = randomGroupStudent;
+            GroupStudent expectedInputGroupStudent = storageGroupStudent;
+            GroupStudent deletedGroupStudent = expectedInputGroupStudent;
+            GroupStudent expectedGroupStudent = deletedGroupStudent.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectGroupStudentByIdAsync(inputGroupId, inputStudentId))
-                    .ReturnsAsync(storedGroupStudent);
+                    .ReturnsAsync(storageGroupStudent);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.DeleteGroupStudentAsync(expectedInputGroupStudent))
+                    .ReturnsAsync(deletedGroupStudent);
 
             //when
             GroupStudent actualGroupStudent = await
-                this.groupStudentService.RetrieveGroupStudentByIdAsync(inputGroupId, inputStudentId);
+                this.groupStudentService.RemoveGroupStudentByIdAsync(inputGroupId, inputStudentId);
 
             //then
             actualGroupStudent.Should().BeEquivalentTo(expectedGroupStudent);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectGroupStudentByIdAsync(inputGroupId, inputStudentId), Times.Once());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeleteGroupStudentAsync(expectedInputGroupStudent), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
