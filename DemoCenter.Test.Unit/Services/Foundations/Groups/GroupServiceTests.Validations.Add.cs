@@ -59,9 +59,16 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 values: "Id is required");
 
             invalidGroupException.AddData(
+             key: nameof(Group.TeacherId),
+             values: "Id is required");
+         
+            invalidGroupException.AddData(
+             key: nameof(Group.SubjectId),
+             values: "Id is required");
+
+            invalidGroupException.AddData(
                 key: nameof(Group.GroupName),
                 values: "Text is required");
-
 
             invalidGroupException.AddData(
                 key: nameof(Group.CreatedDate),

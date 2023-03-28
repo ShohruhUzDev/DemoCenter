@@ -10,9 +10,9 @@ namespace DemoCenter.Services.Foundations.Groups
 {
     public partial class GroupService : IGroupService
     {
-        private IStorageBroker storageBroker;
-        private IDateTimeBroker dateTimeBroker;
-        private ILoggingBroker loggingBroker;
+        private readonly IStorageBroker storageBroker;
+        private readonly IDateTimeBroker dateTimeBroker;
+        private readonly ILoggingBroker loggingBroker;
 
         public GroupService(
             IStorageBroker storageBroker,

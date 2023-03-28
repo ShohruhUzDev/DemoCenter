@@ -169,5 +169,52 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void ShouldThrowValidationExceptionOnAddIfReferenceErrorOccursAndLogItAsync()
+        {
+            // given
+            Group someGroup = CreateRandomGroup();
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+
+            var foreignKeyConstraintConflictException =
+                new ForeignKeyConstraintConflictException(exceptionMessage);
+
+            var invalidGroupReferenceException =
+                new InvalidGroupReferenceException(foreignKeyConstraintConflictException);
+
+            var expectedGroupValidationException =
+                new GroupDependencyValidationException(invalidGroupReferenceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            // when
+            ValueTask<Group> addGroupTask =
+                this.groupService.AddGroupAsync(someGroup);
+
+            GroupDependencyValidationException actualGroupDependencyValidationException =
+                await Assert.ThrowsAsync<GroupDependencyValidationException>(
+                    addGroupTask.AsTask);
+
+            // then
+            actualGroupDependencyValidationException.Should().BeEquivalentTo(
+                expectedGroupValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptonAs(
+                    expectedGroupValidationException))),
+                        Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
