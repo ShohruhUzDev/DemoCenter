@@ -158,13 +158,13 @@ namespace DemoCenter.Controllers
             {
                 return Locked(userDepedencyValidationException.InnerException);
             }
-            catch(UserDependencyException userDependencyException)
+            catch (UserDependencyException userDependencyException)
             {
                 return InternalServerError(userDependencyException.InnerException);
             }
-            catch(UserServiceException userServiceException)
+            catch (UserServiceException userServiceException)
             {
-                return InternalServerError(userServiceException.InnerException);    
+                return InternalServerError(userServiceException.InnerException);
             }
 
         }

@@ -62,7 +62,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
         }
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
-        private static Expression<Func<Xeption, bool>> SameExceptonAs(Xeption expectedException) =>
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
         private static Group CreateRandomGroup() =>
             CreateGroupFiller(dates: GetRandomDateTime()).Create();

@@ -30,7 +30,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
             actualGroupValidationException.Should().BeEquivalentTo(expectedGroupValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException))), Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(expectedGroupValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateGroupAsync(It.IsAny<Group>()), Times.Never);
@@ -97,7 +97,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                  broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(expectedGroupValidationException)))
+                broker.LogError(It.Is(SameExceptionAs(expectedGroupValidationException)))
                     , Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
@@ -142,7 +142,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
@@ -189,7 +189,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
@@ -240,7 +240,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -294,7 +294,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(
-                    SameExceptonAs(expectedGroupValidationException))), Times.Once);
+                    SameExceptionAs(expectedGroupValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -343,7 +343,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptonAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupValidationException))), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
