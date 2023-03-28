@@ -27,6 +27,11 @@ namespace DemoCenter.Controllers
             {
                 return BadRequest(groupValidationException.InnerException);
             }
+            catch (GroupDependencyValidationException groupDependencyValidationException)
+                when (groupDependencyValidationException.InnerException is InvalidGroupReferenceException)
+            {
+                return FailedDependency(groupDependencyValidationException.InnerException);
+            }
             catch (GroupDependencyValidationException groupDependencyException)
                 when (groupDependencyException.InnerException is AlreadyExistGroupException)
             {
