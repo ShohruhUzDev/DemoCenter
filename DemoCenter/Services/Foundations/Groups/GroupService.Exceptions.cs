@@ -45,6 +45,13 @@ namespace DemoCenter.Services.Foundations.Groups
 
                 throw CreateAndDependencyValidationException(failedTicketDependencyValidationException);
             }
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidCommentReferenceException =
+                    new InvalidGroupReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndLogDependencyValidationException(invalidCommentReferenceException);
+            }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 var lockedGroupException = new LockedGroupException(dbUpdateConcurrencyException);
@@ -83,6 +90,16 @@ namespace DemoCenter.Services.Foundations.Groups
 
                 throw CreateAndLogServiceException(failedGroupServiceException);
             }
+        }
+        private GroupDependencyValidationException CreateAndLogDependencyValidationException(
+        Xeption exception)
+        {
+            var groupDependencyValidationException =
+                new GroupDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(groupDependencyValidationException);
+
+            return groupDependencyValidationException;
         }
         private GroupDependencyException CreateAndLogDependencyException(Xeption exception)
         {
