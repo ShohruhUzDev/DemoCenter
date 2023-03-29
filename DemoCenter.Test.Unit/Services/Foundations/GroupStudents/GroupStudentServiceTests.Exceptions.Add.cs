@@ -3,6 +3,10 @@ using Moq;
 using System.Threading.Tasks;
 using System;
 using Xunit;
+using DemoCenter.Models.GroupStudents;
+using DemoCenter.Models.Groups.Exceptions;
+using FluentAssertions;
+using DemoCenter.Models.GroupStudents.Exceptions;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {
@@ -12,9 +16,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
         public async Task ShouldThrowCriticalDependencyExceptionOnAddIfSqlErrorOccursAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             GroupStudent someGroupStudent = CreateRandomGroupStudent(randomDateTime);
-            SqlException sqlException = GetSqlException();
+            SqlException sqlException = CreateSqlException();
 
             var failedGroupStudentStorageException =
                 new FailedGroupStudentStorageException(sqlException);
@@ -23,12 +27,12 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 new GroupStudentDependencyException(failedGroupStudentStorageException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset())
+                broker.GetCurrentDateTime())
                     .Throws(sqlException);
 
             //when
             ValueTask<GroupStudent> addGroupStudentTask =
-                this.GroupStudentService.AddGroupStudents(someGroupStudent);
+                this.groupStudentService.AddGroupStudentAsync(someGroupStudent);
 
             GroupStudentDependencyException actualGroupStudentDependencyException =
                 await Assert.ThrowsAsync<GroupStudentDependencyException>(
@@ -39,7 +43,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedGroupStudentDependencyException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
+                broker.GetCurrentDateTime(),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

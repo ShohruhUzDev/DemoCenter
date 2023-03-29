@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using DemoCenter.Models.Groups.Exceptions;
 using DemoCenter.Models.GroupStudents;
 using DemoCenter.Models.GroupStudents.Exceptions;
+using Microsoft.Data.SqlClient;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.GroupStudents
@@ -27,8 +29,23 @@ namespace DemoCenter.Services.Foundations.GroupStudents
             {
                 throw CreateAndLogValidationException(notFoundGroupStudentException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedGroupStudentStorageException =
+                    new FailedGroupStudentStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedGroupStudentStorageException);
+            }
 
         }
+        private GroupStudentDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var groupStudentDependencyException = new GroupStudentDependencyException(exception);
+            this.loggingBroker.LogCritical(groupStudentDependencyException);
+
+            return groupStudentDependencyException;
+        }
+
         private GroupStudentValidationException CreateAndLogValidationException(Xeption exception)
         {
             var groupStudentValidationException = new GroupStudentValidationException(exception);
