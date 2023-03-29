@@ -153,5 +153,53 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Theory]
+        [MemberData(nameof(InvalidSeconds))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minuts)
+        {
+            //given
+            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            GroupStudent randomGroupStudent = CreateRandomGroupStudent(dateTime);
+            GroupStudent inputGroupStudent = randomGroupStudent;
+            inputGroupStudent.UpdatedDate = dateTime.AddMinutes(minuts);
+            var invalidGroupStudentException = new InvalidGroupStudentException();
+
+            invalidGroupStudentException.AddData(
+                key: nameof(GroupStudent.UpdatedDate),
+                values: "Date is not recent");
+
+            var expectedGroupStudentValidationException =
+                new GroupStudentValidationException(invalidGroupStudentException);
+
+            dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset()).Returns(dateTime);
+
+            //when
+            ValueTask<GroupStudent> modifyGroupStudentTask =
+                this.GroupStudentService.ModifyGroupStudentAsync(inputGroupStudent);
+
+            GroupStudentValidationException actualGroupStudentValidationException =
+                await Assert.ThrowsAsync<GroupStudentValidationException>(
+                    modifyGroupStudentTask.AsTask);
+
+            //then
+            actualGroupStudentValidationException.Should().BeEquivalentTo(
+                expectedGroupStudentValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupStudentValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupStudentByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }
