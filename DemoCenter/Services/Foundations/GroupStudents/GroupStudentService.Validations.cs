@@ -13,9 +13,7 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
             Validate(
                 (Rule: IsInvalid(groupStudent.GroupId), Parameter: nameof(GroupStudent.GroupId)),
-                (Rule: IsInvalid(groupStudent.Group), Parameter: nameof(GroupStudent.Group)),
                 (Rule: IsInvalid(groupStudent.StudentId), Parameter: nameof(GroupStudent.StudentId)),
-                (Rule: IsInvalid(groupStudent.Student), Parameter: nameof(GroupStudent.Student)),
                 (Rule: IsInvalid(groupStudent.CreatedDate), Parameter: nameof(GroupStudent.CreatedDate)),
                 (Rule: IsInvalid(groupStudent.UpdatedDate), Parameter: nameof(GroupStudent.UpdatedDate)));
               

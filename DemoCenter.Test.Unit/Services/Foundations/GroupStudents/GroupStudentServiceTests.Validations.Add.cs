@@ -1,10 +1,10 @@
-﻿using DemoCenter.Models.GroupStudents;
-using FluentAssertions;
-using Moq;
+﻿using System;
 using System.Threading.Tasks;
 using DemoCenter.Models.Groups.Exceptions;
+using DemoCenter.Models.GroupStudents;
+using FluentAssertions;
+using Moq;
 using Xunit;
-using System;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {
@@ -64,16 +64,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 values: "Id is required");
 
             invalidGroupStudentException.AddData(
-                key: nameof(GroupStudent.Group),
-                values: "Object is required");
-
-            invalidGroupStudentException.AddData(
                 key: nameof(GroupStudent.StudentId),
                 values: "Id is required");
-
-            invalidGroupStudentException.AddData(
-                key: nameof(GroupStudent.Student),
-                values: "Object is required");
 
             invalidGroupStudentException.AddData(
                 key: nameof(GroupStudent.CreatedDate),
