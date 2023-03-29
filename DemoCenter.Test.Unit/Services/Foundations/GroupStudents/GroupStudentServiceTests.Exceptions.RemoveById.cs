@@ -103,5 +103,49 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
+        {
+            // given
+            Guid groupId = Guid.NewGuid();
+            Guid studentId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedGroupStudentServiceException =
+                new FailedGroupStudentServiceException(serviceException);
+
+            var expectedGroupStudentServiceException =
+                new GroupStudentServiceException(failedGroupStudentServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGroupStudentByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<GroupStudent> removeGroupStudentByIdTask =
+                this.groupStudentService.RemoveGroupStudentByIdAsync(groupId, studentId);
+
+            GroupStudentServiceException actualGroupStudentServiceException =
+                await Assert.ThrowsAsync<GroupStudentServiceException>(
+                    removeGroupStudentByIdTask.AsTask);
+
+            // then
+            actualGroupStudentServiceException.Should().BeEquivalentTo(
+                expectedGroupStudentServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupStudentByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupStudentServiceException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }
