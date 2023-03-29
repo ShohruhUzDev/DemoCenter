@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using DemoCenter.Models.GroupStudents.Exceptions;
 using DemoCenter.Models.GroupStudents;
+using DemoCenter.Models.GroupStudents.Exceptions;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.GroupStudents

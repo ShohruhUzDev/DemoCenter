@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DemoCenter.Models.Users;
+using DemoCenter.Models.Users.Exceptions;
 using DemoCenter.Services.Foundations.Users;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
-using DemoCenter.Models.Users.Exceptions;
 
 namespace DemoCenter.Controllers
 {

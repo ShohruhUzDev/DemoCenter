@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DemoCenter.Models.Users;
+using DemoCenter.Models.Users.Exceptions;
 using FluentAssertions;
 using Moq;
-using DemoCenter.Models.Users.Exceptions;
 using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Users

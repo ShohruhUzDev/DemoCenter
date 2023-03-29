@@ -1,7 +1,7 @@
 ﻿using System;
 using Xeptions;
 
-namespace DemoCenter.Models.GroupStudents.Exceptions
+namespace DemoCenter.Models.Groups.Exceptions
 {
     public class LockedGroupException : Xeption
     {

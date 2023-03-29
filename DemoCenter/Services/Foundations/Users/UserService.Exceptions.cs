@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DemoCenter.Models.Users;
+using DemoCenter.Models.Users.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using DemoCenter.Models.Users.Exceptions;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.Users

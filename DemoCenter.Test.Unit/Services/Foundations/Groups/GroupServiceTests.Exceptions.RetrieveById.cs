@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DemoCenter.Models.Groups;
-using DemoCenter.Models.GroupStudents.Exceptions;
+using DemoCenter.Models.Groups.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
