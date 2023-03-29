@@ -103,5 +103,83 @@ namespace DemoCenter.Controllers
             }
         }
 
+        [HttpPut]
+        public async ValueTask<ActionResult<GroupStudent>> PutGroupStudentAsync(GroupStudent groupStudent)
+        {
+            try
+            {
+                GroupStudent updatedGroupStudent = 
+                    await this.groupStudentService.ModifyGroupStudentAsync(groupStudent);
+
+                return Ok(updatedGroupStudent); 
+            }
+            catch (GroupStudentValidationException groupStudentValidationException)
+                when(groupStudentValidationException.InnerException is NotFoundGroupStudentException)
+            {
+                return NotFound(groupStudentValidationException.InnerException);
+            }
+            catch(GroupStudentValidationException groupStudentValidationException)
+            {
+                return BadRequest(groupStudentValidationException.InnerException);
+            }
+            catch(GroupStudentDependencyValidationException groupStudentDependencyValidationException)  
+                when(groupStudentDependencyValidationException.InnerException is InvalidGroupStudentReferenceException)
+            {
+                return FailedDependency(groupStudentDependencyValidationException.InnerException);
+            }
+            catch(GroupStudentDependencyValidationException groupDependencyValidationException)
+                when(groupDependencyValidationException.InnerException is AlreadyExistsGroupStudentException)
+            {
+                return Conflict(groupDependencyValidationException.InnerException);
+            }
+            catch(GroupStudentDependencyException groupStudentDependencyException)
+            {
+                return InternalServerError(groupStudentDependencyException.InnerException);
+            }
+            catch(GroupStudentServiceException groupStudentServiceException)
+            {
+                return InternalServerError(groupStudentServiceException.InnerException);    
+            }
+        }
+
+
+        [HttpDelete("groupStudentId")]
+        public async ValueTask<ActionResult<GroupStudent>> DeleteGroupStudentAsync(Guid groupId, Guid studentId)
+        {
+            try
+            {
+                GroupStudent deletedGroupStudent =
+                    await this.groupStudentService.RemoveGroupStudentByIdAsync(groupId, studentId);
+
+                return Ok(deletedGroupStudent);
+            }
+            catch (GroupStudentValidationException groupStudentValidationException)
+                when( groupStudentValidationException.InnerException is NotFoundGroupStudentException)
+            {
+                return NotFound(groupStudentValidationException.InnerException);               
+            }
+            catch(GroupStudentValidationException groupStudentValidationException)
+            {
+                return BadRequest(groupStudentValidationException.InnerException);
+            }
+            catch(GroupStudentDependencyValidationException groupStudentDependencyValidationException)
+                when(groupStudentDependencyValidationException.InnerException is LockedGroupStudentException)
+            {
+                return Locked(groupStudentDependencyValidationException.InnerException);
+            }
+            catch(GroupStudentDependencyValidationException groupStudentDependencyValidationException)
+            {
+                return BadRequest(groupStudentDependencyValidationException.InnerException);
+            }
+            catch(GroupStudentDependencyException groupStudentDependencyException)
+            {
+                return InternalServerError(groupStudentDependencyException.InnerException); 
+            }
+            catch(GroupStudentServiceException groupStudentServiceException)
+            {
+                return InternalServerError(groupStudentServiceException.InnerException);
+            }
+           
+        }
     }
 }
