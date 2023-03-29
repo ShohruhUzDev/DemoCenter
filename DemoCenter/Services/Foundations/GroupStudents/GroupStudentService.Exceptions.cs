@@ -88,12 +88,12 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
                 throw CreateAndLogCriticalDependencyException(failedGroupStudentStorageException);
             }
-            //catch (Exception serviceException)
-            //{
-            //    var failedGroupServiceException = new FailedGroupServiceException(serviceException);
+            catch (Exception serviceException)
+            {
+                var failedGroupStudentServiceException = new FailedGroupStudentServiceException(serviceException);
 
-            //    throw CreateAndLogServiceException(failedGroupServiceException);
-            //}
+                throw CreateAndLogServiceException(failedGroupStudentServiceException);
+            }
         }
         private GroupStudentServiceException CreateAndLogServiceException(Exception exception)
         {
