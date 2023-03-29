@@ -161,6 +161,58 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async void ShouldThrowDependencyValidationExceptionOnAddIfReferenceErrorOccursAndLogItAsync()
+        {
+            //given
+            GroupStudent someGroupStudent = CreateRandomGroupStudent();
+            string randomMessage = GetRandomMessage();
+            string exceptionMessage = randomMessage;
+
+            var foreignKeyConstraintConflictException =
+                new ForeignKeyConstraintConflictException(exceptionMessage);
+
+            var invalidGroupStudentReferenceException =
+                new InvalidGroupStudentReferenceException(foreignKeyConstraintConflictException);
+
+            var expectedGroupStudentDependencyValidationException =
+                new GroupStudentDependencyValidationException(invalidGroupStudentReferenceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            //when
+            ValueTask<GroupStudent> addGroupStudentTask =
+                this.GroupStudentService.AddGroupStudents(someGroupStudent);
+
+            GroupStudentDependencyValidationException actualGroupStudentDependencyValidationException =
+                await Assert.ThrowsAsync<GroupStudentDependencyValidationException>(
+                    addGroupStudentTask.AsTask);
+
+            //then
+            actualGroupStudentDependencyValidationException.Should().BeEquivalentTo(
+                expectedGroupStudentDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupStudentDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertGroupStudentAsync(It.IsAny<GroupStudent>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+
 
     }
 }
