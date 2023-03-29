@@ -47,6 +47,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 secondsInFuture
             };
         }
+        private static int GetRandomNegativeNumber() =>
+           -1 * new IntRange(min: 2, max: 99).GetValue();
+
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 

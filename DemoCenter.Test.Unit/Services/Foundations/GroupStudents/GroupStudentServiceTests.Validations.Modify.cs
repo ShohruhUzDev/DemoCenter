@@ -201,5 +201,59 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfGroupStudentDoesNotExistAndLogItAsync()
+        {
+            //given
+            int randomNegativeMinutes = GetRandomNegativeNumber();
+            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            GroupStudent randomGroupStudent = CreateRandomGroupStudent(dateTime);
+            GroupStudent nonExistGroupStudent = randomGroupStudent;
+            nonExistGroupStudent.CreatedDate = dateTime.AddMinutes(randomNegativeMinutes);
+            GroupStudent nullGroupStudent = null;
+
+            var notFoundGroupStudentException =
+                new NotFoundGroupStudentException(
+                    nonExistGroupStudent.PostId,
+                    nonExistGroupStudent.ProfileId);
+
+            var expectedGroupStudentValidationException =
+                new GroupStudentValidationException(notFoundGroupStudentException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGroupStudentByIdAsync(nonExistGroupStudent.PostId,
+                    nonExistGroupStudent.ProfileId)).ReturnsAsync(nullGroupStudent);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset()).Returns(dateTime);
+
+            //when
+            ValueTask<GroupStudent> modifyGroupStudentTask =
+                this.GroupStudentService.ModifyGroupStudentAsync(nonExistGroupStudent);
+
+            GroupStudentValidationException actualGroupStudentValidationException =
+                await Assert.ThrowsAsync<GroupStudentValidationException>(modifyGroupStudentTask.AsTask);
+
+            //then
+            actualGroupStudentValidationException.Should().BeEquivalentTo(
+                expectedGroupStudentValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupStudentByIdAsync(
+                    nonExistGroupStudent.PostId,
+                    nonExistGroupStudent.ProfileId), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupStudentValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }
