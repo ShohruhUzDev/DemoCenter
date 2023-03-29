@@ -58,7 +58,7 @@ namespace DemoCenter.Controllers
         {
             try
             {
-                IQueryable<GroupStudent> allGroupStudents = 
+                IQueryable<GroupStudent> allGroupStudents =
                     this.groupStudentService.RetrieveAllGroupStudents();
 
                 return Ok(allGroupStudents);
@@ -71,36 +71,9 @@ namespace DemoCenter.Controllers
             {
                 return InternalServerError(groupStudentServiceException.InnerException);
             }
-           
+
         }
 
-        [HttpGet("groupStudentId")]
-        public async ValueTask<ActionResult<GroupStudent>> GetGroupStudentByIdAsync(Guid groupId, Guid studentId)
-        {
-            try
-            {
-                GroupStudent groupStudent =
-                    await this.groupStudentService.RetrieveGroupStudentByIdAsync(groupId, studentId);
-           
-            return Ok(groupStudent);    
-            }
-            catch (GroupStudentValidationException groupStudentValidationException)
-                when(groupStudentValidationException.InnerException is NotFoundGroupStudentException)
-            {
-                return NotFound(groupStudentValidationException.InnerException);
-            }
-            catch(GroupStudentValidationException groupStudentValidationException)
-            {
-                return BadRequest(groupStudentValidationException.InnerException);
-            }
-            catch(GroupStudentDependencyException groupStudentDependencyException)
-            {
-                return InternalServerError(groupStudentDependencyException.InnerException);
-            }
-            catch(GroupStudentServiceException groupStudentServiceException)
-            {
-                return InternalServerError(groupStudentServiceException.InnerException);
-            }
-        }
+      
     }
 }
