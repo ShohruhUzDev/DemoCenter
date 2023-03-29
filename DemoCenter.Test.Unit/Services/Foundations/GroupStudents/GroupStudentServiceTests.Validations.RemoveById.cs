@@ -56,6 +56,53 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRemoveIdsGroupStudentIsNotFoundAndLogItAsync()
+        {
+            //given
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            GroupStudent randomGroupStudent = CreateRandomGroupStudent(randomDateTime);
+            Guid inputPostId = randomGroupStudent.PostId;
+            Guid inputProfile = randomGroupStudent.ProfileId;
+            GroupStudent nullStorageGroupStudent = null;
+
+            var notFoundGroupStudentException =
+                new NotFoundGroupStudentException(inputPostId, inputProfile);
+
+            var expectedGroupStudentValidationException =
+                new GroupStudentValidationException(notFoundGroupStudentException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGroupStudentByIdAsync(inputPostId, inputProfile))
+                    .ReturnsAsync(nullStorageGroupStudent);
+
+            //when
+            ValueTask<GroupStudent> removeGroupStudentTask =
+                this.GroupStudentService.RemoveGroupStudentAsync(randomGroupStudent);
+
+            GroupStudentValidationException actualGroupStudentValidationException =
+                await Assert.ThrowsAsync<GroupStudentValidationException>(
+                    removeGroupStudentTask.AsTask);
+
+            //then
+            actualGroupStudentValidationException.Should().BeEquivalentTo(
+                expectedGroupStudentValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupStudentByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupStudentValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeleteGroupStudentAsync(It.IsAny<GroupStudent>()), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
 
     }
 }
