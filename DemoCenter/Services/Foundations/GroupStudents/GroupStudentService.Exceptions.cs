@@ -4,6 +4,7 @@ using DemoCenter.Models.GroupStudents;
 using DemoCenter.Models.GroupStudents.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.GroupStudents
@@ -44,8 +45,23 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
                 throw CreateAndDependencyValidationException(failedGroupStudentDependencyValidationException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedGroupStudentStorageException = new FailedGroupStudentStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedGroupStudentStorageException);
+            }
 
         }
+        private GroupStudentDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var groupStudentDependencyException = new GroupStudentDependencyException(exception);
+            this.loggingBroker.LogError(groupStudentDependencyException);
+
+            return groupStudentDependencyException;
+        }
+
+
         private GroupStudentDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
             var groupStudentDependencyValidationException = new GroupStudentDependencyValidationException(exception);
