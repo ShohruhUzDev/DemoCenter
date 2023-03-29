@@ -1,7 +1,7 @@
 ﻿
 using Xeptions;
 
-namespace Taarafo.Core.Models.GroupPosts.Exceptions
+namespace DemoCenter.Models.GroupStudents.Exceptions
 {
     public class GroupStudentValidationException : Xeption
     {

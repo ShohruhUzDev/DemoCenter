@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
@@ -7,6 +8,8 @@ using DemoCenter.Models.GroupStudents;
 using DemoCenter.Services.Foundations.GroupStudents;
 using Moq;
 using Tynamix.ObjectFiller;
+using Xeptions;
+using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {
@@ -28,6 +31,34 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 loggingBroker: loggingBrokerMock.Object);
         }
 
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
+        }
+        private static GroupStudent CreateRandomModifyGroupStudent(DateTimeOffset dates)
+        {
+            int randomDaysAgo = GetRandomNegativeNumber();
+            GroupStudent randomGroupStudent = CreateRandomGroupStudent(dates);
+
+            randomGroupStudent.CreatedDate = randomGroupStudent.CreatedDate.AddDays(randomDaysAgo);
+
+            return randomGroupStudent;
+        }
+        private static int GetRandomNegativeNumber() =>
+           -1 * new IntRange(min: 2, max: 99).GetValue();
+
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
@@ -38,6 +69,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             return CreateFillerGroupStudent(date: GetRandomDateTime())
                 .Create(count: GetRandomNumber()).AsQueryable();
         }
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+          actualException => actualException.SameExceptionAs(expectedException);
 
         private static GroupStudent CreateRandomGroupStudent(DateTimeOffset date) =>
             CreateFillerGroupStudent(date).Create();

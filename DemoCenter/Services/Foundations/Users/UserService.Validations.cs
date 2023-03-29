@@ -1,6 +1,6 @@
 ﻿using System;
 using DemoCenter.Models.Users;
-using Tarteeb.Api.Models.Foundations.Users.Exceptions;
+using DemoCenter.Models.Users.Exceptions;
 
 namespace DemoCenter.Services.Foundations.Users
 {

@@ -1,6 +1,6 @@
 ﻿using Xeptions;
 
-namespace Tarteeb.Api.Models.Foundations.Users.Exceptions
+namespace DemoCenter.Models.Users.Exceptions
 {
     public class UserDependencyValidationException : Xeption
     {

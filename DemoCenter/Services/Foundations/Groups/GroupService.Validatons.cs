@@ -24,6 +24,7 @@ namespace DemoCenter.Services.Foundations.Groups
                     secondDateName: nameof(Group.UpdatedDate)),
 
                     Parameter: nameof(Group.CreatedDate)),
+
                 (Rule: IsNotRecent(group.CreatedDate), Parameter: nameof(Group.CreatedDate)));
         }
 

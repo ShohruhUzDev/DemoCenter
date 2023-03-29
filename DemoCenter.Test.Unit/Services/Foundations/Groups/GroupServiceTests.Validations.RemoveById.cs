@@ -72,7 +72,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.Groups
                 broker.SelectGroupByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedGroupValidationException))), Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

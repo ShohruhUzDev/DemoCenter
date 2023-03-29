@@ -25,28 +25,56 @@ namespace DemoCenter.Services.Foundations.GroupStudents
         }
 
         public ValueTask<GroupStudent> AddGroupStudentAsync(GroupStudent student) =>
-            this.storageBroker.InsertGroupStudentAsync(student);
+        TryCatch(async () =>
+        {
+            ValidateGroupStudentOnAdd(student);
+
+            return await this.storageBroker.InsertGroupStudentAsync(student);
+        });
 
         public IQueryable<GroupStudent> RetrieveAllGroupStudents() =>
             this.storageBroker.SelectAllGroupStudents();
 
 
         public ValueTask<GroupStudent> RetrieveGroupStudentByIdAsync(Guid groupId, Guid studentId) =>
-            this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
-
-        public async ValueTask<GroupStudent> ModifyGroupStudentAsync(GroupStudent groupStudent)
+        TryCatch(async () =>
         {
+            ValidateGroupStudentIds(groupId, studentId);
+            GroupStudent maybeGroupStudent =
+                 await this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
+
+            ValidateStorageGroupStudent(maybeGroupStudent, groupId, studentId);
+
+            return maybeGroupStudent;
+        });
+
+
+        public ValueTask<GroupStudent> ModifyGroupStudentAsync(GroupStudent groupStudent) =>
+        TryCatch(async () =>
+        {
+            ValidateGroupStudentOnModify(groupStudent);
             GroupStudent maybeGroupStudent = await
-                this.storageBroker.SelectGroupStudentByIdAsync(groupStudent.GroupId, groupStudent.StudentId);
-            return await this.storageBroker.UpdateGroupStudentAsync(groupStudent);
-        }
+                this.storageBroker
+                    .SelectGroupStudentByIdAsync(groupStudent.GroupId, groupStudent.StudentId);
 
-        public async ValueTask<GroupStudent> RemoveGroupStudentByIdAsync(Guid groupId, Guid studentId)
+            ValidateAgainstStorageGroupStudentOnModify(groupStudent, maybeGroupStudent);
+
+            return await this.storageBroker.UpdateGroupStudentAsync(groupStudent);
+        });
+
+
+        public ValueTask<GroupStudent> RemoveGroupStudentByIdAsync(Guid groupId, Guid studentId) =>
+        TryCatch(async () =>
         {
+            ValidateGroupStudentIds(groupId, studentId);
+
             GroupStudent maybeGroupStudent = await
                 this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
 
+            ValidateStorageGroupStudent(maybeGroupStudent, groupId, studentId);
+
             return await this.storageBroker.DeleteGroupStudentAsync(maybeGroupStudent);
-        }
+        });
+
     }
 }

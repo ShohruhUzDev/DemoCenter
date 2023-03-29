@@ -15,7 +15,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
         {
             //given
             DateTimeOffset randomDateTime = GetRandomDateTime();
-            GroupStudent randomGroupStudent = CreateRandomGroupStudent();
+            GroupStudent randomGroupStudent = CreateRandomModifyGroupStudent(randomDateTime);
             GroupStudent inputGroupStudent = randomGroupStudent;
             GroupStudent storageGroupStudent = inputGroupStudent.DeepClone();
             storageGroupStudent.UpdatedDate = randomGroupStudent.CreatedDate;
@@ -24,6 +24,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             Guid GroupId = inputGroupStudent.GroupId;
             Guid StudentId = inputGroupStudent.StudentId;
 
+            this.dateTimeBrokerMock.Setup(broker =>
+               broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectGroupStudentByIdAsync(GroupId, StudentId))
@@ -39,6 +41,9 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
             //then
             actualGroupStudent.Should().BeEquivalentTo(expectedGroupStudent);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+               broker.GetCurrentDateTime(), Times.Once);
 
 
             this.storageBrokerMock.Verify(broker =>
