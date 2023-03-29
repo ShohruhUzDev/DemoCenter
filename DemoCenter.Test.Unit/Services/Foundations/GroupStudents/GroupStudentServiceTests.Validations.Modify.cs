@@ -107,5 +107,51 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
+        {
+            //given
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            GroupStudent randomGroupStudent = CreateRandomGroupStudent(randomDateTime);
+            GroupStudent invalidGroupStudent = randomGroupStudent;
+            var invalidGroupStudentException = new InvalidGroupStudentException();
+
+            invalidGroupStudentException.AddData(
+                key: nameof(GroupStudent.UpdatedDate),
+                values: $"Date is the same as {nameof(GroupStudent.CreatedDate)}");
+
+            var expectedGroupStudentValidationException =
+                new GroupStudentValidationException(invalidGroupStudentException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<GroupStudent> modifyGroupStudentTask =
+                this.groupStudentService.ModifyGroupStudentAsync(invalidGroupStudent);
+
+            GroupStudentValidationException actualGroupStudentValidationException =
+                await Assert.ThrowsAsync<GroupStudentValidationException>(modifyGroupStudentTask.AsTask);
+
+            //then
+            actualGroupStudentValidationException.Should().BeEquivalentTo(
+                expectedGroupStudentValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupStudentValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupStudentByIdAsync(
+                    invalidGroupStudent.GroupId, invalidGroupStudent.StudentId), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }
