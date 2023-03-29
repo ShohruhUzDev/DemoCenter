@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
 using DemoCenter.Models.GroupStudents;
 using DemoCenter.Services.Foundations.GroupStudents;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -47,6 +49,12 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 secondsInFuture
             };
         }
+
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
+        private static SqlException CreateSqlException() =>
+          (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
         private static GroupStudent CreateRandomModifyGroupStudent(DateTimeOffset dates)
         {
             int randomDaysAgo = GetRandomNegativeNumber();

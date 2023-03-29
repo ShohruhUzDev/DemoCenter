@@ -40,10 +40,10 @@ namespace DemoCenter.Services.Foundations.Groups
             }
             catch (DuplicateKeyException duplicateKeyException)
             {
-                var failedGroupStudentDependencyValidationException =
+                var failedGroupDependencyValidationException =
                      new AlreadyExistGroupException(duplicateKeyException);
 
-                throw CreateAndDependencyValidationException(failedGroupStudentDependencyValidationException);
+                throw CreateAndDependencyValidationException(failedGroupDependencyValidationException);
             }
             catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
             {
