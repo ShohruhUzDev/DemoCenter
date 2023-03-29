@@ -93,7 +93,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedGroupStudentValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Never);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -138,7 +138,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedGroupStudentValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Never);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -249,6 +249,65 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupStudentValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedDateNotSameAsCreatedDateAndLogItAsync()
+        {
+            //given
+            int randomNumber = GetRandomNumber();
+            int randomMinutes = randomNumber;
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            GroupStudent randomGroupStudent = CreateRandomModifyGroupStudent(randomDateTime);
+            GroupStudent invalidGroupStudent = randomGroupStudent.DeepClone();
+            GroupStudent storageGroupStudent = randomGroupStudent.DeepClone();
+            storageGroupStudent.CreatedDate = storageGroupStudent.CreatedDate.AddMinutes(randomMinutes);
+            storageGroupStudent.UpdatedDate = storageGroupStudent.UpdatedDate.AddMinutes(randomMinutes);
+            Guid postId = invalidGroupStudent.PostId;
+            Guid profileId = invalidGroupStudent.ProfileId;
+
+            var invalidGroupStudentException =
+                new InvalidGroupStudentException();
+
+            invalidGroupStudentException.AddData(
+                key: nameof(GroupStudent.CreatedDate),
+                values: $"Date is not the same as {nameof(GroupStudent.CreatedDate)}");
+
+            var expectedGroupStudentValidationException =
+                new GroupStudentValidationException(invalidGroupStudentException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGroupStudentByIdAsync(postId, profileId))
+                    .ReturnsAsync(storageGroupStudent);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset()).Returns(randomDateTime);
+
+            //when
+            ValueTask<GroupStudent> modifyGroupStudentTask =
+                this.GroupStudentService.ModifyGroupStudentAsync(invalidGroupStudent);
+
+            GroupStudentValidationException actualGroupStudentValidationException =
+                await Assert.ThrowsAsync<GroupStudentValidationException>(modifyGroupStudentTask.AsTask);
+
+            //then
+            actualGroupStudentValidationException.Should().BeEquivalentTo(
+                expectedGroupStudentValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupStudentByIdAsync(invalidGroupStudent.PostId,
+                    invalidGroupStudent.ProfileId), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedGroupStudentValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

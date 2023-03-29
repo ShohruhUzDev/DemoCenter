@@ -47,6 +47,15 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 secondsInFuture
             };
         }
+        private static GroupStudent CreateRandomModifyGroupStudent(DateTimeOffset dates)
+        {
+            int randomDaysAgo = GetRandomNegativeNumber();
+            GroupStudent randomGroupStudent = CreateRandomGroupStudent(dates);
+
+            randomGroupStudent.CreatedDate = randomGroupStudent.CreatedDate.AddDays(randomDaysAgo);
+
+            return randomGroupStudent;
+        }
         private static int GetRandomNegativeNumber() =>
            -1 * new IntRange(min: 2, max: 99).GetValue();
 
