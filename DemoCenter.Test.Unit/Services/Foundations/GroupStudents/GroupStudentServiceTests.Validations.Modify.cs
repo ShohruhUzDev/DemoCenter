@@ -138,7 +138,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedGroupStudentValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

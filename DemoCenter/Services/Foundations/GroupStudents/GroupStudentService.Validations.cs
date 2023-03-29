@@ -43,6 +43,25 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
                  Parameter: nameof(GroupStudent.UpdatedDate)));
         }
+        private  void ValidateAgainstStorageGroupStudentOnModify(GroupStudent inputGroupStudent, GroupStudent storageGroupStudent)
+        {
+            ValidateStorageGroupStudent(storageGroupStudent, inputGroupStudent.GroupId, inputGroupStudent.StudentId);
+
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputGroupStudent.CreatedDate,
+                    secondDate: storageGroupStudent.CreatedDate,
+                    secondDateName: nameof(GroupStudent.CreatedDate)),
+                Parameter: nameof(GroupStudent.CreatedDate)),
+            (Rule: IsSame(
+                    firstDate: inputGroupStudent.UpdatedDate,
+                    secondDate: storageGroupStudent.UpdatedDate,
+                    secondDateName: nameof(GroupStudent.UpdatedDate)),
+                Parameter: nameof(GroupStudent.UpdatedDate)));
+
+        }
+
+       
         private static void ValidateGroupStudentNotNull(GroupStudent GroupStudent)
         {
             if (GroupStudent is null)

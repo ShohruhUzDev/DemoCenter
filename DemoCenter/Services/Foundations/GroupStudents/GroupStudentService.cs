@@ -46,9 +46,9 @@ namespace DemoCenter.Services.Foundations.GroupStudents
             GroupStudent maybeGroupStudent = await
                 this.storageBroker.SelectGroupStudentByIdAsync(groupStudent.GroupId, groupStudent.StudentId);
           
+            ValidateAgainstStorageGroupStudentOnModify(groupStudent, maybeGroupStudent);
             
             return await this.storageBroker.UpdateGroupStudentAsync(groupStudent);
-
         });
     
 
