@@ -15,9 +15,13 @@ namespace DemoCenter.Services.Foundations.GroupStudents
                 (Rule: IsInvalid(groupStudent.GroupId), Parameter: nameof(GroupStudent.GroupId)),
                 (Rule: IsInvalid(groupStudent.StudentId), Parameter: nameof(GroupStudent.StudentId)),
                 (Rule: IsInvalid(groupStudent.CreatedDate), Parameter: nameof(GroupStudent.CreatedDate)),
-                (Rule: IsInvalid(groupStudent.UpdatedDate), Parameter: nameof(GroupStudent.UpdatedDate)));
-              
+                (Rule: IsInvalid(groupStudent.UpdatedDate), Parameter: nameof(GroupStudent.UpdatedDate)),
 
+            (Rule: IsNotSame(
+                    firstDate: groupStudent.UpdatedDate,
+                    secondDate: groupStudent.CreatedDate,
+                    secondDateName: nameof(GroupStudent.CreatedDate)),
+                Parameter: nameof(GroupStudent.UpdatedDate)));
 
         }
 
@@ -36,6 +40,14 @@ namespace DemoCenter.Services.Foundations.GroupStudents
             }
         }
 
+        private static dynamic IsNotSame(
+          DateTimeOffset firstDate,
+          DateTimeOffset secondDate,
+          string secondDateName) => new
+          {
+              Condition = firstDate != secondDate,
+              Message = $"Date is not the same as {secondDateName}"
+          };
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == Guid.Empty,
