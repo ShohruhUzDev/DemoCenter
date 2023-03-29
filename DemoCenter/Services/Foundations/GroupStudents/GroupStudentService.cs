@@ -50,14 +50,19 @@ namespace DemoCenter.Services.Foundations.GroupStudents
             
             return await this.storageBroker.UpdateGroupStudentAsync(groupStudent);
         });
-    
 
-        public async ValueTask<GroupStudent> RemoveGroupStudentByIdAsync(Guid groupId, Guid studentId)
+
+        public ValueTask<GroupStudent> RemoveGroupStudentByIdAsync(Guid groupId, Guid studentId) =>
+        TryCatch(async () =>
         {
+            ValidateGroupStudentIds(groupId, studentId);
+
             GroupStudent maybeGroupStudent = await
                 this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
 
             return await this.storageBroker.DeleteGroupStudentAsync(maybeGroupStudent);
-        }
+
+        });
+        
     }
 }

@@ -1,4 +1,6 @@
 ﻿using DemoCenter.Models.Groups.Exceptions;
+using DemoCenter.Models.GroupStudents;
+using FluentAssertions;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -13,7 +15,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
         {
             // given
             Guid invalidGroupId = Guid.Empty;
-            Guid invalidPostId = Guid.Empty;
+            Guid invalidStudentId = Guid.Empty;
 
             var invalidGroupStudentException = new InvalidGroupStudentException();
 
@@ -22,7 +24,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 values: "Id is required");
 
             invalidGroupStudentException.AddData(
-                key: nameof(GroupStudent.PostId),
+                key: nameof(GroupStudent.StudentId),
                 values: "Id is required");
 
             var expectedGroupStudentValidationException =
@@ -30,7 +32,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
             // when
             ValueTask<GroupStudent> removeGroupStudentByIdTask =
-                this.GroupStudentService.RemoveGroupStudentByIdAsync(invalidGroupId, invalidPostId);
+                this.groupStudentService.RemoveGroupStudentByIdAsync(invalidGroupId, invalidStudentId);
 
             GroupStudentValidationException actualGroupStudentValidationException =
                 await Assert.ThrowsAsync<GroupStudentValidationException>(
@@ -51,6 +53,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
 

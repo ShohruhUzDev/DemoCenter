@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Sockets;
 using DemoCenter.Models.Groups.Exceptions;
 using DemoCenter.Models.GroupStudents;
 
@@ -44,7 +43,8 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
                  Parameter: nameof(GroupStudent.UpdatedDate)));
         }
-        private  void ValidateAgainstStorageGroupStudentOnModify(GroupStudent inputGroupStudent, GroupStudent storageGroupStudent)
+
+        private void ValidateAgainstStorageGroupStudentOnModify(GroupStudent inputGroupStudent, GroupStudent storageGroupStudent)
         {
             ValidateStorageGroupStudent(storageGroupStudent, inputGroupStudent.GroupId, inputGroupStudent.StudentId);
 
@@ -54,16 +54,14 @@ namespace DemoCenter.Services.Foundations.GroupStudents
                     secondDate: storageGroupStudent.CreatedDate,
                     secondDateName: nameof(GroupStudent.CreatedDate)),
                 Parameter: nameof(GroupStudent.CreatedDate)),
-              
+
                 (Rule: IsSame(
                         firstDate: inputGroupStudent.UpdatedDate,
                         secondDate: storageGroupStudent.UpdatedDate,
                         secondDateName: nameof(GroupStudent.UpdatedDate)),
                     Parameter: nameof(GroupStudent.UpdatedDate)));
-
         }
 
-       
         private static void ValidateGroupStudentNotNull(GroupStudent GroupStudent)
         {
             if (GroupStudent is null)
@@ -71,6 +69,7 @@ namespace DemoCenter.Services.Foundations.GroupStudents
                 throw new NullGroupStudentException();
             }
         }
+
         private static void ValidateStorageGroupStudent(GroupStudent maybeGroupStudent, Guid groupId, Guid studentId)
         {
             if (maybeGroupStudent is null)
@@ -78,6 +77,15 @@ namespace DemoCenter.Services.Foundations.GroupStudents
                 throw new NotFoundGroupStudentException(groupId, studentId);
             }
         }
+
+        private void ValidateGroupStudentIds(Guid groupId, Guid studentId)
+        {
+            Validate(
+                 (Rule: IsInvalid(groupId), Parameter: nameof(GroupStudent.GroupId)),
+                 (Rule: IsInvalid(studentId), Parameter: nameof(GroupStudent.StudentId)));
+
+        }
+             
         private static dynamic IsSame(
           DateTimeOffset firstDate,
           DateTimeOffset secondDate,
@@ -86,6 +94,7 @@ namespace DemoCenter.Services.Foundations.GroupStudents
               Condition = firstDate == secondDate,
               Message = $"Date is the same as {secondDateName}"
           };
+
         private bool IsDateNotRecent(DateTimeOffset date)
         {
             DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
