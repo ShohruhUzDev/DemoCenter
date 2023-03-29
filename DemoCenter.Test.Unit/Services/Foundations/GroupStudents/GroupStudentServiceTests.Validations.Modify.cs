@@ -1,4 +1,7 @@
-﻿using Moq;
+﻿using DemoCenter.Models.Groups.Exceptions;
+using DemoCenter.Models.GroupStudents;
+using FluentAssertions;
+using Moq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -18,7 +21,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
             //when
             ValueTask<GroupStudent> modifyGroupStudentTask =
-                this.GroupStudentService.ModifyGroupStudentAsync(nullGroupStudent);
+                this.groupStudentService.ModifyGroupStudentAsync(nullGroupStudent);
 
             GroupStudentValidationException actualGroupStudentValidationException =
                 await Assert.ThrowsAsync<GroupStudentValidationException>(
@@ -29,7 +32,8 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedPostValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedPostValidationException))), Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateGroupStudentAsync(nullGroupStudent), Times.Never);

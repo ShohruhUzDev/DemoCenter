@@ -26,6 +26,27 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
         }
 
+        private void ValidateGroupStudentOnModify(GroupStudent GroupStudent)
+        {
+            ValidateGroupStudentNotNull(GroupStudent);
+
+            //Validate(
+            //    (Rule: IsInvalid(GroupStudent.Id), Parameter: nameof(GroupStudent.Id)),
+            //    (Rule: IsInvalid(GroupStudent.Title), Parameter: nameof(GroupStudent.Title)),
+            //    (Rule: IsInvalid(GroupStudent.Deadline), Parameter: nameof(GroupStudent.Deadline)),
+            //    (Rule: IsInvalid(GroupStudent.CreatedDate), Parameter: nameof(GroupStudent.CreatedDate)),
+            //    (Rule: IsInvalid(GroupStudent.UpdatedDate), Parameter: nameof(GroupStudent.UpdatedDate)),
+            //    (Rule: IsInvalid(GroupStudent.CreatedUserId), Parameter: nameof(GroupStudent.CreatedUserId)),
+            //    (Rule: IsInvalid(GroupStudent.UpdatedUserId), Parameter: nameof(GroupStudent.UpdatedUserId)),
+            //    (Rule: IsNotRecent(GroupStudent.UpdatedDate), Parameter: nameof(GroupStudent.UpdatedDate)),
+
+            //    (Rule: IsSame(
+            //            firstDate: GroupStudent.UpdatedDate,
+            //            secondDate: GroupStudent.CreatedDate,
+            //            secondDateName: nameof(GroupStudent.CreatedDate)),
+
+            //         Parameter: nameof(GroupStudent.UpdatedDate)));
+        }
         private static void ValidateGroupStudentNotNull(GroupStudent GroupStudent)
         {
             if (GroupStudent is null)
