@@ -24,7 +24,11 @@ namespace DemoCenter.Services.Foundations.GroupStudents
             {
                 throw CreateAndLogValidationException(nullGroupStudentException);
             }
-          
+            catch (InvalidGroupStudentException invalidGroupStudentException)
+            {
+                throw CreateAndLogValidationException(invalidGroupStudentException);
+            }
+
         }
         private GroupStudentValidationException CreateAndLogValidationException(Xeption exception)
         {
