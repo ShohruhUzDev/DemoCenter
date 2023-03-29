@@ -35,7 +35,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             actualGroupStudent.Should().BeEquivalentTo(expectedGroupStudent);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Never());
+                broker.GetCurrentDateTime(), Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertGroupStudentAsync(inputGroupStudent), Times.Once());

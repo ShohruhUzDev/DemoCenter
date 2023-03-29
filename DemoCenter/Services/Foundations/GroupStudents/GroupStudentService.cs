@@ -28,8 +28,8 @@ namespace DemoCenter.Services.Foundations.GroupStudents
         TryCatch(async () =>
         {
             ValidateGroupStudentOnAdd(student);
-            return await this.storageBroker.InsertGroupStudentAsync(student);
 
+            return await this.storageBroker.InsertGroupStudentAsync(student);
         });
 
         public IQueryable<GroupStudent> RetrieveAllGroupStudents() =>

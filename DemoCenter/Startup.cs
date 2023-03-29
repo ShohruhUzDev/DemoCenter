@@ -2,6 +2,7 @@ using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
 using DemoCenter.Services.Foundations.Groups;
+using DemoCenter.Services.Foundations.GroupStudents;
 using DemoCenter.Services.Foundations.Students;
 using DemoCenter.Services.Foundations.Subjects;
 using DemoCenter.Services.Foundations.Teachers;
@@ -71,6 +72,7 @@ namespace DemoCenter
             services.AddTransient<ISubjectService, SubjectService>();
             services.AddTransient<ITeacherService, TeacherService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IGroupStudentService, GroupStudentService>();
         }
     }
 }
