@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DemoCenter.Models.Groups.Exceptions;
 using DemoCenter.Models.GroupStudents;
 using DemoCenter.Models.GroupStudents.Exceptions;
@@ -58,7 +59,21 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
                 throw CreateAndLogDependencyValidationException(invalidGroupStudentReferenceException);
             }
+            catch (Exception serviceException)
+            {
+                var failedGroupStudentServiceException = new FailedGroupStudentServiceException(serviceException);
 
+                throw CreateAndLogServiceException(failedGroupStudentServiceException);
+            }
+
+        }
+
+        private GroupStudentServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var groupStudentServiceException = new GroupStudentServiceException(exception);
+            this.loggingBroker.LogError(groupStudentServiceException);
+
+            return groupStudentServiceException;
         }
 
         private GroupStudentDependencyValidationException CreateAndLogDependencyValidationException(

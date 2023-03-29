@@ -226,12 +226,12 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 new GroupStudentServiceException(failedGroupStudentServiceException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset())
+                broker.GetCurrentDateTime())
                     .Throws(serviceException);
 
             //when
             ValueTask<GroupStudent> addGroupStudentTask =
-                this.GroupStudentService.AddGroupStudents(someGroupStudent);
+                this.groupStudentService.AddGroupStudentAsync(someGroupStudent);
 
             GroupStudentServiceException actualGroupStudentServiceException =
                 await Assert.ThrowsAsync<GroupStudentServiceException>(
@@ -242,7 +242,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedGroupStudentServiceException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
+                broker.GetCurrentDateTime(),
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
@@ -258,7 +258,6 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
-
 
     }
 }
