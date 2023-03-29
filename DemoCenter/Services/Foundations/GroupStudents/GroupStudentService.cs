@@ -37,7 +37,12 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
 
         public ValueTask<GroupStudent> RetrieveGroupStudentByIdAsync(Guid groupId, Guid studentId) =>
-              this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
+        TryCatch(async () =>
+        {
+            ValidateGroupStudentIds(groupId, studentId);
+
+            return await  this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
+        });
 
 
         public ValueTask<GroupStudent> ModifyGroupStudentAsync(GroupStudent groupStudent) =>

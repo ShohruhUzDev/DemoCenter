@@ -2,6 +2,9 @@
 using System.Threading.Tasks;
 using System;
 using Xunit;
+using DemoCenter.Models.Groups.Exceptions;
+using DemoCenter.Models.GroupStudents;
+using FluentAssertions;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {
@@ -11,17 +14,17 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
         public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfIdIsInvalidAndLogItAsync()
         {
             // given
-            Guid invalidPostId = Guid.Empty;
-            Guid invalidProfileId = Guid.Empty;
+            Guid invalidGroupId = Guid.Empty;
+            Guid invalidStudentId = Guid.Empty;
 
             var invalidGroupStudentException = new InvalidGroupStudentException();
 
             invalidGroupStudentException.AddData(
-                key: nameof(GroupStudent.PostId),
+                key: nameof(GroupStudent.GroupId),
                 values: "Id is required");
 
             invalidGroupStudentException.AddData(
-                key: nameof(GroupStudent.ProfileId),
+                key: nameof(GroupStudent.StudentId),
                 values: "Id is required");
 
             var expectedGroupStudentValidationException = new
@@ -29,7 +32,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
             // when
             ValueTask<GroupStudent> retrieveGroupStudentByIdTask =
-                this.GroupStudentService.RetrieveGroupStudentByIdAsync(invalidPostId, invalidProfileId);
+                this.groupStudentService.RetrieveGroupStudentByIdAsync(invalidGroupId, invalidStudentId);
 
             GroupStudentValidationException actualGroupStudentValidationException =
                 await Assert.ThrowsAsync<GroupStudentValidationException>(
@@ -45,7 +48,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                         Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectGroupStudentByIdAsync(invalidPostId, invalidProfileId),
+                broker.SelectGroupStudentByIdAsync(invalidGroupId, invalidStudentId),
                         Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
