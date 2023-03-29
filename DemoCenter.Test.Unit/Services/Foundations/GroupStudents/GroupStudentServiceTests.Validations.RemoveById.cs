@@ -1,9 +1,9 @@
-﻿using DemoCenter.Models.Groups.Exceptions;
+﻿using System;
+using System.Threading.Tasks;
+using DemoCenter.Models.GroupStudents.Exceptions;
 using DemoCenter.Models.GroupStudents;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents

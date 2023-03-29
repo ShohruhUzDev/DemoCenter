@@ -1,7 +1,7 @@
 ﻿
 using Xeptions;
 
-namespace DemoCenter.Models.Groups.Exceptions
+namespace DemoCenter.Models.GroupStudents.Exceptions
 {
     public class GroupStudentValidationException : Xeption
     {

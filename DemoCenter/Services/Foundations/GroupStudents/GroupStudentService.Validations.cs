@@ -1,5 +1,5 @@
 ﻿using System;
-using DemoCenter.Models.Groups.Exceptions;
+using DemoCenter.Models.GroupStudents.Exceptions;
 using DemoCenter.Models.GroupStudents;
 
 namespace DemoCenter.Services.Foundations.GroupStudents
@@ -85,7 +85,7 @@ namespace DemoCenter.Services.Foundations.GroupStudents
                  (Rule: IsInvalid(studentId), Parameter: nameof(GroupStudent.StudentId)));
 
         }
-             
+
         private static dynamic IsSame(
           DateTimeOffset firstDate,
           DateTimeOffset secondDate,

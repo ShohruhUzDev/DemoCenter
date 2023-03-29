@@ -1,6 +1,6 @@
 ﻿using System;
 using DemoCenter.Models.Groups;
-using DemoCenter.Models.Groups.Exceptions;
+using DemoCenter.Models.GroupStudents.Exceptions;
 
 namespace DemoCenter.Services.Foundations.Groups
 {
@@ -24,7 +24,7 @@ namespace DemoCenter.Services.Foundations.Groups
                     secondDateName: nameof(Group.UpdatedDate)),
 
                     Parameter: nameof(Group.CreatedDate)),
-            
+
                 (Rule: IsNotRecent(group.CreatedDate), Parameter: nameof(Group.CreatedDate)));
         }
 

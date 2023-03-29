@@ -5,7 +5,7 @@ using DemoCenter.Models.Users;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Tarteeb.Api.Models.Foundations.Users.Exceptions;
+using DemoCenter.Models.Users.Exceptions;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.Users

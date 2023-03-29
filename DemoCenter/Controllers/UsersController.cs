@@ -5,7 +5,7 @@ using DemoCenter.Models.Users;
 using DemoCenter.Services.Foundations.Users;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
-using Tarteeb.Api.Models.Foundations.Users.Exceptions;
+using DemoCenter.Models.Users.Exceptions;
 
 namespace DemoCenter.Controllers
 {

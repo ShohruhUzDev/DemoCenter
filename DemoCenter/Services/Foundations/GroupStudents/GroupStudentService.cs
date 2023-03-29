@@ -40,12 +40,12 @@ namespace DemoCenter.Services.Foundations.GroupStudents
         TryCatch(async () =>
         {
             ValidateGroupStudentIds(groupId, studentId);
-            GroupStudent maybeGroupStudent = 
+            GroupStudent maybeGroupStudent =
                  await this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
 
             ValidateStorageGroupStudent(maybeGroupStudent, groupId, studentId);
 
-            return maybeGroupStudent;   
+            return maybeGroupStudent;
         });
 
 

@@ -6,7 +6,7 @@ using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using Tarteeb.Api.Models.Foundations.Users.Exceptions;
+using DemoCenter.Models.Users.Exceptions;
 using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.Users

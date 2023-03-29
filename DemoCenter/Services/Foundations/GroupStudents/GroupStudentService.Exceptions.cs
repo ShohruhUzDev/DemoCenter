@@ -1,11 +1,6 @@
-﻿using EFxceptions.Models.Exceptions;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-using System;
+﻿using System.Threading.Tasks;
+using DemoCenter.Models.GroupStudents.Exceptions;
 using DemoCenter.Models.GroupStudents;
-using DemoCenter.Models.Groups.Exceptions;
 using Xeptions;
 
 namespace DemoCenter.Services.Foundations.GroupStudents
@@ -13,7 +8,7 @@ namespace DemoCenter.Services.Foundations.GroupStudents
     public partial class GroupStudentService
     {
         private delegate ValueTask<GroupStudent> ReturningGroupStudentFunction();
-       
+
         private async ValueTask<GroupStudent> TryCatch(ReturningGroupStudentFunction returningGroupStudentFunction)
         {
             try
