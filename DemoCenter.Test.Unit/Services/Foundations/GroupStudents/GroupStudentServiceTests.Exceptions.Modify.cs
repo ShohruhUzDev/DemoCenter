@@ -166,6 +166,57 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            //given
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            GroupStudent randomGroupStudent = CreateRandomGroupStudent(randomDateTime);
+            GroupStudent someGroupStudent = randomGroupStudent;
+            Guid groupId = someGroupStudent.GroupId;
+            Guid studentId = someGroupStudent.StudentId;
+            someGroupStudent.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            var serviceException = new Exception();
+
+            var failedGroupStudentService =
+                new FailedGroupStudentServiceException(serviceException);
+
+            var expectedGroupStudentServiceException =
+                new GroupStudentServiceException(failedGroupStudentService);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGroupStudentByIdAsync(groupId, studentId)).ThrowsAsync(serviceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<GroupStudent> modifyGroupStudent =
+                this.groupStudentService.ModifyGroupStudentAsync(someGroupStudent);
+
+            GroupStudentServiceException actualGroupStudentServiceException =
+                await Assert.ThrowsAsync<GroupStudentServiceException>(modifyGroupStudent.AsTask);
+
+            //then
+            actualGroupStudentServiceException.Should().BeEquivalentTo(
+                expectedGroupStudentServiceException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupStudentByIdAsync(groupId, studentId), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupStudentServiceException))), Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
 
     }
 }
