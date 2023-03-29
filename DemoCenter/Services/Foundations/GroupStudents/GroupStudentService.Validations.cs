@@ -35,6 +35,7 @@ namespace DemoCenter.Services.Foundations.GroupStudents
                 (Rule: IsInvalid(groupStudent.GroupId), Parameter: nameof(GroupStudent.GroupId)),
                 (Rule: IsInvalid(groupStudent.CreatedDate), Parameter: nameof(GroupStudent.CreatedDate)),
                 (Rule: IsInvalid(groupStudent.UpdatedDate), Parameter: nameof(GroupStudent.UpdatedDate)),
+                (Rule: IsNotRecent(groupStudent.UpdatedDate), Parameter: nameof(GroupStudent.UpdatedDate)),
 
                 (Rule: IsSame(
                     firstDate: groupStudent.UpdatedDate,

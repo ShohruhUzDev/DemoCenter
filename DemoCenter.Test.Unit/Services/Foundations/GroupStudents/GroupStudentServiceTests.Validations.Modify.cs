@@ -158,7 +158,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minuts)
         {
             //given
-            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            DateTimeOffset dateTime = GetRandomDateTime();
             GroupStudent randomGroupStudent = CreateRandomGroupStudent(dateTime);
             GroupStudent inputGroupStudent = randomGroupStudent;
             inputGroupStudent.UpdatedDate = dateTime.AddMinutes(minuts);
@@ -172,11 +172,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 new GroupStudentValidationException(invalidGroupStudentException);
 
             dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset()).Returns(dateTime);
+                broker.GetCurrentDateTime()).Returns(dateTime);
 
             //when
             ValueTask<GroupStudent> modifyGroupStudentTask =
-                this.GroupStudentService.ModifyGroupStudentAsync(inputGroupStudent);
+                this.groupStudentService.ModifyGroupStudentAsync(inputGroupStudent);
 
             GroupStudentValidationException actualGroupStudentValidationException =
                 await Assert.ThrowsAsync<GroupStudentValidationException>(
@@ -187,7 +187,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedGroupStudentValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
