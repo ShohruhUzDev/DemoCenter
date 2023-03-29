@@ -206,7 +206,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
         {
             //given
             int randomNegativeMinutes = GetRandomNegativeNumber();
-            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            DateTimeOffset dateTime = GetRandomDateTime();
             GroupStudent randomGroupStudent = CreateRandomGroupStudent(dateTime);
             GroupStudent nonExistGroupStudent = randomGroupStudent;
             nonExistGroupStudent.CreatedDate = dateTime.AddMinutes(randomNegativeMinutes);
@@ -214,22 +214,22 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
             var notFoundGroupStudentException =
                 new NotFoundGroupStudentException(
-                    nonExistGroupStudent.PostId,
-                    nonExistGroupStudent.ProfileId);
+                    nonExistGroupStudent.GroupId,
+                    nonExistGroupStudent.StudentId);
 
             var expectedGroupStudentValidationException =
                 new GroupStudentValidationException(notFoundGroupStudentException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectGroupStudentByIdAsync(nonExistGroupStudent.PostId,
-                    nonExistGroupStudent.ProfileId)).ReturnsAsync(nullGroupStudent);
+                broker.SelectGroupStudentByIdAsync(nonExistGroupStudent.GroupId,
+                    nonExistGroupStudent.StudentId)).ReturnsAsync(nullGroupStudent);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset()).Returns(dateTime);
+                broker.GetCurrentDateTime()).Returns(dateTime);
 
             //when
             ValueTask<GroupStudent> modifyGroupStudentTask =
-                this.GroupStudentService.ModifyGroupStudentAsync(nonExistGroupStudent);
+                this.groupStudentService.ModifyGroupStudentAsync(nonExistGroupStudent);
 
             GroupStudentValidationException actualGroupStudentValidationException =
                 await Assert.ThrowsAsync<GroupStudentValidationException>(modifyGroupStudentTask.AsTask);
@@ -240,11 +240,11 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectGroupStudentByIdAsync(
-                    nonExistGroupStudent.PostId,
-                    nonExistGroupStudent.ProfileId), Times.Once);
+                    nonExistGroupStudent.GroupId,
+                    nonExistGroupStudent.StudentId), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
