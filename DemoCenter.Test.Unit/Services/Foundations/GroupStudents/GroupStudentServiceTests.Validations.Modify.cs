@@ -319,7 +319,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
         public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             GroupStudent randomGroupStudent = CreateRandomModifyGroupStudent(randomDateTime);
             GroupStudent invalidGroupStudent = randomGroupStudent;
             GroupStudent storageGroupStudent = invalidGroupStudent.DeepClone();
@@ -335,14 +335,14 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectGroupStudentByIdAsync(
-                    invalidGroupStudent.PostId, invalidGroupStudent.ProfileId)).ReturnsAsync(storageGroupStudent);
+                    invalidGroupStudent.GroupId, invalidGroupStudent.StudentId)).ReturnsAsync(storageGroupStudent);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset()).Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             //when
             ValueTask<GroupStudent> modifyGroupStudentTask =
-                this.GroupStudentService.ModifyGroupStudentAsync(invalidGroupStudent);
+                this.groupStudentService.ModifyGroupStudentAsync(invalidGroupStudent);
 
             GroupStudentValidationException actualGroupStudentValidationException =
                 await Assert.ThrowsAsync<GroupStudentValidationException>(modifyGroupStudentTask.AsTask);
@@ -352,7 +352,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedGroupStudentValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -360,7 +360,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectGroupStudentByIdAsync(
-                    invalidGroupStudent.PostId, invalidGroupStudent.ProfileId), Times.Once);
+                    invalidGroupStudent.GroupId, invalidGroupStudent.StudentId), Times.Once);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
