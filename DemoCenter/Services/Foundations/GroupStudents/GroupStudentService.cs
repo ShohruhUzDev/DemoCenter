@@ -37,17 +37,18 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
 
         public ValueTask<GroupStudent> RetrieveGroupStudentByIdAsync(Guid groupId, Guid studentId) =>
-            this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
+              this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
 
-        public  ValueTask<GroupStudent> ModifyGroupStudentAsync(GroupStudent groupStudent) =>
+
+        public ValueTask<GroupStudent> ModifyGroupStudentAsync(GroupStudent groupStudent) =>
         TryCatch(async () =>
         {
             ValidateGroupStudentOnModify(groupStudent);
             GroupStudent maybeGroupStudent = await
                 this.storageBroker.SelectGroupStudentByIdAsync(groupStudent.GroupId, groupStudent.StudentId);
-          
+
             ValidateAgainstStorageGroupStudentOnModify(groupStudent, maybeGroupStudent);
-            
+
             return await this.storageBroker.UpdateGroupStudentAsync(groupStudent);
         });
 
@@ -60,9 +61,10 @@ namespace DemoCenter.Services.Foundations.GroupStudents
             GroupStudent maybeGroupStudent = await
                 this.storageBroker.SelectGroupStudentByIdAsync(groupId, studentId);
 
-            return await this.storageBroker.DeleteGroupStudentAsync(maybeGroupStudent);
+            ValidateStorageGroupStudent(maybeGroupStudent, groupId, studentId);
 
+            return await this.storageBroker.DeleteGroupStudentAsync(maybeGroupStudent);
         });
-        
+
     }
 }

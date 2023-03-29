@@ -62,23 +62,23 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             //given
             DateTimeOffset randomDateTime = GetRandomDateTime();
             GroupStudent randomGroupStudent = CreateRandomGroupStudent(randomDateTime);
-            Guid inputPostId = randomGroupStudent.PostId;
-            Guid inputProfile = randomGroupStudent.ProfileId;
+            Guid inputGroupId = randomGroupStudent.GroupId;
+            Guid inputStudentId = randomGroupStudent.StudentId;
             GroupStudent nullStorageGroupStudent = null;
 
             var notFoundGroupStudentException =
-                new NotFoundGroupStudentException(inputPostId, inputProfile);
+                new NotFoundGroupStudentException(inputGroupId, inputStudentId);
 
             var expectedGroupStudentValidationException =
                 new GroupStudentValidationException(notFoundGroupStudentException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectGroupStudentByIdAsync(inputPostId, inputProfile))
+                broker.SelectGroupStudentByIdAsync(inputGroupId, inputStudentId))
                     .ReturnsAsync(nullStorageGroupStudent);
 
             //when
             ValueTask<GroupStudent> removeGroupStudentTask =
-                this.GroupStudentService.RemoveGroupStudentAsync(randomGroupStudent);
+                this.groupStudentService.RemoveGroupStudentByIdAsync(inputGroupId, inputStudentId);
 
             GroupStudentValidationException actualGroupStudentValidationException =
                 await Assert.ThrowsAsync<GroupStudentValidationException>(
