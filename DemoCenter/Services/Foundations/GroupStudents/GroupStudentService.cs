@@ -25,7 +25,12 @@ namespace DemoCenter.Services.Foundations.GroupStudents
         }
 
         public ValueTask<GroupStudent> AddGroupStudentAsync(GroupStudent student) =>
-            this.storageBroker.InsertGroupStudentAsync(student);
+        TryCatch(async () =>
+        {
+            ValidateGroupStudentOnAdd(student);
+            return await this.storageBroker.InsertGroupStudentAsync(student);
+
+        });
 
         public IQueryable<GroupStudent> RetrieveAllGroupStudents() =>
             this.storageBroker.SelectAllGroupStudents();

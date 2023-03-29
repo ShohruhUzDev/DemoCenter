@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Moq;
 using System.Threading.Tasks;
-using Taarafo.Core.Models.GroupStudents.Exceptions;
+using DemoCenter.Models.Groups.Exceptions;
 using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents

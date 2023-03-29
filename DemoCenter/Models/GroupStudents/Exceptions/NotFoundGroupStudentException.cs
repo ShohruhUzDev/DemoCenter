@@ -1,7 +1,7 @@
 ﻿using System;
 using Xeptions;
 
-namespace Taarafo.Core.Models.GroupStudents.Exceptions
+namespace DemoCenter.Models.Groups.Exceptions
 {
     public class NotFoundGroupStudentException : Xeption
     {
