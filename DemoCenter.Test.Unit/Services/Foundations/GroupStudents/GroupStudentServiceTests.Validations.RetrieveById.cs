@@ -56,6 +56,49 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRetrieveByIdIfTeamIsNotFoundAndLogItAsync()
+        {
+            //given
+            Guid someGroupId = Guid.NewGuid();
+            Guid someProfileId = Guid.NewGuid();
+            GroupStudent noGroupStudent = null;
+
+            var notFoundGroupStudentException =
+                new NotFoundGroupStudentException(somePostId, someProfileId);
+
+            var expectedGroupStudentValidationException =
+                new GroupStudentValidationException(notFoundGroupStudentException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGroupStudentByIdAsync(somePostId, someProfileId))
+                    .ReturnsAsync(noGroupStudent);
+
+            //when
+            ValueTask<GroupStudent> retrieveGroupStudentByIdTask =
+                this.GroupStudentService.RetrieveGroupStudentByIdAsync(somePostId, someProfileId);
+
+            GroupStudentValidationException actualGroupStudentValidationException =
+                await Assert.ThrowsAsync<GroupStudentValidationException>(
+                    retrieveGroupStudentByIdTask.AsTask);
+
+            // then
+            actualGroupStudentValidationException.Should().BeEquivalentTo(
+                expectedGroupStudentValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupStudentByIdAsync(somePostId, someProfileId),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupStudentValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
 
     }
 }
