@@ -2,6 +2,7 @@
 using DemoCenter.Models.Groups.Exceptions;
 using DemoCenter.Models.GroupStudents;
 using DemoCenter.Models.GroupStudents.Exceptions;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Xeptions;
 
@@ -36,7 +37,21 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
                 throw CreateAndLogCriticalDependencyException(failedGroupStudentStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var failedGroupStudentDependencyValidationException =
+                     new AlreadyExistsGroupStudentException(duplicateKeyException);
 
+                throw CreateAndDependencyValidationException(failedGroupStudentDependencyValidationException);
+            }
+
+        }
+        private GroupStudentDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var groupStudentDependencyValidationException = new GroupStudentDependencyValidationException(exception);
+            this.loggingBroker.LogError(groupStudentDependencyValidationException);
+
+            return groupStudentDependencyValidationException;
         }
         private GroupStudentDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {

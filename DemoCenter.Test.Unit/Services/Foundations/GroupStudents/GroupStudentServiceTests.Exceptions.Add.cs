@@ -67,7 +67,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             //given
             GroupStudent randomGroupStudent = CreateRandomGroupStudent();
             GroupStudent alreadyExistsGroupStudent = randomGroupStudent;
-            string randomMessage = GetRandomMessage();
+            string randomMessage = GetRandomString();
 
             var duplicateKeyException =
                 new DuplicateKeyException(randomMessage);
@@ -79,12 +79,12 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 new GroupStudentDependencyValidationException(alreadyExistsGroupStudentException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset())
+                broker.GetCurrentDateTime())
                     .Throws(duplicateKeyException);
 
             //when
             ValueTask<GroupStudent> addGroupStudentTask =
-                this.GroupStudentService.AddGroupStudents(alreadyExistsGroupStudent);
+                this.groupStudentService.AddGroupStudentAsync(alreadyExistsGroupStudent);
 
             GroupStudentDependencyValidationException actualGroupStudentDependencyValidationException =
                 await Assert.ThrowsAsync<GroupStudentDependencyValidationException>(
@@ -95,7 +95,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedGroupStudentDependencyValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
+                broker.GetCurrentDateTime(),
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
