@@ -26,26 +26,22 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
         }
 
-        private void ValidateGroupStudentOnModify(GroupStudent GroupStudent)
+        private void ValidateGroupStudentOnModify(GroupStudent groupStudent)
         {
-            ValidateGroupStudentNotNull(GroupStudent);
+            ValidateGroupStudentNotNull(groupStudent);
 
-            //Validate(
-            //    (Rule: IsInvalid(GroupStudent.Id), Parameter: nameof(GroupStudent.Id)),
-            //    (Rule: IsInvalid(GroupStudent.Title), Parameter: nameof(GroupStudent.Title)),
-            //    (Rule: IsInvalid(GroupStudent.Deadline), Parameter: nameof(GroupStudent.Deadline)),
-            //    (Rule: IsInvalid(GroupStudent.CreatedDate), Parameter: nameof(GroupStudent.CreatedDate)),
-            //    (Rule: IsInvalid(GroupStudent.UpdatedDate), Parameter: nameof(GroupStudent.UpdatedDate)),
-            //    (Rule: IsInvalid(GroupStudent.CreatedUserId), Parameter: nameof(GroupStudent.CreatedUserId)),
-            //    (Rule: IsInvalid(GroupStudent.UpdatedUserId), Parameter: nameof(GroupStudent.UpdatedUserId)),
-            //    (Rule: IsNotRecent(GroupStudent.UpdatedDate), Parameter: nameof(GroupStudent.UpdatedDate)),
+            Validate(
+                (Rule: IsInvalid(groupStudent.StudentId), Parameter: nameof(GroupStudent.StudentId)),
+                (Rule: IsInvalid(groupStudent.GroupId), Parameter: nameof(GroupStudent.GroupId)),
+                (Rule: IsInvalid(groupStudent.CreatedDate), Parameter: nameof(GroupStudent.CreatedDate)),
+                (Rule: IsInvalid(groupStudent.UpdatedDate), Parameter: nameof(GroupStudent.UpdatedDate)),
 
-            //    (Rule: IsSame(
-            //            firstDate: GroupStudent.UpdatedDate,
-            //            secondDate: GroupStudent.CreatedDate,
-            //            secondDateName: nameof(GroupStudent.CreatedDate)),
+                (Rule: IsSame(
+                    firstDate: groupStudent.UpdatedDate,
+                    secondDate: groupStudent.CreatedDate,
+                    secondDateName: nameof(GroupStudent.CreatedDate)),
 
-            //         Parameter: nameof(GroupStudent.UpdatedDate)));
+                 Parameter: nameof(GroupStudent.UpdatedDate)));
         }
         private static void ValidateGroupStudentNotNull(GroupStudent GroupStudent)
         {
@@ -61,6 +57,14 @@ namespace DemoCenter.Services.Foundations.GroupStudents
                 throw new NotFoundGroupStudentException(groupId, studentId);
             }
         }
+        private static dynamic IsSame(
+          DateTimeOffset firstDate,
+          DateTimeOffset secondDate,
+          string secondDateName) => new
+          {
+              Condition = firstDate == secondDate,
+              Message = $"Date is the same as {secondDateName}"
+          };
         private bool IsDateNotRecent(DateTimeOffset date)
         {
             DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();

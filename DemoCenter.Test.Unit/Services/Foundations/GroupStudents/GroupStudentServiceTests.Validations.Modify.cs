@@ -51,29 +51,29 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             //given
             var invalidGroupStudent = new GroupStudent
             {
-                PostId = invalidId,
-                ProfileId = invalidId
+                StudentId = invalidId,
+                GroupId = invalidId
             };
 
             var invalidGroupStudentException = new InvalidGroupStudentException();
 
             invalidGroupStudentException.AddData(
-                key: nameof(GroupStudent.PostId),
+                key: nameof(GroupStudent.StudentId),
                 values: "Id is required");
 
             invalidGroupStudentException.AddData(
-                key: nameof(GroupStudent.ProfileId),
+                key: nameof(GroupStudent.GroupId),
                 values: "Id is required");
 
             invalidGroupStudentException.AddData(
                 key: nameof(GroupStudent.CreatedDate),
-                values: "Date is required");
+                values: "Value is required");
 
             invalidGroupStudentException.AddData(
                 key: nameof(GroupStudent.UpdatedDate),
                  values: new[]
                     {
-                        "Date is required",
+                        "Value is required",
                         $"Date is the same as {nameof(GroupStudent.CreatedDate)}"
                     });
 
@@ -82,7 +82,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 
             //when
             ValueTask<GroupStudent> modifyGroupStudentTask =
-                this.GroupStudentService.ModifyGroupStudentAsync(invalidGroupStudent);
+                this.groupStudentService.ModifyGroupStudentAsync(invalidGroupStudent);
 
             GroupStudentValidationException actualPostValidationException =
                 await Assert.ThrowsAsync<GroupStudentValidationException>(
@@ -93,7 +93,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedGroupStudentValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
