@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DemoCenter.Models.GroupStudents;
 using DemoCenter.Models.GroupStudents.Exceptions;
 using FluentAssertions;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
@@ -54,6 +55,49 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.storageBrokerMock.Verify(broker =>
                 broker.DeleteGroupStudentAsync(It.IsAny<GroupStudent>()),
                     Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnDeleteWhenSqlExceptionOccursAndLogItAsync()
+        {
+            // given
+            Guid groupId = Guid.NewGuid();
+            Guid studentId = Guid.NewGuid();
+            SqlException sqlException = CreateSqlException();
+
+            var failedGroupStudentStorageException =
+                new FailedGroupStudentStorageException(sqlException);
+
+            var expectedGroupStudentDependencyException =
+                new GroupStudentDependencyException(failedGroupStudentStorageException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGroupStudentByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                    .ThrowsAsync(sqlException);
+
+            // when
+            ValueTask<GroupStudent> deleteGroupStudentTask =
+                this.groupStudentService.RemoveGroupStudentByIdAsync(groupId, studentId);
+
+            GroupStudentDependencyException actualGroupStudentDependencyException =
+                await Assert.ThrowsAsync<GroupStudentDependencyException>(
+                    deleteGroupStudentTask.AsTask);
+
+            // then
+            actualGroupStudentDependencyException.Should().BeEquivalentTo(
+                expectedGroupStudentDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupStudentByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedGroupStudentDependencyException))),
+                        Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
