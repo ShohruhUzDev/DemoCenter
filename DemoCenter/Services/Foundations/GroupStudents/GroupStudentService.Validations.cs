@@ -16,6 +16,7 @@ namespace DemoCenter.Services.Foundations.GroupStudents
                 (Rule: IsInvalid(groupStudent.StudentId), Parameter: nameof(GroupStudent.StudentId)),
                 (Rule: IsInvalid(groupStudent.CreatedDate), Parameter: nameof(GroupStudent.CreatedDate)),
                 (Rule: IsInvalid(groupStudent.UpdatedDate), Parameter: nameof(GroupStudent.UpdatedDate)),
+                (Rule: IsNotRecent(groupStudent.CreatedDate), Parameter: nameof(GroupStudent.CreatedDate)),
 
             (Rule: IsNotSame(
                     firstDate: groupStudent.UpdatedDate,
@@ -39,6 +40,19 @@ namespace DemoCenter.Services.Foundations.GroupStudents
                 throw new NotFoundGroupStudentException(groupId, studentId);
             }
         }
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
 
         private static dynamic IsNotSame(
           DateTimeOffset firstDate,
