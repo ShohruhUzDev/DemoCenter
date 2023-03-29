@@ -166,7 +166,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
         {
             //given
             GroupStudent someGroupStudent = CreateRandomGroupStudent();
-            string randomMessage = GetRandomMessage();
+            string randomMessage = GetRandomString();
             string exceptionMessage = randomMessage;
 
             var foreignKeyConstraintConflictException =
@@ -179,12 +179,12 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 new GroupStudentDependencyValidationException(invalidGroupStudentReferenceException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset())
+                broker.GetCurrentDateTime())
                     .Throws(foreignKeyConstraintConflictException);
 
             //when
             ValueTask<GroupStudent> addGroupStudentTask =
-                this.GroupStudentService.AddGroupStudents(someGroupStudent);
+                this.groupStudentService.AddGroupStudentAsync(someGroupStudent);
 
             GroupStudentDependencyValidationException actualGroupStudentDependencyValidationException =
                 await Assert.ThrowsAsync<GroupStudentDependencyValidationException>(
@@ -195,7 +195,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedGroupStudentDependencyValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
+                broker.GetCurrentDateTime(),
                     Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>

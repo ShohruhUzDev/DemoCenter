@@ -51,8 +51,27 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
                 throw CreateAndLogDependencyException(failedGroupStudentStorageException);
             }
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidGroupStudentReferenceException =
+                    new InvalidGroupStudentReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndLogDependencyValidationException(invalidGroupStudentReferenceException);
+            }
 
         }
+
+        private GroupStudentDependencyValidationException CreateAndLogDependencyValidationException(
+            Xeption exception)
+        {
+            var groupStudentDependencyValidationException =
+                new GroupStudentDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(groupStudentDependencyValidationException);
+
+            return groupStudentDependencyValidationException;
+        }
+
         private GroupStudentDependencyException CreateAndLogDependencyException(Xeption exception)
         {
             var groupStudentDependencyException = new GroupStudentDependencyException(exception);
@@ -61,7 +80,6 @@ namespace DemoCenter.Services.Foundations.GroupStudents
             return groupStudentDependencyException;
         }
 
-
         private GroupStudentDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
             var groupStudentDependencyValidationException = new GroupStudentDependencyValidationException(exception);
@@ -69,6 +87,7 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
             return groupStudentDependencyValidationException;
         }
+
         private GroupStudentDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
             var groupStudentDependencyException = new GroupStudentDependencyException(exception);
