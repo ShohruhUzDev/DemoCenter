@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DemoCenter.Models.Groups.Exceptions;
 using DemoCenter.Models.GroupStudents;
@@ -13,6 +14,7 @@ namespace DemoCenter.Services.Foundations.GroupStudents
     public partial class GroupStudentService
     {
         private delegate ValueTask<GroupStudent> ReturningGroupStudentFunction();
+        private delegate IQueryable<GroupStudent> ReturningGroupStudentsFunction();
 
         private async ValueTask<GroupStudent> TryCatch(ReturningGroupStudentFunction returningGroupStudentFunction)
         {
@@ -74,6 +76,25 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
         }
 
+        private IQueryable<GroupStudent> TryCatch(ReturningGroupStudentsFunction returningGroupStudentsFunction)
+        {
+            try
+            {
+                return returningGroupStudentsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedGroupStudentStorageException = new FailedGroupStudentStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedGroupStudentStorageException);
+            }
+            //catch (Exception serviceException)
+            //{
+            //    var failedGroupServiceException = new FailedGroupServiceException(serviceException);
+
+            //    throw CreateAndLogServiceException(failedGroupServiceException);
+            //}
+        }
         private GroupStudentServiceException CreateAndLogServiceException(Exception exception)
         {
             var groupStudentServiceException = new GroupStudentServiceException(exception);
