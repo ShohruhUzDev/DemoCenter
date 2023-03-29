@@ -46,6 +46,12 @@ namespace DemoCenter.Services.Foundations.GroupStudents
 
                 throw CreateAndDependencyValidationException(failedGroupStudentDependencyValidationException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedGroupStudentException = new LockedGroupStudentException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedGroupStudentException);
+            }
             catch (DbUpdateException databaseUpdateException)
             {
                 var failedGroupStudentStorageException = new FailedGroupStudentStorageException(databaseUpdateException);

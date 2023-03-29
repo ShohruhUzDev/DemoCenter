@@ -113,5 +113,59 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            //given
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            GroupStudent randomGroupStudent = CreateRandomGroupStudent(randomDateTime);
+            GroupStudent someGroupStudent = randomGroupStudent;
+            randomGroupStudent.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            Guid groupId = someGroupStudent.GroupId;
+            Guid studentId = someGroupStudent.StudentId;
+            var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var lockedGroupStudentException =
+                new LockedGroupStudentException(databaseUpdateConcurrencyException);
+
+            var expectedGroupStudentDependencyValidationException =
+                new GroupStudentDependencyValidationException(lockedGroupStudentException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGroupStudentByIdAsync(groupId, studentId))
+                    .ThrowsAsync(databaseUpdateConcurrencyException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<GroupStudent> modifyGroupStudent =
+                this.groupStudentService.ModifyGroupStudentAsync(someGroupStudent);
+
+            GroupStudentDependencyValidationException actualGroupStudentDependencyValidationException =
+                await Assert.ThrowsAsync<GroupStudentDependencyValidationException>(modifyGroupStudent.AsTask);
+
+            //then
+            actualGroupStudentDependencyValidationException.Should().BeEquivalentTo(
+                expectedGroupStudentDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupStudentByIdAsync(groupId, studentId), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupStudentDependencyValidationException))), Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+
     }
 }
