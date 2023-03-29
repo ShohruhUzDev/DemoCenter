@@ -7,6 +7,7 @@ using DemoCenter.Models.GroupStudents;
 using DemoCenter.Models.GroupStudents.Exceptions;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using EFxceptions.Models.Exceptions;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {
@@ -211,6 +212,64 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedGroupStudentServiceException))), Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+
+        [Fact]
+        public async void ShouldThrowValidationExceptionOnModifyIfReferenceErrorOccursAndLogItAsync()
+        {
+            // given
+            GroupStudent foreignKeyConflictedGroupStudent = CreateRandomGroupStudent();
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+
+            var foreignKeyConstraintConflictException =
+                new ForeignKeyConstraintConflictException(exceptionMessage);
+
+            var invalidGroupStudentReferenceException =
+                new InvalidGroupStudentReferenceException(foreignKeyConstraintConflictException);
+
+            var expectedGroupStudentDependencyValidationException =
+                new GroupStudentDependencyValidationException(invalidGroupStudentReferenceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            // when
+            ValueTask<GroupStudent> modifyGroupStudentTask =
+                this.groupStudentService.ModifyGroupStudentAsync(foreignKeyConflictedGroupStudent);
+
+            GroupStudentDependencyValidationException actualGroupStudentDependencyValidationException =
+                await Assert.ThrowsAsync<GroupStudentDependencyValidationException>(
+                    modifyGroupStudentTask.AsTask);
+
+            // then
+            actualGroupStudentDependencyValidationException.Should().BeEquivalentTo(
+                expectedGroupStudentDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGroupStudentByIdAsync(
+                    foreignKeyConflictedGroupStudent.GroupId,
+                    foreignKeyConflictedGroupStudent.StudentId),
+                         Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupStudentDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateGroupStudentAsync(foreignKeyConflictedGroupStudent),
+                    Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
