@@ -54,11 +54,11 @@ namespace DemoCenter.Services.Foundations.GroupStudents
                     secondDate: storageGroupStudent.CreatedDate,
                     secondDateName: nameof(GroupStudent.CreatedDate)),
                 Parameter: nameof(GroupStudent.CreatedDate)),
-            (Rule: IsSame(
-                    firstDate: inputGroupStudent.UpdatedDate,
-                    secondDate: storageGroupStudent.UpdatedDate,
-                    secondDateName: nameof(GroupStudent.UpdatedDate)),
-                Parameter: nameof(GroupStudent.UpdatedDate)));
+                (Rule: IsSame(
+                        firstDate: inputGroupStudent.UpdatedDate,
+                        secondDate: storageGroupStudent.UpdatedDate,
+                        secondDateName: nameof(GroupStudent.UpdatedDate)),
+                    Parameter: nameof(GroupStudent.UpdatedDate)));
 
         }
 
