@@ -61,22 +61,22 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
         {
             //given
             Guid someGroupId = Guid.NewGuid();
-            Guid someProfileId = Guid.NewGuid();
+            Guid someStudentId = Guid.NewGuid();
             GroupStudent noGroupStudent = null;
 
             var notFoundGroupStudentException =
-                new NotFoundGroupStudentException(somePostId, someProfileId);
+                new NotFoundGroupStudentException(someGroupId, someStudentId);
 
             var expectedGroupStudentValidationException =
                 new GroupStudentValidationException(notFoundGroupStudentException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectGroupStudentByIdAsync(somePostId, someProfileId))
+                broker.SelectGroupStudentByIdAsync(someGroupId, someStudentId))
                     .ReturnsAsync(noGroupStudent);
 
             //when
             ValueTask<GroupStudent> retrieveGroupStudentByIdTask =
-                this.GroupStudentService.RetrieveGroupStudentByIdAsync(somePostId, someProfileId);
+                this.groupStudentService.RetrieveGroupStudentByIdAsync(someGroupId, someStudentId);
 
             GroupStudentValidationException actualGroupStudentValidationException =
                 await Assert.ThrowsAsync<GroupStudentValidationException>(
@@ -87,7 +87,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
                 expectedGroupStudentValidationException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectGroupStudentByIdAsync(somePostId, someProfileId),
+                broker.SelectGroupStudentByIdAsync(someGroupId, someStudentId),
                     Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
