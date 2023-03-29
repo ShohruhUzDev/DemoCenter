@@ -46,5 +46,42 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllWhenAllServiceErrorOccursAndLogIt()
+        {
+            //given
+            string exceptionMessage = GetRandomString();
+            var serviceException = new Exception(exceptionMessage);
+
+            var failedGroupStudentServiceException =
+                new FailedGroupStudentServiceException(serviceException);
+
+            var expectedGroupStudentServiceException =
+                new GroupStudentServiceException(failedGroupStudentServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllGroupStudents()).Throws(serviceException);
+
+            //when
+            Action retrieveAllGroupStudentAction = () =>
+                this.groupStudentService.RetrieveAllGroupStudents();
+
+            GroupStudentServiceException actualGroupStudentServiceException =
+                Assert.Throws<GroupStudentServiceException>(retrieveAllGroupStudentAction);
+
+            //then
+            actualGroupStudentServiceException.Should().BeEquivalentTo(expectedGroupStudentServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllGroupStudents(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGroupStudentServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }
