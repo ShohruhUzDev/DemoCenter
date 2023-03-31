@@ -1,4 +1,4 @@
-﻿using DemoCenter.Models.Groups;
+﻿using DemoCenter.Models.Foundations.Groups;
 using Microsoft.EntityFrameworkCore;
 
 namespace DemoCenter.Brokers.Storages

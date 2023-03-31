@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
-using DemoCenter.Models.GroupStudents;
+using DemoCenter.Models.Foundations.GroupStudents;
 
 namespace DemoCenter.Services.Foundations.GroupStudents
 {

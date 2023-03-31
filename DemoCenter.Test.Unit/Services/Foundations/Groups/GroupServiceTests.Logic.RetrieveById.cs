@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DemoCenter.Models.Groups;
+using DemoCenter.Models.Foundations.Groups;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;

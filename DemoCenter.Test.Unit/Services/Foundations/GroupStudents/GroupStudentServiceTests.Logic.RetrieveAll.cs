@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using DemoCenter.Models.GroupStudents;
+using DemoCenter.Models.Foundations.GroupStudents;
 using FluentAssertions;
 using Moq;
 using Xunit;

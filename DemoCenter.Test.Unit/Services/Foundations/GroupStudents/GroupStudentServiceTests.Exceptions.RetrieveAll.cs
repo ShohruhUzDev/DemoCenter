@@ -1,4 +1,4 @@
-﻿using DemoCenter.Models.GroupStudents.Exceptions;
+﻿using DemoCenter.Models.Foundations.GroupStudents.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;

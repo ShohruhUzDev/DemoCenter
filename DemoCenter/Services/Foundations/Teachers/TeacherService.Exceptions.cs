@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DemoCenter.Models.Teachers;
-using DemoCenter.Models.Teachers.Exceptions;
+using DemoCenter.Models.Foundations.Teachers;
+using DemoCenter.Models.Foundations.Teachers.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;

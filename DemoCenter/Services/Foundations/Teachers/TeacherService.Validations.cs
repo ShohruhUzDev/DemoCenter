@@ -1,5 +1,5 @@
 ﻿using System;
-using DemoCenter.Models.Teachers;
+using DemoCenter.Models.Foundations.Teachers;
 using DemoCenter.Models.Teachers.Exceptions;
 
 namespace DemoCenter.Services.Foundations.Teachers

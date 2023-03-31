@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DemoCenter.Models.Subjects;
-using DemoCenter.Models.Subjects.Exceptions;
+using DemoCenter.Models.Foundations.Subjects;
+using DemoCenter.Models.Foundations.Subjects.Exceptions;
 using DemoCenter.Services.Foundations.Subjects;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;

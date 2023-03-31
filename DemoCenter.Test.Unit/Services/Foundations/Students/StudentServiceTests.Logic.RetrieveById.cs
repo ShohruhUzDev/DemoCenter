@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DemoCenter.Models.Students;
+using DemoCenter.Models.Foundations.Students;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;

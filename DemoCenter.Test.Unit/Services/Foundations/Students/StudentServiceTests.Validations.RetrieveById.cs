@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DemoCenter.Models.Students;
-using DemoCenter.Models.Students.Exceptions;
+using DemoCenter.Models.Foundations.Students;
+using DemoCenter.Models.Foundations.Students.Exceptions;
 using FluentAssertions;
 using Moq;
 using Xunit;
