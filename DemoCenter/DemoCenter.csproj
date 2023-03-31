@@ -3,13 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Brokers\Tokens\**" />
-    <Content Remove="Brokers\Tokens\**" />
-    <EmbeddedResource Remove="Brokers\Tokens\**" />
-    <None Remove="Brokers\Tokens\**" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EFxceptions" Version="0.4.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3" />

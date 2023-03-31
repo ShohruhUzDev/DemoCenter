@@ -33,7 +33,7 @@ namespace DemoCenter.Services.Foundations.GroupStudents
         });
 
         public IQueryable<GroupStudent> RetrieveAllGroupStudents() =>
-        TryCatch( () => this.storageBroker.SelectAllGroupStudents());
+        TryCatch(() => this.storageBroker.SelectAllGroupStudents());
 
 
         public ValueTask<GroupStudent> RetrieveGroupStudentByIdAsync(Guid groupId, Guid studentId) =>

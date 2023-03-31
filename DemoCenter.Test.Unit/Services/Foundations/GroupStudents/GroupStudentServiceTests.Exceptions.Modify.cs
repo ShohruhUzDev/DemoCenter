@@ -1,14 +1,14 @@
-﻿using Microsoft.Data.SqlClient;
-using Moq;
+﻿using System;
 using System.Threading.Tasks;
-using System;
-using Xunit;
-using DemoCenter.Models.GroupStudents.Exceptions;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using EFxceptions.Models.Exceptions;
-using DemoCenter.Models.Foundations.GroupStudents.Exceptions;
 using DemoCenter.Models.Foundations.GroupStudents;
+using DemoCenter.Models.Foundations.GroupStudents.Exceptions;
+using DemoCenter.Models.GroupStudents.Exceptions;
+using EFxceptions.Models.Exceptions;
+using FluentAssertions;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Moq;
+using Xunit;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {

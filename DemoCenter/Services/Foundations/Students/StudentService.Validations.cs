@@ -1,6 +1,6 @@
 ﻿using System;
 using DemoCenter.Models.Foundations.Students;
-using DemoCenter.Models.Students.Exceptions;
+using DemoCenter.Models.Foundations.Students.Exceptions;
 
 namespace DemoCenter.Services.Foundations.Students
 {
