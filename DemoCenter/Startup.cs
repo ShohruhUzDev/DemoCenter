@@ -2,8 +2,10 @@ using System.Text;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
+using DemoCenter.Brokers.Tokens;
 using DemoCenter.Services.Foundations.Groups;
 using DemoCenter.Services.Foundations.GroupStudents;
+using DemoCenter.Services.Foundations.Securities;
 using DemoCenter.Services.Foundations.Students;
 using DemoCenter.Services.Foundations.Subjects;
 using DemoCenter.Services.Foundations.Teachers;
@@ -60,6 +62,7 @@ namespace DemoCenter
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -70,6 +73,7 @@ namespace DemoCenter
             services.AddTransient<IStorageBroker, StorageBroker>();
             services.AddTransient<ILoggingBroker, LoggingBroker>();
             services.AddTransient<IDateTimeBroker, DateTimeBroker>();
+            services.AddTransient<ITokenBroker, TokenBroker>();
 
         }
 
@@ -80,6 +84,7 @@ namespace DemoCenter
             services.AddTransient<ISubjectService, SubjectService>();
             services.AddTransient<ITeacherService, TeacherService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ISecurityService, SecurityService>();
             services.AddTransient<IGroupStudentService, GroupStudentService>();
         }
         private static void AddProcessingServices(IServiceCollection services) =>
