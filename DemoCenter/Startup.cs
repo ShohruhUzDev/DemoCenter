@@ -1,3 +1,4 @@
+using System.Text;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
@@ -7,11 +8,15 @@ using DemoCenter.Services.Foundations.Students;
 using DemoCenter.Services.Foundations.Subjects;
 using DemoCenter.Services.Foundations.Teachers;
 using DemoCenter.Services.Foundations.Users;
+using DemoCenter.Services.Orchestrations;
+using DemoCenter.Services.Processings.Users;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace DemoCenter
@@ -37,6 +42,9 @@ namespace DemoCenter
 
             RegisterBrokers(services);
             AddFoundationServices(services);
+            AddProcessingServices(services);
+            AddOrchestrationServices(services);
+            RegisterJwtConfigurations(services, Configuration);
 
         }
 
@@ -73,6 +81,32 @@ namespace DemoCenter
             services.AddTransient<ITeacherService, TeacherService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IGroupStudentService, GroupStudentService>();
+        }
+        private static void AddProcessingServices(IServiceCollection services) =>
+           services.AddTransient<IUserProcessingService, UserProcessingService>();
+
+        private static void AddOrchestrationServices(IServiceCollection services) =>
+            services.AddTransient<IUserSecurityOrchestrationService, UserSecurityOrchestrationService>();
+
+        private static void RegisterJwtConfigurations(IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    string key = configuration.GetSection("Jwt").GetValue<string>("Key");
+                    byte[] convertKeyToBytes = Encoding.UTF8.GetBytes(key);
+
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(convertKeyToBytes),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        RequireExpirationTime = true,
+                        ValidateLifetime = true
+                    };
+                });
         }
     }
 }
