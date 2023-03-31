@@ -1,13 +1,8 @@
-﻿//=================================
-// Copyright (c) Coalition of Good-Hearted Engineers
-// Free to use to bring order in your workplace
-//=================================
+﻿using DemoCenter.Brokers.Loggings;
+using DemoCenter.Brokers.Tokens;
+using DemoCenter.Models.Foundations.Users;
 
-using Tarteeb.Api.Brokers.Loggings;
-using Tarteeb.Api.Brokers.Tokens;
-using Tarteeb.Api.Models.Foundations.Users;
-
-namespace Tarteeb.Api.Services.Foundations.Securities;
+namespace DemoCenter.Services.Foundations.Securities;
 
 public partial class SecurityService : ISecurityService
 {
