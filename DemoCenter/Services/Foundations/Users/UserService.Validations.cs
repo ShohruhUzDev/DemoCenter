@@ -1,6 +1,5 @@
 ﻿using System;
 using DemoCenter.Models.Foundations.Users;
-using DemoCenter.Models.Foundations.Users.Exceptions;
 
 namespace DemoCenter.Services.Foundations.Users
 {

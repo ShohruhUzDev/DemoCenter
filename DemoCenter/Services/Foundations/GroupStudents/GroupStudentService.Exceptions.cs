@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DemoCenter.Models.Foundations.GroupStudents;
 using DemoCenter.Models.Foundations.GroupStudents.Exceptions;
-using DemoCenter.Models.GroupStudents.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;

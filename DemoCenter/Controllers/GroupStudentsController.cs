@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DemoCenter.Models.Foundations.GroupStudents;
 using DemoCenter.Models.Foundations.GroupStudents.Exceptions;
-using DemoCenter.Models.GroupStudents.Exceptions;
 using DemoCenter.Services.Foundations.GroupStudents;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
