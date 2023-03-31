@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using DemoCenter.Models.Subjects;
+using DemoCenter.Models.Foundations.Subjects;
 using FluentAssertions;
 using Moq;
 using Xunit;

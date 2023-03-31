@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
-using DemoCenter.Models.Groups;
+using DemoCenter.Models.Foundations.Groups;
 using DemoCenter.Services.Foundations.Groups;
 using Microsoft.Data.SqlClient;
 using Moq;

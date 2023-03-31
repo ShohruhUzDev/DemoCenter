@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DemoCenter.Brokers.DateTimes;
 using DemoCenter.Brokers.Loggings;
 using DemoCenter.Brokers.Storages;
-using DemoCenter.Models.Subjects;
+using DemoCenter.Models.Foundations.Subjects;
 
 namespace DemoCenter.Services.Foundations.Subjects
 {

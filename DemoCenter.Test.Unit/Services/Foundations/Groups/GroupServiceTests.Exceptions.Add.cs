@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DemoCenter.Models.Groups;
+using DemoCenter.Models.Foundations.Groups;
+using DemoCenter.Models.Foundations.Groups.Exceptions;
 using DemoCenter.Models.Groups.Exceptions;
 using EFxceptions.Models.Exceptions;
 using FluentAssertions;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DemoCenter.Models.Users;
+using DemoCenter.Models.Foundations.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DemoCenter.Brokers.Storages

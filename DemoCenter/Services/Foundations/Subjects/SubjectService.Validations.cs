@@ -1,5 +1,5 @@
 ﻿using System;
-using DemoCenter.Models.Subjects;
+using DemoCenter.Models.Foundations.Subjects;
 using DemoCenter.Models.Subjects.Exceptions;
 
 namespace DemoCenter.Services.Foundations.Subjects

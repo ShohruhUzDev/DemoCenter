@@ -1,5 +1,5 @@
 ﻿using System;
-using DemoCenter.Models.Groups;
+using DemoCenter.Models.Foundations.Groups;
 using DemoCenter.Models.Groups.Exceptions;
 
 namespace DemoCenter.Services.Foundations.Groups

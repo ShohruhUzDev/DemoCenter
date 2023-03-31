@@ -1,5 +1,5 @@
 ﻿using System;
-using DemoCenter.Models.Users.Exceptions;
+using DemoCenter.Models.Foundations.Users.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;

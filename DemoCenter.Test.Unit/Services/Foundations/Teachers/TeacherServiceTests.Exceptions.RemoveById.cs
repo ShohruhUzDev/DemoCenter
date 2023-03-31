@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DemoCenter.Models.Teachers;
-using DemoCenter.Models.Teachers.Exceptions;
+using DemoCenter.Models.Foundations.Teachers;
+using DemoCenter.Models.Foundations.Teachers.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;

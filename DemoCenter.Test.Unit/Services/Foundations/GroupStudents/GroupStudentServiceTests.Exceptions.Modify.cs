@@ -3,11 +3,12 @@ using Moq;
 using System.Threading.Tasks;
 using System;
 using Xunit;
-using DemoCenter.Models.GroupStudents;
 using DemoCenter.Models.GroupStudents.Exceptions;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using EFxceptions.Models.Exceptions;
+using DemoCenter.Models.Foundations.GroupStudents.Exceptions;
+using DemoCenter.Models.Foundations.GroupStudents;
 
 namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {
