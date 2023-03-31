@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DemoCenter.Models.Foundations.GroupStudents;
 using DemoCenter.Models.Foundations.GroupStudents.Exceptions;
+using DemoCenter.Models.GroupStudents.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -11,7 +12,7 @@ namespace DemoCenter.Test.Unit.Services.Foundations.GroupStudents
 {
     public partial class GroupStudentServiceTests
     {
-         [Fact]
+        [Fact]
         public async Task ShouldThrowCriticalDependencyExceptionOnRetrieveByIdIfSqlErrorOccursAndLogItAsync()
         {
             //given

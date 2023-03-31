@@ -1,6 +1,6 @@
 ﻿using System;
 using DemoCenter.Models.Foundations.GroupStudents;
-using DemoCenter.Models.Groups.Exceptions;
+using DemoCenter.Models.Foundations.GroupStudents.Exceptions;
 using DemoCenter.Models.GroupStudents.Exceptions;
 
 namespace DemoCenter.Services.Foundations.GroupStudents
