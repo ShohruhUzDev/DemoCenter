@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using DemoCenter.Models.Foundations.Tokens;
 using DemoCenter.Models.Foundations.Users;
@@ -44,6 +45,15 @@ namespace DemoCenter.Brokers.Tokens
                 signingCredentials: cridentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public string HashToken(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            }
         }
     }
 }
